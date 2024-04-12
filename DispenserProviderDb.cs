@@ -12,15 +12,16 @@ public class DispenserProviderDb
     internal ITransactionDetails Item => IsRefund ? RefundDetails! : WithdrawalDetails;
 
     // Generate signature for either withdrawal or refund
-    public void GenerateSignature(bool isWithdrawal)
+    public DateTime GenerateSignature(bool isWithdrawal)
     {
         if (DateTime.Now < ValidUntil)
         {
             throw new InvalidOperationException("Cannot generate signature: the signature is still valid.");
         }
-        if (DateTime.Now < ValidUntil.AddMinutes(5))
+        var NextTry = ValidUntil.AddMinutes(5);
+        if (DateTime.Now < NextTry)
         {
-            throw new InvalidOperationException("Cannot generate signature: the signature is cooldown.");
+            throw new InvalidOperationException($"Cannot generate signature: the signature is cooldown. try on: {NextTry}");
         }
         IsRefund = !isWithdrawal;
         CheckChains();
@@ -28,6 +29,7 @@ public class DispenserProviderDb
         ValidUntil = DateTime.Now.AddMinutes(5);
         ValidFrom = DateTime.Now.AddSeconds(5);
         Signature = Sign(Item);
+        return ValidFrom;
     }
 
     private void CheckChains()
