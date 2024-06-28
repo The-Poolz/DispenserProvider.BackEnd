@@ -34,7 +34,6 @@ public class DispenserProviderDb
 
     private void CheckChains()
     {
-
         Check(WithdrawalDetails,"The Deal has been Withdrawen");
         if (RefundDetails != null)
             Check(RefundDetails, "The Deal has been Refunded");
