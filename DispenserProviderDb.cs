@@ -56,6 +56,7 @@ public class DispenserProviderDb
     // Get the valid signature based on type
     public SignResultObject GetSignature()
     {
+        CheckChains();
         if (DateTime.Now < ValidFrom)
         {
             throw new InvalidOperationException("Cannot retrieve signature: the validity period has not started yet.");
