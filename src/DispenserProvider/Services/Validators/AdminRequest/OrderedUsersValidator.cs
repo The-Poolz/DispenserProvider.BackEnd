@@ -15,14 +15,14 @@ public class OrderedUsersValidator : AbstractValidator<IEnumerable<EthereumAddre
         RuleForEach(users => GetZippedPairs(users))
             .Configure(config => config.PropertyName = "OrderCheck")
             .Must(IsSorted)
-            .WithMessage((_, pair) =>
-                pair.Item1 == pair.Item2
-                    ? $"Duplicate address found: {pair.Item1}"
-                    : $"Addresses must be in ascending order. Found '{pair.Item1}' >= '{pair.Item2}'"
-            );
+            .WithMessage(MessageFormat);
     }
-    internal static IEnumerable<(EthereumAddress, EthereumAddress)> GetZippedPairs(IEnumerable<EthereumAddress> users) =>
+    private static string MessageFormat(IEnumerable<EthereumAddress> _, (EthereumAddress First, EthereumAddress Second) pair) =>
+        pair.First == pair.Second
+            ? $"Duplicate address found: {pair.First}"
+            : $"Addresses must be in ascending order. Found '{pair.First}' >= '{pair.Second}'";
+    private static IEnumerable<(EthereumAddress, EthereumAddress)> GetZippedPairs(IEnumerable<EthereumAddress> users) =>
         users.Zip(users.Skip(1));
-    internal static bool IsSorted((EthereumAddress First, EthereumAddress Second) pair) =>
+    private static bool IsSorted((EthereumAddress First, EthereumAddress Second) pair) =>
         string.Compare(pair.First, pair.Second) < 0;
 }
