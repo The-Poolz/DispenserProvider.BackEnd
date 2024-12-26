@@ -23,7 +23,7 @@ namespace DispenserProvider.Services.Validators.AdminRequest
         }
         private static IEnumerable<(EthereumAddress, EthereumAddress)> GetZippedPairs(IEnumerable<EthereumAddress> users) =>
             users.Zip(users.Skip(1));
-        internal static bool IsSorted((EthereumAddress First, EthereumAddress Second) tuple) =>
-            string.Compare(tuple.First, tuple.Second) < 0;
+        internal static bool IsSorted((EthereumAddress First, EthereumAddress Second) pair) =>
+            string.Compare(pair.First, pair.Second) < 0;
     }
 }
