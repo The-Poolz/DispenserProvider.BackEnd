@@ -2,7 +2,11 @@
    "ReadAssetRequest":{
       "AssetContext":[
          {
-            "PoolId":1,
+            "PoolId":4,
+            "ChainId":1
+         },
+         {
+            "PoolId":5,
             "ChainId":1
          },
          {

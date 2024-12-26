@@ -1,0 +1,10 @@
+{
+   "ReadAssetRequest":{
+      "AssetContext":[
+         {
+            "PoolId":4,
+            "ChainId":1
+         }
+      ]
+   }
+}
