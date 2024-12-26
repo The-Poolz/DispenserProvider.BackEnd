@@ -21,7 +21,7 @@ public class OrderedUsersValidator : AbstractValidator<IEnumerable<EthereumAddre
                     : $"Addresses must be in ascending order. Found '{pair.Item1}' >= '{pair.Item2}'"
             );
     }
-    private static IEnumerable<(EthereumAddress, EthereumAddress)> GetZippedPairs(IEnumerable<EthereumAddress> users) =>
+    internal static IEnumerable<(EthereumAddress, EthereumAddress)> GetZippedPairs(IEnumerable<EthereumAddress> users) =>
         users.Zip(users.Skip(1));
     internal static bool IsSorted((EthereumAddress First, EthereumAddress Second) pair) =>
         string.Compare(pair.First, pair.Second) < 0;
