@@ -34,7 +34,7 @@ public class OrderedUsersValidatorTests
             var testCode = () => validator.ValidateAndThrow(users);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage($"Validation failed: {Environment.NewLine} -- :* All addresses must be in ascending order. Severity: Error");
+                .WithMessage($"Validation failed: {Environment.NewLine} -- : Addresses must be in ascending order. Found '0x0000000000000000000000000000000000000002' >= '0x0000000000000000000000000000000000000001' Severity: Error");
         }
 
 
@@ -49,7 +49,7 @@ public class OrderedUsersValidatorTests
             var testCode = () => validator.ValidateAndThrow(users);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage($"Validation failed: {Environment.NewLine} -- :* All addresses must be unique. Severity: Error");
+                .WithMessage($"Validation failed: {Environment.NewLine} -- : Duplicate address found: 0x0000000000000000000000000000000000000002 Severity: Error");
         }
 
         [Fact]

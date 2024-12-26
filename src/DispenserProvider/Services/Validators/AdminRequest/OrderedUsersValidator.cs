@@ -11,16 +11,23 @@ public class OrderedUsersValidator : AbstractValidator<IEnumerable<EthereumAddre
             .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .WithMessage("Collection of users cannot be empty.")
-            .Must(users => users.Zip(users.Skip(1))
-                .All(pair => string.Compare(pair.First, pair.Second) < 0))
+            .Must(AllZippedAreSorted)
             .WithMessage(FormatMessage);
     }
     private static string FormatMessage(IEnumerable<EthereumAddress> addresses)
     {
-        var (First, Second) = addresses.Zip(addresses.Skip(1))
-            .FirstOrDefault(pair => string.Compare(pair.First, pair.Second) >= 0);
-        return $"Error on {First} and {Second} " + (First == Second ?
-            "All addresses must be unique." :
-        "All addresses must be in ascending order.");
+        var miss = Zipped(addresses).FirstOrDefault(IsNotSorted);
+        return miss.Item1 == miss.Item2 ?
+           $"Duplicate address found: {miss.Item1}" :
+        $"Addresses must be in ascending order. Found '{miss.Item1}' >= '{miss.Item2}'";
     }
+    internal static IEnumerable<(EthereumAddress,EthereumAddress)> Zipped(IEnumerable<EthereumAddress> users) =>
+        users.Zip(users.Skip(1));
+    internal static bool IsSorted((EthereumAddress First, EthereumAddress Second) tuple) =>
+        string.Compare(tuple.First, tuple.Second) < 0;
+    internal static bool IsNotSorted((EthereumAddress First, EthereumAddress Second) tuple) =>
+        !IsSorted(tuple);
+    internal static bool AllZippedAreSorted(IEnumerable<EthereumAddress> users) =>
+        Zipped(users).All(IsSorted);
 }
+
