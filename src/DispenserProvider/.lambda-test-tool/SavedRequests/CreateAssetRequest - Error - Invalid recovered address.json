@@ -1,0 +1,37 @@
+{
+   "CreateAssetRequest":{
+      "Signature":"0x6652e9ee3cf6aa9c5dfaa46a9d27dd5aa1eae3089c10ca01cfc6ec3a4be586155cf8ca736b8776486e5d9eff097b47e3c536000eaec4dd46fec2b9556e2a483e1c",
+      "Message":{
+         "ChainId":1,
+         "PoolId":3,
+         "Users":[
+            {
+               "UserAddress":"0x0000000000000000000000000000000000000001",
+               "WeiAmount":"50000000000000000000"
+            },
+            {
+               "UserAddress":"0x0000000000000000000000000000000000000002",
+               "WeiAmount":"25000000000000000000"
+            }
+         ],
+         "Schedules":[
+            {
+               "ProviderAddress":"0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+               "Ratio":0.5,
+               "StartTime":1763486000
+            },
+            {
+               "ProviderAddress":"0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+               "Ratio":0.3,
+               "StartTime":1763586000
+            },
+            {
+               "ProviderAddress":"0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
+               "Ratio":0.2,
+               "StartTime":1763586000,
+               "FinishTime":1763758800
+            }
+         ]
+      }
+   }
+}

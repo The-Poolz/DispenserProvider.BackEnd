@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
+    <AWSProjectType>Lambda</AWSProjectType>
+    <!-- This property makes the build directory similar to a publish directory and helps the AWS .NET Lambda Mock Test Tool find project dependencies. -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <!-- Generate ready to run images during publishing to improve cold start time. -->
+    <PublishReadyToRun>true</PublishReadyToRun>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Amazon.Lambda.Core" Version="2.2.0" />
+    <PackageReference Include="Amazon.Lambda.Serialization.Json" Version="2.2.3" />
+    <PackageReference Include="CovalentDB" Version="2.0.20" />
+    <PackageReference Include="DispenserProvider.DataBase" Version="1.0.10" />
+    <PackageReference Include="AuthDB" Version="1.0.7" />
+    <PackageReference Include="Nethereum.ABI" Version="4.26.0" />
+    <PackageReference Include="FluentValidation" Version="11.11.0" />
+    <PackageReference Include="Nethereum.Signer" Version="4.26.0" />
+    <PackageReference Include="Nethereum.Web3" Version="4.26.0" />
+    <PackageReference Include="SecretsManager" Version="1.0.0" />
+    <PackageReference Include="TokenSchedule.FluentValidation" Version="1.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>
