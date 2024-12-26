@@ -1,33 +1,29 @@
 ﻿using FluentValidation;
 using Net.Web3.EthereumWallet;
 
-namespace DispenserProvider.Services.Validators.AdminRequest;
-
-public class OrderedUsersValidator : AbstractValidator<IEnumerable<EthereumAddress>>
+namespace DispenserProvider.Services.Validators.AdminRequest
 {
-    public OrderedUsersValidator()
+    public class OrderedUsersValidator : AbstractValidator<IEnumerable<EthereumAddress>>
     {
-        RuleFor(users => users)
-            .Cascade(CascadeMode.Stop)
-            .NotEmpty()
-            .WithMessage("Collection of users cannot be empty.")
-            .Must(AllZippedAreSorted)
-            .WithMessage(FormatMessage);
-    }
-    private static string FormatMessage(IEnumerable<EthereumAddress> addresses)
-    {
-        var miss = Zipped(addresses).FirstOrDefault(IsNotSorted);
-        return miss.Item1 == miss.Item2 ?
-           $"Duplicate address found: {miss.Item1}" :
-        $"Addresses must be in ascending order. Found '{miss.Item1}' >= '{miss.Item2}'";
-    }
-    internal static IEnumerable<(EthereumAddress,EthereumAddress)> Zipped(IEnumerable<EthereumAddress> users) =>
-        users.Zip(users.Skip(1));
-    internal static bool IsSorted((EthereumAddress First, EthereumAddress Second) tuple) =>
-        string.Compare(tuple.First, tuple.Second) < 0;
-    internal static bool IsNotSorted((EthereumAddress First, EthereumAddress Second) tuple) =>
-        !IsSorted(tuple);
-    internal static bool AllZippedAreSorted(IEnumerable<EthereumAddress> users) =>
-        Zipped(users).All(IsSorted);
-}
+        public OrderedUsersValidator()
+        {
+            RuleFor(users => users)
+                .Cascade(CascadeMode.Stop)
+                .NotEmpty()
+                .WithMessage("Collection of users cannot be empty.");
 
+            RuleForEach(users => GetZippedPairs(users))
+                .Configure(config => config.PropertyName = "OrderCheck")
+                .Must(IsSorted)
+                .WithMessage((_, pair) =>
+                    pair.Item1 == pair.Item2
+                        ? $"Duplicate address found: {pair.Item1}"
+                        : $"Addresses must be in ascending order. Found '{pair.Item1}' >= '{pair.Item2}'"
+                );
+        }
+        private static IEnumerable<(EthereumAddress, EthereumAddress)> GetZippedPairs(IEnumerable<EthereumAddress> users) =>
+            users.Zip(users.Skip(1));
+        internal static bool IsSorted((EthereumAddress First, EthereumAddress Second) tuple) =>
+            string.Compare(tuple.First, tuple.Second) < 0;
+    }
+}
