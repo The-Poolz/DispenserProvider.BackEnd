@@ -6,7 +6,7 @@ namespace DispenserProvider.Services.Validators.GenerateSignature;
 
 public class AssetAvailabilityValidator : AbstractValidator<DispenserDTO>
 {
-    public AssetAvailabilityValidator(DispenserProviderContract dispenserContract)
+    public AssetAvailabilityValidator(IDispenserProviderContract dispenserContract)
     {
         RuleFor(x => x)
             .Must(x => !dispenserContract.IsTaken(x.WithdrawalDetail.ChainId, x.WithdrawalDetail.PoolId, x.UserAddress))

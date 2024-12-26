@@ -6,7 +6,7 @@ using Nethereum.ABI.FunctionEncoding;
 
 namespace DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
-public class DispenserProviderContract(ChainProvider chainProvider)
+public class DispenserProviderContract(IChainProvider chainProvider) : IDispenserProviderContract
 {
     public bool IsTaken(long chainId, long poolId, EthereumAddress address)
     {
