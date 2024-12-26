@@ -15,9 +15,9 @@ public class OrderedUsersValidator : AbstractValidator<IEnumerable<EthereumAddre
         RuleForEach(users => GetZippedPairs(users))
             .Configure(config => config.PropertyName = "OrderCheck")
             .Must(IsSorted)
-            .WithMessage(MessageFormat);
+            .WithMessage(FormatOrderErrorMessage);
     }
-    private static string MessageFormat(IEnumerable<EthereumAddress> _, (EthereumAddress First, EthereumAddress Second) pair) =>
+    private static string FormatOrderErrorMessage(IEnumerable<EthereumAddress> _, (EthereumAddress First, EthereumAddress Second) pair) =>
         pair.First == pair.Second
             ? $"Duplicate address found: {pair.First}"
             : $"Addresses must be in ascending order. Found '{pair.First}' > '{pair.Second}'";
