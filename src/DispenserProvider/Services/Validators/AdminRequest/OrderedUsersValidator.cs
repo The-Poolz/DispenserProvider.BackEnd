@@ -7,7 +7,7 @@ public class OrderedUsersValidator : AbstractValidator<IEnumerable<EthereumAddre
 {
     public OrderedUsersValidator()
     {
-        RuleFor(users => users.ToArray())
+        RuleFor(users => users)
             .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .WithMessage("Collection of users cannot be empty.")
@@ -15,7 +15,6 @@ public class OrderedUsersValidator : AbstractValidator<IEnumerable<EthereumAddre
                 .All(pair => string.Compare(pair.First, pair.Second) < 0))
             .WithMessage(FormatMessage);
     }
-
     private static string FormatMessage(IEnumerable<EthereumAddress> addresses)
     {
         var (First, Second) = addresses.Zip(addresses.Skip(1))
