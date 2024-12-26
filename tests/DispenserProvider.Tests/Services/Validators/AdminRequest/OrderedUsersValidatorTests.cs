@@ -34,7 +34,7 @@ public class OrderedUsersValidatorTests
             var testCode = () => validator.ValidateAndThrow(users);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage($"Validation failed: {Environment.NewLine} -- OrderCheck[0]: Addresses must be in ascending order. Found '0x0000000000000000000000000000000000000002' >= '0x0000000000000000000000000000000000000001' Severity: Error");
+                .WithMessage($"Validation failed: {Environment.NewLine} -- OrderCheck[0]: Addresses must be in ascending order. Found '0x0000000000000000000000000000000000000002' > '0x0000000000000000000000000000000000000001' Severity: Error");
         }
 
 
