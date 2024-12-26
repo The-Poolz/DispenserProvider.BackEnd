@@ -79,7 +79,7 @@ public class AdminRequestValidatorTests
             );
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage($"Validation failed: {Environment.NewLine} -- UsersToValidateOrder: All addresses must be unique and in ascending order. Severity: Error");
+                .WithMessage($"Validation failed: {Environment.NewLine} -- UsersToValidateOrder:* All addresses must be in ascending order. Severity: Error");
         }
 
         [Fact]

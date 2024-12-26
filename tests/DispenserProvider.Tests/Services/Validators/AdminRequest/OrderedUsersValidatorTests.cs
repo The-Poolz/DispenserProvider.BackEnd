@@ -34,7 +34,22 @@ public class OrderedUsersValidatorTests
             var testCode = () => validator.ValidateAndThrow(users);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage($"Validation failed: {Environment.NewLine} -- : All addresses must be unique and in ascending order. Severity: Error");
+                .WithMessage($"Validation failed: {Environment.NewLine} -- :* All addresses must be in ascending order. Severity: Error");
+        }
+
+
+        [Fact]
+        internal void WhenCollectionNotUniqe_ShouldThrowException()
+        {
+            var users = new EthereumAddress[] {
+                "0x0000000000000000000000000000000000000002",
+                "0x0000000000000000000000000000000000000002"
+            };
+
+            var testCode = () => validator.ValidateAndThrow(users);
+
+            testCode.Should().Throw<ValidationException>()
+                .WithMessage($"Validation failed: {Environment.NewLine} -- :* All addresses must be unique. Severity: Error");
         }
 
         [Fact]
