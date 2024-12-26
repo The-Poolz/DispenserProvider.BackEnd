@@ -1,0 +1,20 @@
+{
+   "CreateAssetRequest":{
+      "Signature":"0xfdfbbb533af39f08d872311a1970c30f70c7fc5fae7ed1205e9275c7703b8f93442c8c89ca5547065708a9e59feeb73b855dac2c2df88d56aa7b74851fdc5fa81c",
+      "Message":{
+         "ChainId":1,
+         "PoolId":3,
+         "Users":[
+            {
+               "UserAddress":"0x0000000000000000000000000000000000000001",
+               "WeiAmount":"50000000000000000000"
+            },
+            {
+               "UserAddress":"0x0000000000000000000000000000000000000002",
+               "WeiAmount":"25000000000000000000"
+            }
+         ],
+         "Schedules":[ ]
+      }
+   }
+}
