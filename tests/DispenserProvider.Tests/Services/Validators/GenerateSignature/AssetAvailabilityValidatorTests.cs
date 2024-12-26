@@ -1,10 +1,9 @@
-﻿using Moq;
-using Xunit;
+﻿using Xunit;
 using FluentAssertions;
 using FluentValidation;
 using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Validators.GenerateSignature;
-using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
+using DispenserProvider.Tests.Mocks.Services.Handlers.GenerateSignature.Web3;
 
 namespace DispenserProvider.Tests.Services.Validators.GenerateSignature;
 
@@ -23,11 +22,9 @@ public class AssetAvailabilityValidatorTests
                 }
             };
 
-            var providerContract = new Mock<IDispenserProviderContract>();
-            providerContract.Setup(x => x.IsTaken(dispenser.WithdrawalDetail.ChainId, dispenser.WithdrawalDetail.PoolId, dispenser.UserAddress))
-                .Returns(true);
+            var providerContract = MockDispenserProviderContract.Create(dispenser, isWithdrawn: true, isRefunded: false);
 
-            var validator = new AssetAvailabilityValidator(providerContract.Object);
+            var validator = new AssetAvailabilityValidator(providerContract);
 
             var testCode = () => validator.ValidateAndThrow(dispenser);
 
@@ -50,13 +47,9 @@ public class AssetAvailabilityValidatorTests
                 }
             };
 
-            var providerContract = new Mock<IDispenserProviderContract>();
-            providerContract.Setup(x => x.IsTaken(dispenser.WithdrawalDetail.ChainId, dispenser.WithdrawalDetail.PoolId, dispenser.UserAddress))
-                .Returns(false);
-            providerContract.Setup(x => x.IsTaken(dispenser.RefundDetail.ChainId, dispenser.RefundDetail.PoolId, dispenser.UserAddress))
-                .Returns(true);
+            var providerContract = MockDispenserProviderContract.Create(dispenser, isWithdrawn: false, isRefunded: true);
 
-            var validator = new AssetAvailabilityValidator(providerContract.Object);
+            var validator = new AssetAvailabilityValidator(providerContract);
 
             var testCode = () => validator.ValidateAndThrow(dispenser);
 
@@ -79,13 +72,9 @@ public class AssetAvailabilityValidatorTests
                 }
             };
 
-            var providerContract = new Mock<IDispenserProviderContract>();
-            providerContract.Setup(x => x.IsTaken(dispenser.WithdrawalDetail.ChainId, dispenser.WithdrawalDetail.PoolId, dispenser.UserAddress))
-                .Returns(false);
-            providerContract.Setup(x => x.IsTaken(dispenser.RefundDetail.ChainId, dispenser.RefundDetail.PoolId, dispenser.UserAddress))
-                .Returns(false);
+            var providerContract = MockDispenserProviderContract.Create(dispenser, isWithdrawn: false, isRefunded: false);
 
-            var validator = new AssetAvailabilityValidator(providerContract.Object);
+            var validator = new AssetAvailabilityValidator(providerContract);
 
             var testCode = () => validator.ValidateAndThrow(dispenser);
 

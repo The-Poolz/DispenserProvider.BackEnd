@@ -1,7 +1,6 @@
 ﻿using Xunit;
 using FluentAssertions;
 using FluentValidation;
-using EnvironmentManager.Extensions;
 using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Validators.GenerateSignature;
 
@@ -32,7 +31,7 @@ public class UpdatingSignatureValidatorTests
             var testCode = () => validator.ValidateAndThrow(dispenser);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage($"**Cannot generate signature, because it is still valid until ({signature.ValidUntil}). Please try again after ({NextTry(signature)}).**");
+                .WithMessage($"**Cannot generate signature, because it is still valid until ({signature.ValidUntil}). Please try again after ({UpdatingSignatureValidator.NextTry(signature)}).**");
         }
 
         [Fact]
@@ -51,7 +50,7 @@ public class UpdatingSignatureValidatorTests
             var testCode = () => validator.ValidateAndThrow(dispenser);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage($"**Cannot generate signature, because the next valid time for generation has not yet arrived. Please try again after ({NextTry(signature)}).**");
+                .WithMessage($"**Cannot generate signature, because the next valid time for generation has not yet arrived. Please try again after ({UpdatingSignatureValidator.NextTry(signature)}).**");
         }
 
         [Fact]
@@ -71,7 +70,5 @@ public class UpdatingSignatureValidatorTests
 
             testCode.Should().NotThrow();
         }
-
-        private static DateTime NextTry(SignatureDTO signature) => signature.ValidUntil + TimeSpan.FromSeconds(Env.COOLDOWN_OFFSET_IN_SECONDS.GetRequired<int>());
     }
 }
