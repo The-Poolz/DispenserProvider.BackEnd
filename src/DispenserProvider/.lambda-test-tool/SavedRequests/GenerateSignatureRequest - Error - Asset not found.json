@@ -1,0 +1,7 @@
+{
+   "GenerateSignatureRequest":{
+      "UserAddress":"0x0000000000000000000000000000000000000000",
+      "ChainId":123,
+      "PoolId":123
+   }
+}
