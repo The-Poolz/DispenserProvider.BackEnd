@@ -65,7 +65,7 @@ public class AssetAvailabilityValidatorTests
         }
 
         [Fact]
-        internal void WhenAssetNotTaken_ShouldThrowException()
+        internal void WhenAssetNotTaken_ShouldNotThrowException()
         {
             var dispenser = new DispenserDTO {
                 UserAddress = "0x0000000000000000000000000000000000000001",
