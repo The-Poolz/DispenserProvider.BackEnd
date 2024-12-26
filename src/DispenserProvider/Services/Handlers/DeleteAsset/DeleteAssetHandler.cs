@@ -23,7 +23,7 @@ public class DeleteAssetHandler(DispenserContext dispenserContext, IValidator<Ad
     private void MarkAsDeleted(DeleteAssetRequest request)
     {
         var dispensers = dispenserContext.Dispenser
-            .Where(d => request.Message.ToDelete.Select(x => x.Value).Contains(d.Id))
+            .Where(d => d.DeletionLogSignature == null && request.Message.ToDelete.Select(x => x.Value).Contains(d.Id))
             .ToList();
 
         if (request.Message.ToDelete.Count != dispensers.Count)
