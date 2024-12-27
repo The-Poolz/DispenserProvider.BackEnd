@@ -4,9 +4,9 @@ using Net.Web3.EthereumWallet;
 
 namespace DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
-public class ChainProvider(CovalentContext context)
+public class ChainProvider(CovalentContext context) : IChainProvider
 {
-    private readonly Dictionary<long, EthereumAddress> contractsAddresses = new()
+    private readonly Dictionary<long, EthereumAddress> _contractsAddresses = new()
     {
         { 1, "0x55eB3e27355c09854f7F85371600C360Bd95d42F" },
         { 56, "0x55eB3e27355c09854f7F85371600C360Bd95d42F" },
@@ -22,6 +22,6 @@ public class ChainProvider(CovalentContext context)
 
     public EthereumAddress ContractAddress(long chainId)
     {
-        return contractsAddresses[chainId];
+        return _contractsAddresses[chainId];
     }
 }
