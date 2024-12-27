@@ -13,7 +13,7 @@ public class AdminRequestValidatorTests
 {
     public class ValidateAndThrow
     {
-        private readonly AdminRequestValidator<MockPlainMessage> validator = new(
+        private readonly AdminRequestValidator<MockPlainMessage> _validator = new(
             MockAuthContext.Create(),
             new OrderedUsersValidator()
         );
@@ -23,7 +23,7 @@ public class AdminRequestValidatorTests
         {
             var adminRequest = MockValidatedAdminRequest.Create();
 
-            var testCode = () => validator.ValidateAndThrow(
+            var testCode = () => _validator.ValidateAndThrow(
                 instance: new AdminValidationRequest<MockPlainMessage>("invalid role name", adminRequest)
             );
 
@@ -37,7 +37,7 @@ public class AdminRequestValidatorTests
         {
             var adminRequest = MockValidatedAdminRequest.Create(new MockPlainMessage(), MockUsers.UnauthorizedUser.PrivateKey);
 
-            var testCode = () => validator.ValidateAndThrow(
+            var testCode = () => _validator.ValidateAndThrow(
                 instance: new AdminValidationRequest<MockPlainMessage>(MockAuthContext.Role.Name, adminRequest)
             );
 
@@ -54,7 +54,7 @@ public class AdminRequestValidatorTests
             };
             var adminRequest = MockValidatedAdminRequest.Create(message, MockUsers.Admin.PrivateKey);
 
-            var testCode = () => validator.ValidateAndThrow(
+            var testCode = () => _validator.ValidateAndThrow(
                 instance: new AdminValidationRequest<MockPlainMessage>(MockAuthContext.Role.Name, adminRequest)
             );
 
@@ -74,12 +74,12 @@ public class AdminRequestValidatorTests
             };
             var adminRequest = MockValidatedAdminRequest.Create(message, MockUsers.Admin.PrivateKey);
 
-            var testCode = () => validator.ValidateAndThrow(
+            var testCode = () => _validator.ValidateAndThrow(
                 instance: new AdminValidationRequest<MockPlainMessage>(MockAuthContext.Role.Name, adminRequest)
             );
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage($"Validation failed: {Environment.NewLine} -- UsersToValidateOrder: All addresses must be unique and in ascending order. Severity: Error");
+                .WithMessage($"Validation failed: {Environment.NewLine} -- UsersToValidateOrder.OrderCheck[0]: Addresses must be in ascending order. Found '0x0000000000000000000000000000000000000002' > '0x0000000000000000000000000000000000000001' Severity: Error");
         }
 
         [Fact]
@@ -87,7 +87,7 @@ public class AdminRequestValidatorTests
         {
             var adminRequest = MockValidatedAdminRequest.Create();
 
-            var testCode = () => validator.ValidateAndThrow(
+            var testCode = () => _validator.ValidateAndThrow(
                 instance: new AdminValidationRequest<MockPlainMessage>(MockAuthContext.Role.Name, adminRequest)
             );
 

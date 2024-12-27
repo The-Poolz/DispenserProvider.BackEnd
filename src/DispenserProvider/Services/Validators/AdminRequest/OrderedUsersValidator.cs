@@ -7,11 +7,24 @@ public class OrderedUsersValidator : AbstractValidator<IEnumerable<EthereumAddre
 {
     public OrderedUsersValidator()
     {
-        RuleFor(users => users.ToArray())
-            .Cascade(CascadeMode.Stop)
+        ClassLevelCascadeMode = CascadeMode.Stop;
+
+        RuleFor(users => users)
             .NotEmpty()
-            .WithMessage("Collection of users cannot be empty.")
-            .Must(users => !users.Zip(users.Skip(1), (left, right) => (left, right)).Any(pair => string.Compare(pair.left, pair.right) >= 0))
-            .WithMessage("All addresses must be unique and in ascending order.");
+            .WithMessage("Collection of users cannot be empty.");
+
+        RuleForEach(users => GetZippedPairs(users.ToArray()))
+            .Configure(config => config.PropertyName = "OrderCheck")
+            .Must(IsSorted)
+            .WithMessage(FormatOrderErrorMessage);
     }
+
+    private static IEnumerable<(EthereumAddress, EthereumAddress)> GetZippedPairs(EthereumAddress[] users) =>
+        users.Zip(users.Skip(1));
+
+    private static bool IsSorted((EthereumAddress first, EthereumAddress second) pair) =>
+        string.Compare(pair.first, pair.second) < 0;
+
+    private static string FormatOrderErrorMessage(IEnumerable<EthereumAddress> _, (EthereumAddress first, EthereumAddress second) pair) =>
+        pair.first == pair.second ? $"Duplicate address found: {pair.first}" : $"Addresses must be in ascending order. Found '{pair.first}' > '{pair.second}'";
 }
