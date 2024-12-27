@@ -7,22 +7,24 @@ public class OrderedUsersValidator : AbstractValidator<IEnumerable<EthereumAddre
 {
     public OrderedUsersValidator()
     {
+        ClassLevelCascadeMode = CascadeMode.Stop;
+
         RuleFor(users => users)
-            .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .WithMessage("Collection of users cannot be empty.");
 
-        RuleForEach(users => GetZippedPairs(users))
+        RuleForEach(users => GetZippedPairs(users.ToArray()))
             .Configure(config => config.PropertyName = "OrderCheck")
             .Must(IsSorted)
             .WithMessage(FormatOrderErrorMessage);
     }
-    private static string FormatOrderErrorMessage(IEnumerable<EthereumAddress> _, (EthereumAddress First, EthereumAddress Second) pair) =>
-        pair.First == pair.Second
-            ? $"Duplicate address found: {pair.First}"
-            : $"Addresses must be in ascending order. Found '{pair.First}' > '{pair.Second}'";
-    private static IEnumerable<(EthereumAddress, EthereumAddress)> GetZippedPairs(IEnumerable<EthereumAddress> users) =>
+
+    private static IEnumerable<(EthereumAddress, EthereumAddress)> GetZippedPairs(EthereumAddress[] users) =>
         users.Zip(users.Skip(1));
-    private static bool IsSorted((EthereumAddress First, EthereumAddress Second) pair) =>
-        string.Compare(pair.First, pair.Second) < 0;
+
+    private static bool IsSorted((EthereumAddress first, EthereumAddress second) pair) =>
+        string.Compare(pair.first, pair.second) < 0;
+
+    private static string FormatOrderErrorMessage(IEnumerable<EthereumAddress> _, (EthereumAddress first, EthereumAddress second) pair) =>
+        pair.first == pair.second ? $"Duplicate address found: {pair.first}" : $"Addresses must be in ascending order. Found '{pair.first}' > '{pair.second}'";
 }
