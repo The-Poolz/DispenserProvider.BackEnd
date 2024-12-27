@@ -5,18 +5,11 @@ namespace DispenserProvider.Extensions;
 
 public static class AmountExtensions
 {
-    public static string CalculateAmount(this User user, Schedule schedule)
-    {
-        return CalculateAmount(user.WeiAmount, schedule.Ratio);
-    }
+    public static string CalculateAmount(this User user, Schedule schedule) => CalculateAmount(user.WeiAmount, schedule.Ratio);
 
-    public static string CalculateAmount(this User user, Refund refund)
-    {
-        return CalculateAmount(user.WeiAmount, refund.Ratio);
-    }
+    public static string CalculateAmount(this User user, Refund refund) => CalculateAmount(user.WeiAmount, refund.Ratio);
 
-    public static string CalculateAmount(this string weiAmount, decimal ratio)
-    {
-        return new BigInteger(ratio * (decimal)BigInteger.Parse(weiAmount)).ToString();
-    }
+    public static string CalculateAmount(this string weiAmount, decimal ratio) => CalculateAmount(BigInteger.Parse(weiAmount), ratio);
+
+    public static string CalculateAmount(this BigInteger weiAmount, decimal ratio) => new BigInteger(ratio * (decimal)weiAmount).ToString();
 }
