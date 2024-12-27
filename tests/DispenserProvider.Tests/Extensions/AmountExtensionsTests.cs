@@ -13,7 +13,7 @@ public class AmountExtensionsTests
         [InlineData("100", 1.5, "150")]
         [InlineData("100", 0.8, "80")]
         [InlineData("100", 0.0, "0")]
-        [InlineData("100", 0.667, "66")]
+        [InlineData("100", 0.666666666667, "66.6666666667")]
         public void WhenCalledOnString_ShouldReturnCorrectBigIntegerString(string weiAmount, decimal ratio, string expected)
         {
             var result = weiAmount.CalculateAmount(ratio);
