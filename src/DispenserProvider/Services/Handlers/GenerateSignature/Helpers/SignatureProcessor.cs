@@ -8,7 +8,7 @@ public class SignatureProcessor(DispenserContext dispenserContext, ISignatureGen
 {
     public DateTime SaveSignature(DispenserDTO dispenser, bool isRefund)
     {
-        var transactionDetail = isRefund ? dispenser.RefundDetail! : dispenser.WithdrawalDetail = dispenser.WithdrawalDetail;
+        var transactionDetail = isRefund ? dispenser.RefundDetail! : dispenser.WithdrawalDetail;
 
         var validUntil = CalculateValidUntil(dispenser.RefundFinishTime, isRefund);
         var signature = new SignatureDTO
