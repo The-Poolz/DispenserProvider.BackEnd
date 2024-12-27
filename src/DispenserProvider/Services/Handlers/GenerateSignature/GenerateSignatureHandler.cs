@@ -9,7 +9,7 @@ namespace DispenserProvider.Services.Handlers.GenerateSignature;
 
 public class GenerateSignatureHandler(
     DispenserContext dispenserContext,
-    SignatureProcessor signatureProcessor,
+    ISignatureProcessor signatureProcessor,
     IValidator<GenerateSignatureValidatorRequest> validator
 )
     : IRequestHandler<GenerateSignatureRequest, GenerateSignatureResponse>

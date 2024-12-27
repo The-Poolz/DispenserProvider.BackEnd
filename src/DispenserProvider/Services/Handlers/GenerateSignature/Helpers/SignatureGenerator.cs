@@ -7,7 +7,7 @@ using DispenserProvider.DataBase.Models;
 
 namespace DispenserProvider.Services.Handlers.GenerateSignature.Helpers;
 
-public class SignatureGenerator(SecretManager secretManager)
+public class SignatureGenerator(SecretManager secretManager) : ISignatureGenerator
 {
     public string GenerateSignature(TransactionDetailDTO transactionDetail, DateTime validUntil)
     {
