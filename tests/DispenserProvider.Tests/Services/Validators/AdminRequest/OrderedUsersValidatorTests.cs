@@ -39,7 +39,7 @@ public class OrderedUsersValidatorTests
 
 
         [Fact]
-        internal void WhenCollectionNotUniqe_ShouldThrowException()
+        internal void WhenCollectionNotUnique_ShouldThrowException()
         {
             var users = new EthereumAddress[] {
                 "0x0000000000000000000000000000000000000002",
