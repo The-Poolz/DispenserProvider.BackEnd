@@ -4,7 +4,7 @@ using DispenserProvider.DataBase.Models;
 
 namespace DispenserProvider.Services.Handlers.GenerateSignature.Helpers;
 
-public class SignatureProcessor(DispenserContext dispenserContext, SignatureGenerator signatureGenerator)
+public class SignatureProcessor(DispenserContext dispenserContext, ISignatureGenerator signatureGenerator) : ISignatureProcessor
 {
     public DateTime SaveSignature(DispenserDTO dispenser, bool isRefund)
     {
