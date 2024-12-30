@@ -1,10 +1,11 @@
 ﻿using Newtonsoft.Json;
 using Net.Web3.EthereumWallet;
 using DispenserProvider.Models;
+using DispenserProvider.Services.Database.Models;
 
 namespace DispenserProvider.Services.Handlers.GenerateSignature.Models;
 
-public class GenerateSignatureRequest : IHandlerRequest
+public class GenerateSignatureRequest : IGetDispenserRequest, IHandlerRequest
 {
     [JsonRequired]
     public EthereumAddress UserAddress { get; set; } = null!;
