@@ -17,6 +17,7 @@ public class AmountExtensionsTests
         [InlineData("100", 0.0, "0")]
         [InlineData("1" + zeroX18, 0.667, "66700000" + zeroX10)]
         [InlineData("10" + zeroX10 + zeroX18, 0.667, "66700000000" + zeroX18)]
+        [InlineData("1" + zeroX10 + zeroX18 + zeroX18, 2, "2" + zeroX10 + zeroX18 + zeroX18)]
         public void WhenCalledOnString_ShouldReturnCorrectBigIntegerString(string weiAmount, decimal ratio, string expected)
         {
             var result = weiAmount.MultiplyWeiByRatio(ratio);
