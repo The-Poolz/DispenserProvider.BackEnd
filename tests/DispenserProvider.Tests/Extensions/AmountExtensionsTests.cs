@@ -33,6 +33,7 @@ namespace DispenserProvider.Tests.Extensions
             "Even larger test, ensuring correct multiplication of bigger BigInteger.")]
         [InlineData("1" + Zero10 + Zero18 + Zero18, 2, "2" + Zero10 + Zero18 + Zero18,
             "Doubling a large value by ratio of 2.")]
+        [InlineData("1" + Zero18, 0.000000000000000001, "1", "Ratio of 1e-18 yields 1 from 1 × 10^18.")]
         public void ShouldReturnCorrectBigIntegerString(
             string weiAmount,
             decimal ratio,
