@@ -14,9 +14,9 @@ public static class AmountExtensions
     /// <param name="ratio">A decimal ratio (e.g. 0.667m).</param>
     /// <param name="precision">Number of decimal places to treat the ratio with (default is 18).</param>
     /// <returns>String representation of the result as a BigInteger.</returns>
-    public static string MultiplyWeiByRatio(this string weiAmount, decimal ratio, int precision = 18)
-        => ((BigInteger.Parse(weiAmount) * ConvertToWei(ratio, precision)) /
-        BigInteger.Pow(10, precision)).ToString();
-    private static BigInteger ConvertToWei(decimal ratio, int precision)
-        => new UnitConversion().ToWei(ratio, precision);
+    public static string MultiplyWeiByRatio(this string weiAmount, decimal ratio, int precision = 18) =>
+        ((BigInteger.Parse(weiAmount) * ConvertToWei(ratio, precision)) /
+            BigInteger.Pow(10, precision)).ToString();
+    private static BigInteger ConvertToWei(decimal ratio, int precision) =>
+        new UnitConversion().ToWei(ratio, precision);
 }
