@@ -14,10 +14,10 @@ public class AmountExtensionsTests
         [InlineData("100", 0.8, "80")]
         [InlineData("100", 0.0, "0")]
         [InlineData("1000000000000000000", 0.667, "667000000000000000")]
-        [InlineData("100000000000000000000000000000", 0.667, "error")]
+        [InlineData("100000000000000000000000000000", 0.667, "66700000000000000000000000000")]
         public void WhenCalledOnString_ShouldReturnCorrectBigIntegerString(string weiAmount, decimal ratio, string expected)
         {
-            var result = weiAmount.CalculateAmount(ratio);
+            var result = weiAmount.MultiplyWeiByRatio(ratio);
 
             result.Should().Be(expected);
         }
