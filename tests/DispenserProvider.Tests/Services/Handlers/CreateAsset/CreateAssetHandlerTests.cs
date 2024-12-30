@@ -5,7 +5,6 @@ using FluentValidation;
 using DispenserProvider.DataBase;
 using TokenSchedule.FluentValidation;
 using DispenserProvider.Tests.Mocks.DataBase;
-using DispenserProvider.DataBase.Models.Types;
 using DispenserProvider.Services.Handlers.CreateAsset;
 using DispenserProvider.Services.Validators.AdminRequest;
 using DispenserProvider.Services.Handlers.CreateAsset.Models;
@@ -53,7 +52,7 @@ public class CreateAssetHandlerTests
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             dispenserContext.Logs.ToArray().Should().ContainSingle(x =>
                 x.Signature == MockDispenserContext.Log.Signature &&
-                x.Operation == OperationType.Creation
+                x.IsCreation == true
             );
             dispenserContext.Dispenser.ToArray().Should().ContainSingle(x =>
                 x.Id == MockDispenserContext.Dispenser.Id && 
