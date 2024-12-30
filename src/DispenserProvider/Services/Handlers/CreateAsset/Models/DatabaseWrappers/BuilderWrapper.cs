@@ -10,14 +10,14 @@ public sealed class BuilderWrapper : BuilderDTO
         ProviderAddress = schedule.ProviderAddress;
         StartTime = schedule.StartDate;
         FinishTime = schedule.FinishDate;
-        WeiAmount = user.CalculateAmount(schedule);
+        WeiAmount = user.WeiAmount.CalculateAmount(schedule.Ratio);
         TransactionDetail = transactionDetail;
     }
 
     public BuilderWrapper(User user, TransactionDetailWrapper transactionDetail, Refund refund)
     {
         ProviderAddress = refund.DealProvider;
-        WeiAmount = user.CalculateAmount(refund);
+        WeiAmount = user.WeiAmount.CalculateAmount(refund.Ratio);
         TransactionDetail = transactionDetail;
     }
 }
