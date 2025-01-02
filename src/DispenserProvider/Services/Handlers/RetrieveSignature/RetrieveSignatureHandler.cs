@@ -1,12 +1,13 @@
-﻿using DispenserProvider.Services.Database;
-using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
+﻿using FluentValidation;
+using DispenserProvider.DataBase.Models;
+using DispenserProvider.Services.Database;
 using DispenserProvider.Services.Handlers.RetrieveSignature.Models;
 
 namespace DispenserProvider.Services.Handlers.RetrieveSignature;
 
 public class RetrieveSignatureHandler(
     IDispenserManager dispenserManager,
-    IDispenserProviderContract dispenserContract
+    IValidator<DispenserDTO> retrieveValidator
 )
     : IRequestHandler<RetrieveSignatureRequest, RetrieveSignatureResponse>
 {
@@ -14,8 +15,8 @@ public class RetrieveSignatureHandler(
     {
         var dispenser = dispenserManager.GetDispenser(request);
 
-        var isTaken = dispenserContract.IsTaken();
+        retrieveValidator.ValidateAndThrow(dispenser);
 
-        throw new NotImplementedException($"The 'Handle' method is not implemented, in '{nameof(RetrieveSignatureHandler)}' class.");
+        return new RetrieveSignatureResponse(dispenser, request);
     }
 }

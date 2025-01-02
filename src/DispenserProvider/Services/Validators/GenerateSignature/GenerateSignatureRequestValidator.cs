@@ -15,7 +15,7 @@ public class GenerateSignatureValidator : AbstractValidator<GenerateSignatureVal
 
         RuleFor(x => x.Dispenser)
             .SetValidator(updatingValidator)
-            .When(x => x.Dispenser.UserSignatures.Count > 0);
+            .When(x => x.Dispenser.LastUserSignature != null);
 
         RuleFor(x => x.Dispenser)
             .SetValidator(refundValidator)

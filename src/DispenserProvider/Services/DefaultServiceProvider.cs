@@ -6,6 +6,7 @@ using Net.Web3.EthereumWallet;
 using DispenserProvider.DataBase;
 using Microsoft.EntityFrameworkCore;
 using TokenSchedule.FluentValidation;
+using DispenserProvider.DataBase.Models;
 using ConfiguredSqlConnection.Extensions;
 using DispenserProvider.Services.Handlers;
 using TokenSchedule.FluentValidation.Models;
@@ -22,6 +23,7 @@ using DispenserProvider.Services.Handlers.CreateAsset.Models;
 using DispenserProvider.Services.Handlers.DeleteAsset.Models;
 using DispenserProvider.Services.Handlers.ListOfAssets.Models;
 using DispenserProvider.Services.Validators.GenerateSignature;
+using DispenserProvider.Services.Validators.RetrieveSignature;
 using DispenserProvider.Services.Validators.AdminRequest.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 using DispenserProvider.Services.Handlers.GenerateSignature.Models;
@@ -42,6 +44,7 @@ public static class DefaultServiceProvider
         .AddScoped<IValidator<IEnumerable<EthereumAddress>>, OrderedUsersValidator>()
         .AddScoped<IValidator<GenerateSignatureValidatorRequest>, GenerateSignatureValidator>()
         .AddScoped<IValidator<IEnumerable<IValidatedScheduleItem>>, ScheduleValidator>()
+        .AddScoped<IValidator<DispenserDTO>, RetrieveSignatureRequestValidator>()
         .AddScoped<UpdatingSignatureValidator>()
         .AddScoped<RefundSignatureValidator>()
         .AddScoped<AssetAvailabilityValidator>()
