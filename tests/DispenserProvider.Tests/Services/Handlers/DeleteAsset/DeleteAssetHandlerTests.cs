@@ -4,7 +4,6 @@ using System.Text;
 using FluentValidation;
 using FluentAssertions;
 using DispenserProvider.Tests.Mocks.DataBase;
-using DispenserProvider.DataBase.Models.Types;
 using DispenserProvider.Services.Handlers.DeleteAsset;
 using DispenserProvider.Services.Validators.AdminRequest;
 using DispenserProvider.Services.Handlers.DeleteAsset.Models;
@@ -75,7 +74,7 @@ public class DeleteAssetHandlerTests
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             dispenserContext.Logs.ToArray().Should().ContainSingle(x =>
                 x.Signature == MockDeleteAssetRequest.Request.Signature &&
-                x.Operation == OperationType.Deletion
+                x.IsCreation == false
             );
             dispenserContext.Dispenser.ToArray().Should().ContainSingle(x =>
                 x.Id == MockDispenserContext.Dispenser.Id &&

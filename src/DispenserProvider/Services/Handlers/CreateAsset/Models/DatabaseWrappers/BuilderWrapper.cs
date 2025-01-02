@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+﻿using DispenserProvider.Extensions;
 using DispenserProvider.DataBase.Models;
 
 namespace DispenserProvider.Services.Handlers.CreateAsset.Models.DatabaseWrappers;
@@ -10,14 +10,14 @@ public sealed class BuilderWrapper : BuilderDTO
         ProviderAddress = schedule.ProviderAddress;
         StartTime = schedule.StartDate;
         FinishTime = schedule.FinishDate;
-        WeiAmount = new BigInteger(schedule.Ratio * (decimal)BigInteger.Parse(user.WeiAmount)).ToString();
+        WeiAmount = user.WeiAmount.MultiplyWeiByRatio(schedule.Ratio);
         TransactionDetail = transactionDetail;
     }
 
     public BuilderWrapper(User user, TransactionDetailWrapper transactionDetail, Refund refund)
     {
         ProviderAddress = refund.DealProvider;
-        WeiAmount = new BigInteger(refund.Ratio * (decimal)BigInteger.Parse(user.WeiAmount)).ToString();
+        WeiAmount = user.WeiAmount.MultiplyWeiByRatio(refund.Ratio);
         TransactionDetail = transactionDetail;
     }
 }
