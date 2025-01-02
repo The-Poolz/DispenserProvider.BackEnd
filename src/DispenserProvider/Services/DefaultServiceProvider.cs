@@ -9,6 +9,7 @@ using TokenSchedule.FluentValidation;
 using DispenserProvider.DataBase.Models;
 using ConfiguredSqlConnection.Extensions;
 using DispenserProvider.Services.Handlers;
+using DispenserProvider.Services.Database;
 using TokenSchedule.FluentValidation.Models;
 using Microsoft.Extensions.DependencyInjection;
 using DispenserProvider.Services.Handlers.ReadAsset;
@@ -39,6 +40,8 @@ public static class DefaultServiceProvider
         .AddDbContext<DispenserContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Staging, "DispenserStage")))
         .AddDbContext<AuthContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Staging, "AuthStage")))
         .AddDbContext<CovalentContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Staging, "DownloaderStage")))
+        .AddScoped<ISignatureGenerator, SignatureGenerator>()
+        .AddScoped<IDispenserManager, DispenserManager>()
         .AddScoped<IValidator<AdminValidationRequest<CreateAssetMessage>>, AdminRequestValidator<CreateAssetMessage>>()
         .AddScoped<IValidator<AdminValidationRequest<DeleteAssetMessage>>, AdminRequestValidator<DeleteAssetMessage>>()
         .AddScoped<IValidator<IEnumerable<EthereumAddress>>, OrderedUsersValidator>()
@@ -49,7 +52,6 @@ public static class DefaultServiceProvider
         .AddScoped<RefundSignatureValidator>()
         .AddScoped<AssetAvailabilityValidator>()
         .AddScoped<SecretManager>()
-        .AddScoped<ISignatureGenerator, SignatureGenerator>()
         .AddScoped<ISignatureProcessor, SignatureProcessor>()
         .AddScoped<IChainProvider, ChainProvider>()
         .AddScoped<IDispenserProviderContract, DispenserProviderContract>()

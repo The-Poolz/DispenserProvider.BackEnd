@@ -2,6 +2,7 @@
 using SecretsManager;
 using System.Numerics;
 using Nethereum.Signer;
+using EnvironmentManager.Static;
 using EnvironmentManager.Extensions;
 using DispenserProvider.DataBase.Models;
 
@@ -50,10 +51,14 @@ public class SignatureGenerator(SecretManager secretManager) : ISignatureGenerat
 
     private EthECKey GetSigner()
     {
-        var privateKey = secretManager.GetSecretValue(
-            secretId: Env.SECRET_ID_OF_SIGN_ACCOUNT.GetRequired<string>(),
-            secretKey: Env.SECRET_KEY_OF_SIGN_ACCOUNT.GetRequired<string>()
-        );
+        var isProduction = EnvManager.Get<bool?>("IS_PROD");
+        var privateKey = isProduction.HasValue && isProduction.Value
+            ? EnvManager.GetRequired<string>("PRIVATE_KEY")
+            : secretManager.GetSecretValue(
+                secretId: Env.SECRET_ID_OF_SIGN_ACCOUNT.GetRequired<string>(),
+                secretKey: Env.SECRET_KEY_OF_SIGN_ACCOUNT.GetRequired<string>()
+            );
+
         return new EthECKey(privateKey);
     }
 }
