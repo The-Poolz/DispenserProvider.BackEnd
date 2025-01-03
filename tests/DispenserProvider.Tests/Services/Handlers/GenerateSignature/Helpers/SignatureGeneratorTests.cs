@@ -1,9 +1,9 @@
 ﻿using Moq;
 using Xunit;
-using SecretsManager;
 using FluentAssertions;
-using EnvironmentManager.Extensions;
+using Nethereum.Signer;
 using DispenserProvider.Tests.Mocks.DataBase;
+using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 using DispenserProvider.Services.Handlers.GenerateSignature.Helpers;
 using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
@@ -24,16 +24,15 @@ public class SignatureGeneratorTests
         [Fact]
         internal void WhenGeneratedSuccessfully_ShouldReturnSignature()
         {
-            var secretManager = new Mock<SecretManager>();
-
-            secretManager.Setup(x => x.GetSecretValue(Env.SECRET_ID_OF_SIGN_ACCOUNT.GetRequired<string>(null), Env.SECRET_KEY_OF_SIGN_ACCOUNT.GetRequired<string>(null)))
-                .Returns(PrivateKey);
+            var signerManager = new Mock<ISignerManager>();
+            signerManager.Setup(x => x.GetSigner())
+                .Returns(new EthECKey(PrivateKey));
 
             var transactionDetail = MockDispenserContext.TransactionDetail;
             transactionDetail.WithdrawalDispenser = MockDispenserContext.Dispenser;
             var validUntil = DateTime.UtcNow.AddMinutes(10);
 
-            var signatureGenerator = new SignatureGenerator(secretManager.Object, new Mock<ISignerManager>().Object);
+            var signatureGenerator = new SignatureGenerator(signerManager.Object);
 
             var signature = signatureGenerator.GenerateSignature(transactionDetail, validUntil);
 

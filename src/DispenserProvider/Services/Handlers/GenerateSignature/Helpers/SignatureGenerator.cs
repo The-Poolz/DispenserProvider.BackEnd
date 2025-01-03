@@ -1,5 +1,4 @@
 ﻿using Nethereum.ABI;
-using SecretsManager;
 using System.Numerics;
 using Nethereum.Signer;
 using DispenserProvider.DataBase.Models;
@@ -7,7 +6,7 @@ using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
 namespace DispenserProvider.Services.Handlers.GenerateSignature.Helpers;
 
-public class SignatureGenerator(SecretManager secretManager, ISignerManager signerManager) : ISignatureGenerator
+public class SignatureGenerator(ISignerManager signerManager) : ISignatureGenerator
 {
     public string GenerateSignature(TransactionDetailDTO transactionDetail, DateTime validUntil)
     {
@@ -15,9 +14,10 @@ public class SignatureGenerator(SecretManager secretManager, ISignerManager sign
             abiValues: BuildAbiValues(transactionDetail, validUntil)
         );
 
-        var signer = signerManager.GetSigner(secretManager);
-        var signature = new EthereumMessageSigner().Sign(packedData, signer);
-        return signature;
+        return new EthereumMessageSigner().Sign(
+            message: packedData, 
+            key: signerManager.GetSigner()
+        );
     }
 
     private static ABIValue[] BuildAbiValues(TransactionDetailDTO transactionDetail, DateTime validUntil)
