@@ -3,7 +3,9 @@ using CovalentDb;
 using SecretsManager;
 using FluentValidation;
 using Net.Web3.EthereumWallet;
+using DispenserProvider.Options;
 using DispenserProvider.DataBase;
+using EnvironmentManager.Extensions;
 using Microsoft.EntityFrameworkCore;
 using TokenSchedule.FluentValidation;
 using ConfiguredSqlConnection.Extensions;
@@ -15,6 +17,7 @@ using DispenserProvider.Services.Handlers.CreateAsset;
 using DispenserProvider.Services.Handlers.DeleteAsset;
 using DispenserProvider.Services.Handlers.ListOfAssets;
 using DispenserProvider.Services.Validators.AdminRequest;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using DispenserProvider.Services.Handlers.ReadAsset.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature;
 using DispenserProvider.Services.Handlers.RetrieveSignature;
@@ -33,11 +36,23 @@ namespace DispenserProvider.Services;
 
 public static class DefaultServiceProvider
 {
-    public static IServiceProvider Default => new ServiceCollection()
-        .AddDbContext<DispenserContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Staging, "DispenserStage")))
-        .AddDbContext<AuthContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Staging, "AuthStage")))
-        .AddDbContext<CovalentContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Staging, "DownloaderStage")))
-        .AddScoped<ISignerManager, SignerManager>(_ => new SignerManager(isProduction: false))
+    public static IServiceProvider Build()
+    {
+        var mode = Env.PRODUCTION_MODE.GetRequired<ProductionMode>();
+        var services = new ServiceCollection
+        {
+            Default,
+            mode switch
+            {
+                ProductionMode.Prod => Prod,
+                ProductionMode.Stage => Stage,
+                _ => throw new NotImplementedException($"No one valid stage in '{nameof(Env.PRODUCTION_MODE)}' environment variable found.")
+            }
+        };
+        return services.BuildServiceProvider();
+    }
+
+    private static IServiceCollection Default => new ServiceCollection()
         .AddScoped<IValidator<AdminValidationRequest<CreateAssetMessage>>, AdminRequestValidator<CreateAssetMessage>>()
         .AddScoped<IValidator<AdminValidationRequest<DeleteAssetMessage>>, AdminRequestValidator<DeleteAssetMessage>>()
         .AddScoped<IValidator<IEnumerable<EthereumAddress>>, OrderedUsersValidator>()
@@ -57,6 +72,17 @@ public static class DefaultServiceProvider
         .AddScoped<IRequestHandler<ListOfAssetsRequest, ListOfAssetsResponse>, ListOfAssetsHandler>()
         .AddScoped<IRequestHandler<GenerateSignatureRequest, GenerateSignatureResponse>, GenerateSignatureHandler>()
         .AddScoped<IRequestHandler<RetrieveSignatureRequest, RetrieveSignatureResponse>, RetrieveSignatureHandler>()
-        .AddScoped<IHandlerFactory, HandlerFactory>()
-        .BuildServiceProvider();
+        .AddScoped<IHandlerFactory, HandlerFactory>();
+
+    private static IServiceCollection Prod => new ServiceCollection()
+        .AddDbContext<DispenserContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Prod)))
+        .AddDbContext<AuthContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Prod)))
+        .AddDbContext<CovalentContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Prod)))
+        .AddScoped<ISignerManager, SignerManager>(_ => new SignerManager(isProduction: true));
+
+    private static IServiceCollection Stage => new ServiceCollection()
+        .AddDbContext<DispenserContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Staging, "DispenserStage")))
+        .AddDbContext<AuthContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Staging, "AuthStage")))
+        .AddDbContext<CovalentContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Staging, "DownloaderStage")))
+        .AddScoped<ISignerManager, SignerManager>(_ => new SignerManager(isProduction: false));
 }
