@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using DispenserProvider.Services.Validators.GenerateSignature.Models;
+using DispenserProvider.Services.Validators.Signature.Models;
 
-namespace DispenserProvider.Services.Validators.GenerateSignature;
+namespace DispenserProvider.Services.Validators.Signature;
 
 public class GenerateSignatureValidator : AbstractValidator<GenerateSignatureValidatorRequest>
 {
@@ -15,7 +15,7 @@ public class GenerateSignatureValidator : AbstractValidator<GenerateSignatureVal
 
         RuleFor(x => x.Dispenser)
             .SetValidator(updatingValidator)
-            .When(x => x.Dispenser.UserSignatures.Count > 0);
+            .When(x => x.Dispenser.LastUserSignature != null);
 
         RuleFor(x => x.Dispenser)
             .SetValidator(refundValidator)

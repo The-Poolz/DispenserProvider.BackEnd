@@ -2,7 +2,7 @@
 using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
-namespace DispenserProvider.Services.Validators.GenerateSignature;
+namespace DispenserProvider.Services.Validators.Signature;
 
 public class AssetAvailabilityValidator : AbstractValidator<DispenserDTO>
 {

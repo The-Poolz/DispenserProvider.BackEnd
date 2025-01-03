@@ -9,12 +9,14 @@ using EnvironmentManager.Extensions;
 using Microsoft.EntityFrameworkCore;
 using TokenSchedule.FluentValidation;
 using ConfiguredSqlConnection.Extensions;
+using DispenserProvider.Services.Database;
 using DispenserProvider.Services.Handlers;
 using TokenSchedule.FluentValidation.Models;
 using Microsoft.Extensions.DependencyInjection;
 using DispenserProvider.Services.Handlers.ReadAsset;
 using DispenserProvider.Services.Handlers.CreateAsset;
 using DispenserProvider.Services.Handlers.DeleteAsset;
+using DispenserProvider.Services.Validators.Signature;
 using DispenserProvider.Services.Handlers.ListOfAssets;
 using DispenserProvider.Services.Validators.AdminRequest;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -23,14 +25,13 @@ using DispenserProvider.Services.Handlers.GenerateSignature;
 using DispenserProvider.Services.Handlers.RetrieveSignature;
 using DispenserProvider.Services.Handlers.CreateAsset.Models;
 using DispenserProvider.Services.Handlers.DeleteAsset.Models;
+using DispenserProvider.Services.Validators.Signature.Models;
 using DispenserProvider.Services.Handlers.ListOfAssets.Models;
-using DispenserProvider.Services.Validators.GenerateSignature;
 using DispenserProvider.Services.Validators.AdminRequest.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 using DispenserProvider.Services.Handlers.GenerateSignature.Models;
 using DispenserProvider.Services.Handlers.RetrieveSignature.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature.Helpers;
-using DispenserProvider.Services.Validators.GenerateSignature.Models;
 
 namespace DispenserProvider.Services;
 
@@ -57,10 +58,12 @@ public static class DefaultServiceProvider
         .AddScoped<IValidator<AdminValidationRequest<DeleteAssetMessage>>, AdminRequestValidator<DeleteAssetMessage>>()
         .AddScoped<IValidator<IEnumerable<EthereumAddress>>, OrderedUsersValidator>()
         .AddScoped<IValidator<GenerateSignatureValidatorRequest>, GenerateSignatureValidator>()
+        .AddScoped<IValidator<RetrieveSignatureValidatorRequest>, RetrieveSignatureRequestValidator>()
         .AddScoped<IValidator<IEnumerable<IValidatedScheduleItem>>, ScheduleValidator>()
         .AddScoped<UpdatingSignatureValidator>()
         .AddScoped<RefundSignatureValidator>()
         .AddScoped<AssetAvailabilityValidator>()
+        .AddScoped<IDispenserManager, DispenserManager>()
         .AddScoped<SecretManager>()
         .AddScoped<ISignatureGenerator, SignatureGenerator>()
         .AddScoped<ISignatureProcessor, SignatureProcessor>()
