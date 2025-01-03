@@ -3,12 +3,12 @@ using Xunit;
 using FluentValidation;
 using FluentAssertions;
 using DispenserProvider.DataBase.Models;
+using DispenserProvider.Services.Database;
 using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.Services.Handlers.GenerateSignature;
 using DispenserProvider.Services.Handlers.GenerateSignature.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature.Helpers;
 using DispenserProvider.Services.Validators.GenerateSignature.Models;
-using DispenserProvider.Services.Database;
 
 namespace DispenserProvider.Tests.Services.Handlers.GenerateSignature;
 

@@ -5,7 +5,6 @@ using Nethereum.Signer;
 using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 using DispenserProvider.Services.Handlers.GenerateSignature.Helpers;
-using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
 namespace DispenserProvider.Tests.Services.Handlers.GenerateSignature.Helpers;
 

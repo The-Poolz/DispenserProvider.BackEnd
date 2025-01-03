@@ -13,7 +13,6 @@ public class SignatureGenerator(ISignerManager signerManager) : ISignatureGenera
         var packedData = new ABIEncode().GetSha3ABIEncodedPacked(
             abiValues: BuildAbiValues(transactionDetail, validUntil)
         );
-
         return new EthereumMessageSigner().Sign(
             message: packedData, 
             key: signerManager.GetSigner()
