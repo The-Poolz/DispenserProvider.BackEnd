@@ -15,6 +15,8 @@ public class DispenserProviderLambdaTests
         [Fact]
         internal void WithoutParameters()
         {
+            Environment.SetEnvironmentVariable("PRODUCTION_MODE", "Stage");
+
             new DispenserProviderLambda().Should().NotBeNull();
         }
     }

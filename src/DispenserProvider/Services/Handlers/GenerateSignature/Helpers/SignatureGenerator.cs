@@ -1,22 +1,22 @@
 ﻿using Nethereum.ABI;
-using SecretsManager;
 using System.Numerics;
 using Nethereum.Signer;
-using EnvironmentManager.Extensions;
 using DispenserProvider.DataBase.Models;
+using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
 namespace DispenserProvider.Services.Handlers.GenerateSignature.Helpers;
 
-public class SignatureGenerator(SecretManager secretManager) : ISignatureGenerator
+public class SignatureGenerator(ISignerManager signerManager) : ISignatureGenerator
 {
     public string GenerateSignature(TransactionDetailDTO transactionDetail, DateTime validUntil)
     {
         var packedData = new ABIEncode().GetSha3ABIEncodedPacked(
             abiValues: BuildAbiValues(transactionDetail, validUntil)
         );
-
-        var signature = new EthereumMessageSigner().Sign(packedData, GetSigner());
-        return signature;
+        return new EthereumMessageSigner().Sign(
+            message: packedData, 
+            key: signerManager.GetSigner()
+        );
     }
 
     private static ABIValue[] BuildAbiValues(TransactionDetailDTO transactionDetail, DateTime validUntil)
@@ -47,13 +47,4 @@ public class SignatureGenerator(SecretManager secretManager) : ISignatureGenerat
     }
 
     private static BigInteger ToUnixBigInteger(DateTime date) => new(new DateTimeOffset(date).ToUnixTimeSeconds());
-
-    private EthECKey GetSigner()
-    {
-        var privateKey = secretManager.GetSecretValue(
-            secretId: Env.SECRET_ID_OF_SIGN_ACCOUNT.GetRequired<string>(),
-            secretKey: Env.SECRET_KEY_OF_SIGN_ACCOUNT.GetRequired<string>()
-        );
-        return new EthECKey(privateKey);
-    }
 }

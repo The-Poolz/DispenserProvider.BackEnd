@@ -9,7 +9,7 @@ namespace DispenserProvider;
 
 public class DispenserProviderLambda(IServiceProvider serviceProvider)
 {
-    public DispenserProviderLambda() : this(DefaultServiceProvider.Default) { }
+    public DispenserProviderLambda() : this(DefaultServiceProvider.Build()) { }
 
     public IHandlerResponse Run(LambdaRequest request)
     {
