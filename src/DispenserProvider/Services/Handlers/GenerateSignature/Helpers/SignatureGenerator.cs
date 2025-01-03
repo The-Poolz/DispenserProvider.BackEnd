@@ -2,13 +2,12 @@
 using SecretsManager;
 using System.Numerics;
 using Nethereum.Signer;
-using EnvironmentManager.Static;
-using EnvironmentManager.Extensions;
 using DispenserProvider.DataBase.Models;
+using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
 namespace DispenserProvider.Services.Handlers.GenerateSignature.Helpers;
 
-public class SignatureGenerator(SecretManager secretManager) : ISignatureGenerator
+public class SignatureGenerator(SecretManager secretManager, ISignerManager signerManager) : ISignatureGenerator
 {
     public string GenerateSignature(TransactionDetailDTO transactionDetail, DateTime validUntil)
     {
@@ -16,7 +15,8 @@ public class SignatureGenerator(SecretManager secretManager) : ISignatureGenerat
             abiValues: BuildAbiValues(transactionDetail, validUntil)
         );
 
-        var signature = new EthereumMessageSigner().Sign(packedData, GetSigner());
+        var signer = signerManager.GetSigner(secretManager);
+        var signature = new EthereumMessageSigner().Sign(packedData, signer);
         return signature;
     }
 
@@ -48,17 +48,4 @@ public class SignatureGenerator(SecretManager secretManager) : ISignatureGenerat
     }
 
     private static BigInteger ToUnixBigInteger(DateTime date) => new(new DateTimeOffset(date).ToUnixTimeSeconds());
-
-    private EthECKey GetSigner()
-    {
-        var isProduction = EnvManager.Get<bool?>("IS_PROD");
-        var privateKey = isProduction.HasValue && !isProduction.Value
-            ? EnvManager.GetRequired<string>("PRIVATE_KEY")
-            : secretManager.GetSecretValue(
-                secretId: Env.SECRET_ID_OF_SIGN_ACCOUNT.GetRequired<string>(),
-                secretKey: Env.SECRET_KEY_OF_SIGN_ACCOUNT.GetRequired<string>()
-            );
-
-        return new EthECKey(privateKey);
-    }
 }
