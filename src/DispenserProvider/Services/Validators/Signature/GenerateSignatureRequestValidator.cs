@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using DispenserProvider.Services.Validators.GenerateSignature.Models;
+using DispenserProvider.Services.Validators.Signature.Models;
 
-namespace DispenserProvider.Services.Validators.GenerateSignature;
+namespace DispenserProvider.Services.Validators.Signature;
 
 public class GenerateSignatureValidator : AbstractValidator<GenerateSignatureValidatorRequest>
 {

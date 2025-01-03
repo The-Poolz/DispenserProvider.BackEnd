@@ -2,8 +2,8 @@
 using FluentAssertions;
 using FluentValidation;
 using DispenserProvider.DataBase.Models;
-using DispenserProvider.Services.Validators.GenerateSignature;
-using DispenserProvider.Services.Validators.GenerateSignature.Models;
+using DispenserProvider.Services.Validators.Signature;
+using DispenserProvider.Services.Validators.Signature.Models;
 using DispenserProvider.Tests.Mocks.Services.Handlers.GenerateSignature.Web3;
 
 namespace DispenserProvider.Tests.Services.Validators.GenerateSignature;

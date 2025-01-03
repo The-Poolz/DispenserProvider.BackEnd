@@ -8,7 +8,7 @@ using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.Services.Handlers.GenerateSignature;
 using DispenserProvider.Services.Handlers.GenerateSignature.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature.Helpers;
-using DispenserProvider.Services.Validators.GenerateSignature.Models;
+using DispenserProvider.Services.Validators.Signature.Models;
 
 namespace DispenserProvider.Tests.Services.Handlers.GenerateSignature;
 

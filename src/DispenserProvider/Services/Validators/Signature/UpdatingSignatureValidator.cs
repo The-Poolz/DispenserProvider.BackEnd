@@ -2,7 +2,7 @@
 using EnvironmentManager.Extensions;
 using DispenserProvider.DataBase.Models;
 
-namespace DispenserProvider.Services.Validators.GenerateSignature;
+namespace DispenserProvider.Services.Validators.Signature;
 
 public class UpdatingSignatureValidator : AbstractValidator<DispenserDTO>
 {
