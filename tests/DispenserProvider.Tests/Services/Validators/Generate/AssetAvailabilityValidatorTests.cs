@@ -1,11 +1,11 @@
 ﻿using Xunit;
-using FluentValidation;
 using FluentAssertions;
+using FluentValidation;
 using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Validators.Signature;
 using DispenserProvider.Tests.Mocks.Services.Handlers.GenerateSignature.Web3;
 
-namespace DispenserProvider.Tests.Services.Validators.GenerateSignature;
+namespace DispenserProvider.Tests.Services.Validators.Generate;
 
 public class AssetAvailabilityValidatorTests
 {

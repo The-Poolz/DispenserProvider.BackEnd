@@ -6,7 +6,7 @@ using DispenserProvider.Services.Validators.Signature;
 using DispenserProvider.Services.Validators.Signature.Models;
 using DispenserProvider.Tests.Mocks.Services.Handlers.GenerateSignature.Web3;
 
-namespace DispenserProvider.Tests.Services.Validators.GenerateSignature;
+namespace DispenserProvider.Tests.Services.Validators.Generate;
 
 public class GenerateSignatureValidatorTests
 {
