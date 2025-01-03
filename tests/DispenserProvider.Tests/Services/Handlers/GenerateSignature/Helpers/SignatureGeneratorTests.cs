@@ -5,6 +5,7 @@ using FluentAssertions;
 using EnvironmentManager.Extensions;
 using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.Services.Handlers.GenerateSignature.Helpers;
+using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
 namespace DispenserProvider.Tests.Services.Handlers.GenerateSignature.Helpers;
 
@@ -32,7 +33,7 @@ public class SignatureGeneratorTests
             transactionDetail.WithdrawalDispenser = MockDispenserContext.Dispenser;
             var validUntil = DateTime.UtcNow.AddMinutes(10);
 
-            var signatureGenerator = new SignatureGenerator(secretManager.Object);
+            var signatureGenerator = new SignatureGenerator(secretManager.Object, new Mock<ISignerManager>().Object);
 
             var signature = signatureGenerator.GenerateSignature(transactionDetail, validUntil);
 

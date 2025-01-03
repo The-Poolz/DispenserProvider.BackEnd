@@ -17,6 +17,8 @@ public class RetrieveSignatureHandler(
 
         retrieveValidator.ValidateAndThrow(dispenser);
 
-        return new RetrieveSignatureResponse(dispenser, request);
+        var isRefund = dispenser.RefundDetail != null && dispenser.RefundDetail.ChainId == request.ChainId && dispenser.RefundDetail.PoolId == request.PoolId;
+
+        return new RetrieveSignatureResponse(dispenser, isRefund);
     }
 }

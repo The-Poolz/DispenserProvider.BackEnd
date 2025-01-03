@@ -6,7 +6,7 @@ namespace DispenserProvider.Services.Handlers.RetrieveSignature.Models;
 public class RetrieveSignatureResponse(Asset asset) : IHandlerResponse
 {
     public RetrieveSignatureResponse() : this(default!) { }
-    public RetrieveSignatureResponse(DispenserDTO dispenser, RetrieveSignatureRequest request) : this(new Asset(dispenser, request)) { }
+    public RetrieveSignatureResponse(DispenserDTO dispenser, bool isRefund) : this(new Asset(dispenser, isRefund)) { }
 
     public Asset Asset { get; } = asset;
 }
