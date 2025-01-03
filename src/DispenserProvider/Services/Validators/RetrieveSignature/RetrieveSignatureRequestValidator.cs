@@ -6,9 +6,7 @@ namespace DispenserProvider.Services.Validators.RetrieveSignature;
 
 public class RetrieveSignatureRequestValidator : AbstractValidator<DispenserDTO>
 {
-    public RetrieveSignatureRequestValidator(
-        AssetAvailabilityValidator assetValidator
-    )
+    public RetrieveSignatureRequestValidator(AssetAvailabilityValidator assetValidator)
     {
         ClassLevelCascadeMode = CascadeMode.Stop;
 
