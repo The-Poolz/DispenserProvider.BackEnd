@@ -10,7 +10,7 @@ public class RetrieveSignatureRequestValidator : AbstractValidator<RetrieveSigna
         ClassLevelCascadeMode = CascadeMode.Stop;
 
         RuleFor(x => x.Dispenser.LastUserSignature)
-            .Must(x => x != null)
+            .NotNull()
             .WithMessage("Signature for user, not found.");
 
         RuleFor(x => x.Dispenser.LastUserSignature)
