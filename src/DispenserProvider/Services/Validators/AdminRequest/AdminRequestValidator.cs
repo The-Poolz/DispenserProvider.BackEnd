@@ -5,8 +5,7 @@ using DispenserProvider.Services.Validators.AdminRequest.Models;
 
 namespace DispenserProvider.Services.Validators.AdminRequest;
 
-public class AdminRequestValidator<TMessage> : AbstractValidator<AdminValidationRequest<TMessage>>
-    where TMessage : IPlainMessage
+public class AdminRequestValidator : AbstractValidator<AdminValidationRequest>
 {
     public AdminRequestValidator(AuthContext authContext, IValidator<IEnumerable<EthereumAddress>> orderValidator)
     {
@@ -19,7 +18,7 @@ public class AdminRequestValidator<TMessage> : AbstractValidator<AdminValidation
             });
     }
 
-    private static bool IsValidAdmin(AdminValidationRequest<TMessage> request, AuthContext authContext) => authContext.Users
+    private static bool IsValidAdmin(AdminValidationRequest request, AuthContext authContext) => authContext.Users
         .Join(
             authContext.Roles,
             user => user.RoleId,

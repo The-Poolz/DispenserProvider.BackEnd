@@ -1,10 +1,8 @@
 ﻿using Newtonsoft.Json;
-using Net.Web3.EthereumWallet;
-using DispenserProvider.Services.Validators.AdminRequest.Models;
 
 namespace DispenserProvider.Services.Handlers.CreateAsset.Models;
 
-public class CreateAssetMessage : IPlainMessage
+public class CreateAssetMessage
 {
     [JsonRequired]
     public Schedule[] Schedules { get; set; } = [];
@@ -19,7 +17,4 @@ public class CreateAssetMessage : IPlainMessage
 
     [JsonRequired]
     public long PoolId { get; set; }
-
-    [JsonIgnore]
-    public IEnumerable<EthereumAddress> UsersToValidateOrder => Users.Select(x => x.UserAddress);
 }

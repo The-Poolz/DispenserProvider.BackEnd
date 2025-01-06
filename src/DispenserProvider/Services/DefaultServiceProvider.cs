@@ -54,8 +54,8 @@ public static class DefaultServiceProvider
     }
 
     private static IServiceCollection Default => new ServiceCollection()
-        .AddScoped<IValidator<AdminValidationRequest<CreateAssetMessage>>, AdminRequestValidator<CreateAssetMessage>>()
-        .AddScoped<IValidator<AdminValidationRequest<DeleteAssetMessage>>, AdminRequestValidator<DeleteAssetMessage>>()
+        .AddScoped<IValidator<AdminValidationRequest>, AdminRequestValidator>()
+        .AddScoped<IValidator<AdminValidationRequest>, AdminRequestValidator>()
         .AddScoped<IValidator<IEnumerable<EthereumAddress>>, OrderedUsersValidator>()
         .AddScoped<IValidator<GenerateSignatureValidatorRequest>, GenerateSignatureValidator>()
         .AddScoped<IValidator<RetrieveSignatureValidatorRequest>, RetrieveSignatureRequestValidator>()

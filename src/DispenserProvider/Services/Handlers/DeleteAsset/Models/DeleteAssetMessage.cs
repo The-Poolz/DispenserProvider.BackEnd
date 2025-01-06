@@ -1,11 +1,10 @@
 ﻿using Newtonsoft.Json;
 using Net.Web3.EthereumWallet;
 using DispenserProvider.DataBase.Models;
-using DispenserProvider.Services.Validators.AdminRequest.Models;
 
 namespace DispenserProvider.Services.Handlers.DeleteAsset.Models;
 
-public class DeleteAssetMessage : IPlainMessage
+public class DeleteAssetMessage
 {
     [JsonRequired]
     public long ChainId { get; set; }
@@ -21,7 +20,4 @@ public class DeleteAssetMessage : IPlainMessage
         key => key,
         value => DispenserDTO.GenerateId(value.Address, ChainId, PoolId)
     );
-
-    [JsonIgnore]
-    public IEnumerable<EthereumAddress> UsersToValidateOrder => Users;
 }

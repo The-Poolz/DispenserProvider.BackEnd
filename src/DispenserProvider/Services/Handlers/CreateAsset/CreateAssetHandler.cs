@@ -9,7 +9,7 @@ namespace DispenserProvider.Services.Handlers.CreateAsset;
 
 public class CreateAssetHandler(
     DispenserContext dispenserContext,
-    IValidator<AdminValidationRequest<CreateAssetMessage>> requestValidator,
+    IValidator<AdminValidationRequest> requestValidator,
     IValidator<IEnumerable<IValidatedScheduleItem>> scheduleValidator
 )
     : IRequestHandler<CreateAssetRequest, CreateAssetResponse>
@@ -18,7 +18,7 @@ public class CreateAssetHandler(
 
     public CreateAssetResponse Handle(CreateAssetRequest request)
     {
-        requestValidator.ValidateAndThrow(new AdminValidationRequest<CreateAssetMessage>(NameOfDispenserRole, request));
+        requestValidator.ValidateAndThrow(new AdminValidationRequest(NameOfDispenserRole, request));
         scheduleValidator.ValidateAndThrow(request.Message.Schedules);
 
         Save(request);

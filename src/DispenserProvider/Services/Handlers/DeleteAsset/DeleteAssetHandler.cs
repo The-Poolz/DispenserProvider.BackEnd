@@ -7,13 +7,13 @@ using DispenserProvider.Services.Handlers.DeleteAsset.Models.DatabaseWrappers;
 
 namespace DispenserProvider.Services.Handlers.DeleteAsset;
 
-public class DeleteAssetHandler(DispenserContext dispenserContext, IValidator<AdminValidationRequest<DeleteAssetMessage>> validator) : IRequestHandler<DeleteAssetRequest, DeleteAssetResponse>
+public class DeleteAssetHandler(DispenserContext dispenserContext, IValidator<AdminValidationRequest> validator) : IRequestHandler<DeleteAssetRequest, DeleteAssetResponse>
 {
     private const string NameOfDispenserRole = "DispenserAdmin";
 
     public DeleteAssetResponse Handle(DeleteAssetRequest request)
     {
-        validator.ValidateAndThrow(new AdminValidationRequest<DeleteAssetMessage>(NameOfDispenserRole, request));
+        validator.ValidateAndThrow(new AdminValidationRequest(NameOfDispenserRole, request));
 
         MarkAsDeleted(request);
 
