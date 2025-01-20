@@ -10,7 +10,7 @@ using ValidationSchedule = DispenserProvider.MessageTemplate.Models.Create.Sched
 
 namespace DispenserProvider.Services.Handlers.CreateAsset.Models;
 
-public class CreateAssetMessage : IValidatedMessage, IValidatedCreateMessage
+public class CreateAssetMessage : IValidatedMessage
 {
     [JsonRequired]
     public Schedule[] Schedules { get; set; } = [];

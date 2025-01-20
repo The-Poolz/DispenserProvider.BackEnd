@@ -1,11 +1,13 @@
 ﻿using Newtonsoft.Json;
 using Net.Web3.EthereumWallet;
 using DispenserProvider.DataBase.Models;
+using DispenserProvider.MessageTemplate.Models.Delete;
+using DispenserProvider.MessageTemplate.Models.Eip712;
 using DispenserProvider.Services.Validators.AdminRequest.Models;
 
 namespace DispenserProvider.Services.Handlers.DeleteAsset.Models;
 
-public class DeleteAssetMessage : IPlainMessage
+public class DeleteAssetMessage : IValidatedMessage
 {
     [JsonRequired]
     public long ChainId { get; set; }
@@ -23,5 +25,8 @@ public class DeleteAssetMessage : IPlainMessage
     );
 
     [JsonIgnore]
-    public IEnumerable<EthereumAddress> UsersToValidateOrder => Users;
+    public AbstractMessage Eip712Message => new DeleteMessage(ChainId, PoolId, Users);
+
+    [JsonIgnore]
+    public IEnumerable<EthereumAddress> UsersToValidate => Users;
 }

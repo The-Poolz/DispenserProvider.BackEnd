@@ -6,11 +6,7 @@ using DispenserProvider.Services.Handlers.CreateAsset.Models.DatabaseWrappers;
 
 namespace DispenserProvider.Services.Handlers.CreateAsset;
 
-public class CreateAssetHandler(
-    DispenserContext dispenserContext,
-    IValidator<CreateValidatorSettings> requestValidator
-)
-    : IRequestHandler<CreateAssetRequest, CreateAssetResponse>
+public class CreateAssetHandler(DispenserContext dispenserContext, IValidator<CreateValidatorSettings> requestValidator) : IRequestHandler<CreateAssetRequest, CreateAssetResponse>
 {
     private const string NameOfDispenserRole = "DispenserAdmin";
 

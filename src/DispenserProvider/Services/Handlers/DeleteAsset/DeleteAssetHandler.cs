@@ -1,19 +1,26 @@
 ﻿using System.Text;
 using FluentValidation;
 using DispenserProvider.DataBase;
+using DispenserProvider.MessageTemplate.Models.Validators;
 using DispenserProvider.Services.Handlers.DeleteAsset.Models;
-using DispenserProvider.Services.Validators.AdminRequest.Models;
 using DispenserProvider.Services.Handlers.DeleteAsset.Models.DatabaseWrappers;
 
 namespace DispenserProvider.Services.Handlers.DeleteAsset;
 
-public class DeleteAssetHandler(DispenserContext dispenserContext, IValidator<AdminValidationRequest<DeleteAssetMessage>> validator) : IRequestHandler<DeleteAssetRequest, DeleteAssetResponse>
+public class DeleteAssetHandler(DispenserContext dispenserContext, IValidator<DeleteValidatorSettings> validator) : IRequestHandler<DeleteAssetRequest, DeleteAssetResponse>
 {
     private const string NameOfDispenserRole = "DispenserAdmin";
 
     public DeleteAssetResponse Handle(DeleteAssetRequest request)
     {
-        validator.ValidateAndThrow(new AdminValidationRequest<DeleteAssetMessage>(NameOfDispenserRole, request));
+        validator.ValidateAndThrow(new DeleteValidatorSettings(
+            new AdminRequestValidatorSettings(
+                NameOfDispenserRole,
+                request.Signature,
+                request.Message.Eip712Message
+            ),
+            request.Message.UsersToValidate
+        ));
 
         MarkAsDeleted(request);
 
