@@ -1,24 +1,24 @@
 ﻿using Newtonsoft.Json;
 using Net.Web3.EthereumWallet;
 using Newtonsoft.Json.Converters;
-using TokenSchedule.FluentValidation.Models;
 
 namespace DispenserProvider.Services.Handlers.CreateAsset.Models;
 
-public class Schedule : IValidatedScheduleItem
+public class Schedule
 {
     [JsonRequired]
     public EthereumAddress ProviderAddress { get; set; } = null!;
 
     [JsonRequired]
-    public decimal Ratio { get; set; }
+    public string Ratio { get; set; } = null!;
 
     [JsonRequired]
+    [JsonProperty("StartTime")]
     [JsonConverter(typeof(UnixDateTimeConverter))]
-    [JsonProperty("StartTime", DefaultValueHandling = DefaultValueHandling.Ignore)]
     public DateTime StartDate { get; set; }
 
+    [JsonRequired]
+    [JsonProperty("FinishTime")]
     [JsonConverter(typeof(UnixDateTimeConverter))]
-    [JsonProperty("FinishTime", DefaultValueHandling = DefaultValueHandling.Ignore)]
-    public DateTime? FinishDate { get; set; }
+    public DateTime FinishDate { get; set; }
 }

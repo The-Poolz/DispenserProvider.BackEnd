@@ -3,7 +3,7 @@
 namespace DispenserProvider.Services.Validators.AdminRequest.Models;
 
 public class ValidatedAdminRequest<TMessage>
-    where TMessage : IPlainMessage
+    where TMessage : IValidatedMessage
 {
     [JsonRequired]
     public string Signature { get; set; } = null!;
