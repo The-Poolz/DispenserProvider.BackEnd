@@ -1,8 +1,10 @@
 using Amazon.Lambda.Core;
+using DispenserProvider.MessageTemplate.Models.Eip712;
 using DispenserProvider.Models;
 using DispenserProvider.Services;
 using EnvironmentManager.Static;
 using Microsoft.Extensions.DependencyInjection;
+using Nethereum.ABI.EIP712;
 using Nethereum.Signer;
 using Nethereum.Signer.EIP712;
 
@@ -23,12 +25,12 @@ public class DispenserProviderLambda(IServiceProvider serviceProvider)
     private static LambdaRequest SetRealSignature(LambdaRequest request)
     {
         var pk = EnvManager.GetRequired<string>("PRIVATE_KEY");
-        var signature = new Eip712TypedDataSigner().SignTypedDataV4(
-            request.CreateAssetRequest!.Message.Eip712Message,
-            request.CreateAssetRequest!.Message.Eip712Message.TypedData,
+        var signature = new Eip712TypedDataSigner().SignTypedDataV4<EIP712Domain>(
+            request.CreateAssetRequest!.Message.Eip712Message.TypedData.ToJson(),
             new EthECKey(pk)
         );
         Console.WriteLine(signature);
+        Console.WriteLine(request.CreateAssetRequest!.Message.Eip712Message.TypedData.ToJson());
         request.CreateAssetRequest.Signature = signature;
         return request;
     }
