@@ -1,6 +1,6 @@
 {
    "DeleteAssetRequest":{
-      "Signature":"0x1ca6e1e97d7983c09fa9faeb60083298aaa0b743d683f657fe0076f9cf9b17cf1f4ce10a1bd15d43986704c4112b74b182c31cec22de076b65f3ce323b1bf93e1b",
+      "Signature":"0x8c7c39de1cd085fefe820461e579fd8b11b504976f350a92fd3b4c61d3e79d8610f37e187fc67628f440318429d9ba2c29c025e0d1531c637f778e867c5b886a1c",
       "Message":{
          "ChainId":1,
          "PoolId":1,
