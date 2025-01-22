@@ -31,18 +31,18 @@ public class CreateAssetMessage : IValidatedMessage
         ? new CreateMessage(
             chainId: ChainId,
             poolId: PoolId,
-            schedules: Schedules.Select(x => new ValidationSchedule(x.ProviderAddress, x.Ratio, x.StartDate, HandleFinishDate(x.FinishDate))),
+            schedules: Schedules.Select(x => new ValidationSchedule(x.ProviderAddress, x.WeiRatio, x.StartDate, HandleFinishDate(x.FinishDate))),
             users: Users.Select(x => new ValidationUser(x.UserAddress, x.WeiAmount))
         )
         : new CreateMessageWithRefund(
             chainId: ChainId,
             poolId: PoolId,
-            schedules: Schedules.Select(x => new ValidationSchedule(x.ProviderAddress, x.Ratio, x.StartDate, HandleFinishDate(x.FinishDate))),
+            schedules: Schedules.Select(x => new ValidationSchedule(x.ProviderAddress, x.WeiRatio, x.StartDate, HandleFinishDate(x.FinishDate))),
             users: Users.Select(x => new ValidationUser(x.UserAddress, x.WeiAmount)),
             refund: new ValidationRefund(
                 chainId: Refund.ChainId,
                 poolId: Refund.PoolId,
-                ratio: Refund.Ratio,
+                ratio: Refund.WeiRatio,
                 dealProvider: Refund.DealProvider,
                 finishTime: Refund.FinishTime
             )

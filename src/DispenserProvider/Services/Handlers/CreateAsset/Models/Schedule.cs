@@ -10,7 +10,7 @@ public class Schedule
     public EthereumAddress ProviderAddress { get; set; } = null!;
 
     [JsonRequired]
-    public string Ratio { get; set; } = null!;
+    public string WeiRatio { get; set; } = null!;
 
     [JsonRequired]
     [JsonProperty("StartTime")]

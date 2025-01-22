@@ -11,14 +11,14 @@ public sealed class BuilderWrapper : BuilderDTO
         ProviderAddress = schedule.ProviderAddress;
         StartTime = schedule.StartDate;
         FinishTime = schedule.FinishDate.ToUnixTimestamp() == 0 ? null : schedule.FinishDate;
-        WeiAmount = user.WeiAmount.MultiplyWeiByRatio(schedule.Ratio.StringRatioToDecimal());
+        WeiAmount = user.WeiAmount.MultiplyWeiByRatio(schedule.WeiRatio.StringRatioToDecimal());
         TransactionDetail = transactionDetail;
     }
 
     public BuilderWrapper(User user, TransactionDetailWrapper transactionDetail, Refund refund)
     {
         ProviderAddress = refund.DealProvider;
-        WeiAmount = user.WeiAmount.MultiplyWeiByRatio(refund.Ratio.StringRatioToDecimal());
+        WeiAmount = user.WeiAmount.MultiplyWeiByRatio(refund.WeiRatio.StringRatioToDecimal());
         TransactionDetail = transactionDetail;
     }
 }

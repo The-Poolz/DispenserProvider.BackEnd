@@ -11,7 +11,7 @@ public class Refund
     public DateTime FinishTime { get; set; }
 
     [JsonRequired]
-    public string Ratio { get; set; } = null!;
+    public string WeiRatio { get; set; } = null!;
 
     [JsonRequired]
     public EthereumAddress DealProvider { get; set; } = null!;

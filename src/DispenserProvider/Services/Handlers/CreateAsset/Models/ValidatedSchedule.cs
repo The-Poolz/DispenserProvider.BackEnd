@@ -6,7 +6,7 @@ namespace DispenserProvider.Services.Handlers.CreateAsset.Models;
 
 public class ValidatedSchedule(Schedule schedule) : IValidatedScheduleItem
 {
-    public decimal Ratio { get; } = schedule.Ratio.StringRatioToDecimal();
+    public decimal Ratio { get; } = schedule.WeiRatio.StringRatioToDecimal();
     public DateTime StartDate { get; } = schedule.StartDate;
     public DateTime? FinishDate { get; } = schedule.FinishDate.ToUnixTimestamp() == 0 ? null : schedule.FinishDate;
 }

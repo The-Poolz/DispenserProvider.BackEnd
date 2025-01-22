@@ -29,13 +29,13 @@ internal class MockCreateAssetRequest : MockAssetRequest
                 ProviderAddress = "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
                 StartDate = DateTimeOffset.FromUnixTimeSeconds(1763586000).UtcDateTime,
                 FinishDate = DateTimeOffset.FromUnixTimeSeconds(0).UtcDateTime,
-                Ratio = "1000000000000000000"
+                WeiRatio = "1000000000000000000"
             }
         ],
         Refund = new Refund {
             PoolId = 1,
             ChainId = 56,
-            Ratio = "2000000000000000000",
+            WeiRatio = "2000000000000000000",
             FinishTime = DateTimeOffset.FromUnixTimeSeconds(1763544530).UtcDateTime,
             DealProvider = "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
         }
