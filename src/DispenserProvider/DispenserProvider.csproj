@@ -19,6 +19,7 @@
     <PackageReference Include="DispenserProvider.MessageTemplate" Version="1.0.2" />
     <PackageReference Include="Nethereum.ABI" Version="4.28.0" />
     <PackageReference Include="FluentValidation" Version="11.11.0" />
+    <PackageReference Include="Nethereum.Web3" Version="4.28.0" />
     <PackageReference Include="SecretsManager" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
