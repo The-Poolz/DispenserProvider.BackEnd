@@ -8,16 +8,10 @@ namespace DispenserProvider.Services.Handlers.CreateAsset;
 
 public class CreateAssetHandler(DispenserContext dispenserContext, IValidator<CreateValidatorSettings> requestValidator) : IRequestHandler<CreateAssetRequest, CreateAssetResponse>
 {
-    private const string NameOfDispenserRole = "DispenserAdmin";
-
     public CreateAssetResponse Handle(CreateAssetRequest request)
     {
         requestValidator.ValidateAndThrow(new CreateValidatorSettings(
-            new AdminRequestValidatorSettings(
-                nameOfRole: NameOfDispenserRole,
-                request.Signature,
-                request.Message.Eip712Message
-            ),
+            new AdminRequestValidatorSettings(request.Signature, request.Message.Eip712Message),
             request.Message.UsersToValidate,
             request.Message.ScheduleToValidate
         ));
