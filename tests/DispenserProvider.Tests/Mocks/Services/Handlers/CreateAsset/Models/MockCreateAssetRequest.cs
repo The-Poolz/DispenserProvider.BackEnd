@@ -1,11 +1,9 @@
-﻿using Newtonsoft.Json;
-using Nethereum.Signer;
-using DispenserProvider.Tests.Mocks.DataBase;
+﻿using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.Services.Handlers.CreateAsset.Models;
 
 namespace DispenserProvider.Tests.Mocks.Services.Handlers.CreateAsset.Models;
 
-internal static class MockCreateAssetRequest
+internal class MockCreateAssetRequest : MockAssetRequest
 {
     internal static CreateAssetRequest Request => new()
     {
@@ -13,15 +11,8 @@ internal static class MockCreateAssetRequest
         Message = Message
     };
 
-    internal static string Signature => new EthereumMessageSigner().EncodeUTF8AndSign(
-        message: JsonConvert.SerializeObject(Message, Formatting.None),
-        key: MockUsers.Admin.PrivateKey
-    );
-
-    internal static string UnauthorizedUserSignature => new EthereumMessageSigner().EncodeUTF8AndSign(
-        message: JsonConvert.SerializeObject(Message, Formatting.None),
-        key: MockUsers.UnauthorizedUser.PrivateKey
-    );
+    internal static string Signature => GenerateSignature(Message, MockUsers.Admin.PrivateKey);
+    internal static string UnauthorizedUserSignature => GenerateSignature(Message, MockUsers.UnauthorizedUser.PrivateKey);
 
     internal static CreateAssetMessage Message => new()
     {
@@ -36,15 +27,16 @@ internal static class MockCreateAssetRequest
         Schedules = [
             new Schedule {
                 ProviderAddress = "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-                StartDate = DateTimeOffset.FromUnixTimeSeconds(1763586000).DateTime,
-                Ratio = 1.0m
+                StartDate = DateTimeOffset.FromUnixTimeSeconds(1763586000).UtcDateTime,
+                FinishDate = DateTimeOffset.FromUnixTimeSeconds(0).UtcDateTime,
+                Ratio = "1000000000000000000"
             }
         ],
         Refund = new Refund {
             PoolId = 1,
             ChainId = 56,
-            Ratio = 2.0m,
-            FinishTime = DateTimeOffset.FromUnixTimeSeconds(1763544530).DateTime,
+            Ratio = "2000000000000000000",
+            FinishTime = DateTimeOffset.FromUnixTimeSeconds(1763544530).UtcDateTime,
             DealProvider = "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
         }
     };
