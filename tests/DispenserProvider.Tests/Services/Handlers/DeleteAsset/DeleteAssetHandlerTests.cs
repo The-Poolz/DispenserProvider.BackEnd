@@ -6,6 +6,7 @@ using FluentAssertions;
 using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.MessageTemplate.Validators;
 using DispenserProvider.Services.Handlers.DeleteAsset;
+using DispenserProvider.Tests.Mocks.Services.Validators;
 using DispenserProvider.Services.Handlers.DeleteAsset.Models;
 using DispenserProvider.Tests.Mocks.Services.Handlers.DeleteAsset.Models;
 
@@ -15,7 +16,7 @@ public class DeleteAssetHandlerTests
 {
     public class Handle
     {
-        private readonly DeleteValidator _requestValidator = new(MockAuthContext.Create());
+        private readonly DeleteValidator _requestValidator = new(new MockAdminValidationService());
 
         [Fact]
         internal void WhenValidationFailed_ShouldThrowException()
@@ -33,7 +34,7 @@ public class DeleteAssetHandlerTests
 
             testCode.Should().Throw<ValidationException>()
                 .Which.Errors.Should().ContainSingle()
-                .Which.ErrorMessage.Should().Be($"Recovered address '{MockUsers.UnauthorizedUser.Address}' is not '{MockAuthContext.Role.Name}'.");
+                .Which.ErrorMessage.Should().Be($"Recovered address '{MockUsers.UnauthorizedUser.Address}' is not valid.");
         }
 
         [Fact]

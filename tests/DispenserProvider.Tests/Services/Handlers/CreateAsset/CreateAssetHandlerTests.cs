@@ -6,6 +6,7 @@ using DispenserProvider.DataBase;
 using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.MessageTemplate.Validators;
 using DispenserProvider.Services.Handlers.CreateAsset;
+using DispenserProvider.Tests.Mocks.Services.Validators;
 using DispenserProvider.Services.Handlers.CreateAsset.Models;
 using DispenserProvider.Tests.Mocks.Services.Handlers.CreateAsset.Models;
 
@@ -23,7 +24,7 @@ public class CreateAssetHandlerTests
             _dispenserContext = MockDispenserContext.Create();
             _handler = new CreateAssetHandler(
                 dispenserContext: _dispenserContext,
-                requestValidator: new CreateValidator(MockAuthContext.Create())
+                requestValidator: new CreateValidator(new MockAdminValidationService())
             );
         }
 
@@ -40,7 +41,7 @@ public class CreateAssetHandlerTests
 
             testCode.Should().Throw<ValidationException>()
                 .Which.Errors.Should().ContainSingle()
-                .Which.ErrorMessage.Should().Be($"Recovered address '{MockUsers.UnauthorizedUser.Address}' is not '{MockAuthContext.Role.Name}'.");
+                .Which.ErrorMessage.Should().Be($"Recovered address '{MockUsers.UnauthorizedUser.Address}' is not valid.");
         }
 
         [Fact]
