@@ -51,7 +51,7 @@ public static class DefaultServiceProvider
         };
         return services.BuildServiceProvider();
     }
-
+    
     private static IServiceCollection Default => new ServiceCollection()
         .AddScoped<IValidator<CreateValidatorSettings>, CreateValidator>()
         .AddScoped<IValidator<DeleteValidatorSettings>, DeleteValidator>()
@@ -76,13 +76,13 @@ public static class DefaultServiceProvider
         .AddScoped<IHandlerFactory, HandlerFactory>();
 
     private static IServiceCollection Prod => new ServiceCollection()
-        .AddDbContext<DispenserContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Prod)))
+        .AddDbContextFactory<DispenserContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Prod)))
         .AddDbContext<AuthContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Prod)))
         .AddDbContext<CovalentContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Prod)))
         .AddScoped<ISignerManager, SignerManager>();
 
     private static IServiceCollection Stage => new ServiceCollection()
-        .AddDbContext<DispenserContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Staging, "DispenserStage")))
+        .AddDbContextFactory<DispenserContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Staging, "DispenserStage")))
         .AddDbContext<AuthContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Staging, "AuthStage")))
         .AddDbContext<CovalentContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Staging, "DownloaderStage")))
         .AddScoped<ISignerManager, EnvSignerManager>();

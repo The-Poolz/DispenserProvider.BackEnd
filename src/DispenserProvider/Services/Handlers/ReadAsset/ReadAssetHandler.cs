@@ -4,10 +4,11 @@ using DispenserProvider.Services.Handlers.ReadAsset.Models;
 
 namespace DispenserProvider.Services.Handlers.ReadAsset;
 
-public class ReadAssetHandler(DispenserContext dispenserContext) : IRequestHandler<ReadAssetRequest, ReadAssetResponse>
+public class ReadAssetHandler(IDbContextFactory<DispenserContext> dispenserContextFactory) : IRequestHandler<ReadAssetRequest, ReadAssetResponse>
 {
     public ReadAssetResponse Handle(ReadAssetRequest request)
     {
+        using var dispenserContext = dispenserContextFactory.CreateDbContext();
         var assets = request.AssetContext.Select(assetContext =>
             new Asset(assetContext, dispenserContext.TransactionDetails
                 .Where(x =>

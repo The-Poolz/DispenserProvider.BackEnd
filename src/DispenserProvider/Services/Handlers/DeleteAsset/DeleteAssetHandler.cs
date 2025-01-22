@@ -1,13 +1,14 @@
 ﻿using System.Text;
 using FluentValidation;
 using DispenserProvider.DataBase;
+using Microsoft.EntityFrameworkCore;
 using DispenserProvider.MessageTemplate.Models.Validators;
 using DispenserProvider.Services.Handlers.DeleteAsset.Models;
 using DispenserProvider.Services.Handlers.DeleteAsset.Models.DatabaseWrappers;
 
 namespace DispenserProvider.Services.Handlers.DeleteAsset;
 
-public class DeleteAssetHandler(DispenserContext dispenserContext, IValidator<DeleteValidatorSettings> validator) : IRequestHandler<DeleteAssetRequest, DeleteAssetResponse>
+public class DeleteAssetHandler(IDbContextFactory<DispenserContext> dispenserContextFactory, IValidator<DeleteValidatorSettings> validator) : IRequestHandler<DeleteAssetRequest, DeleteAssetResponse>
 {
     public DeleteAssetResponse Handle(DeleteAssetRequest request)
     {
@@ -23,6 +24,7 @@ public class DeleteAssetHandler(DispenserContext dispenserContext, IValidator<De
 
     private void MarkAsDeleted(DeleteAssetRequest request)
     {
+        using var dispenserContext = dispenserContextFactory.CreateDbContext();
         var dispensers = dispenserContext.Dispenser
             .Where(d => d.DeletionLogSignature == null && request.Message.ToDelete.Select(x => x.Value).Contains(d.Id))
             .ToList();
