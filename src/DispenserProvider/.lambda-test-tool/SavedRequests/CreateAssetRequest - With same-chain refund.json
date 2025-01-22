@@ -17,19 +17,19 @@
          "Schedules":[
             {
                "ProviderAddress":"0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-               "Ratio":"500000000000000000",
+               "WeiRatio":"500000000000000000",
                "StartTime":1763486000,
                "FinishTime":0
             },
             {
                "ProviderAddress":"0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-               "Ratio":"300000000000000000",
+               "WeiRatio":"300000000000000000",
                "StartTime":1763586000,
                "FinishTime":0
             },
             {
                "ProviderAddress":"0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-               "Ratio":"200000000000000000",
+               "WeiRatio":"200000000000000000",
                "StartTime":1763586000,
                "FinishTime":1763758800
             }
@@ -37,7 +37,7 @@
          "Refund":{
             "ChainId":1,
             "PoolId":5,
-            "Ratio":"800000000000000000",
+            "WeiRatio":"800000000000000000",
             "DealProvider":"0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
             "FinishTime":1763544530
          }
