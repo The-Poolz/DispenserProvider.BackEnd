@@ -1,11 +1,9 @@
-﻿using Newtonsoft.Json;
-using Nethereum.Signer;
-using DispenserProvider.Tests.Mocks.DataBase;
+﻿using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.Services.Handlers.DeleteAsset.Models;
 
 namespace DispenserProvider.Tests.Mocks.Services.Handlers.DeleteAsset.Models;
 
-internal class MockDeleteAssetRequest
+internal class MockDeleteAssetRequest : MockAssetRequest
 {
     internal static DeleteAssetRequest Request => new()
     {
@@ -35,9 +33,4 @@ internal class MockDeleteAssetRequest
             "0x0000000000000000000000000000000000000102"
         ]
     };
-
-    private static string GenerateSignature(DeleteAssetMessage message, EthECKey key) => new EthereumMessageSigner().EncodeUTF8AndSign(
-        message: JsonConvert.SerializeObject(message, Formatting.None),
-        key: key
-    );
 }

@@ -3,10 +3,10 @@ using System.Net;
 using FluentAssertions;
 using FluentValidation;
 using DispenserProvider.DataBase;
-using TokenSchedule.FluentValidation;
 using DispenserProvider.Tests.Mocks.DataBase;
+using DispenserProvider.MessageTemplate.Validators;
 using DispenserProvider.Services.Handlers.CreateAsset;
-using DispenserProvider.Services.Validators.AdminRequest;
+using DispenserProvider.Tests.Mocks.Services.Validators;
 using DispenserProvider.Services.Handlers.CreateAsset.Models;
 using DispenserProvider.Tests.Mocks.Services.Handlers.CreateAsset.Models;
 
@@ -16,16 +16,15 @@ public class CreateAssetHandlerTests
 {
     public class Handle
     {
-        private readonly CreateAssetHandler handler;
-        private readonly DispenserContext dispenserContext;
+        private readonly CreateAssetHandler _handler;
+        private readonly DispenserContext _dispenserContext;
 
         public Handle()
         {
-            dispenserContext = MockDispenserContext.Create();
-            handler = new CreateAssetHandler(
-                dispenserContext: dispenserContext,
-                requestValidator: new AdminRequestValidator<CreateAssetMessage>(MockAuthContext.Create(), new OrderedUsersValidator()),
-                scheduleValidator: new ScheduleValidator()
+            _dispenserContext = MockDispenserContext.Create();
+            _handler = new CreateAssetHandler(
+                dispenserContext: _dispenserContext,
+                requestValidator: new CreateValidator(new MockAdminValidationService())
             );
         }
 
@@ -38,33 +37,34 @@ public class CreateAssetHandlerTests
                 Signature = MockCreateAssetRequest.UnauthorizedUserSignature
             };
 
-            var testCode = () => handler.Handle(request);
+            var testCode = () => _handler.Handle(request);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage($"Validation failed: {Environment.NewLine} -- : Recovered address '{MockUsers.UnauthorizedUser.Address}' is not '{MockAuthContext.Role.Name}'. Severity: Error");
+                .Which.Errors.Should().ContainSingle()
+                .Which.ErrorMessage.Should().Be($"Recovered address '{MockUsers.UnauthorizedUser.Address}' is not valid.");
         }
 
         [Fact]
         internal void WhenSavingSuccessfully_ShouldContextContainsExpectedEntities()
         {
-            var response = handler.Handle(MockCreateAssetRequest.Request);
+            var response = _handler.Handle(MockCreateAssetRequest.Request);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
-            dispenserContext.Logs.ToArray().Should().ContainSingle(x =>
+            _dispenserContext.Logs.ToArray().Should().ContainSingle(x =>
                 x.Signature == MockDispenserContext.Log.Signature &&
                 x.IsCreation == true
             );
-            dispenserContext.Dispenser.ToArray().Should().ContainSingle(x =>
+            _dispenserContext.Dispenser.ToArray().Should().ContainSingle(x =>
                 x.Id == MockDispenserContext.Dispenser.Id && 
                 x.UserAddress == MockDispenserContext.Dispenser.UserAddress &&
                 x.RefundFinishTime == MockDispenserContext.Dispenser.RefundFinishTime
             );
-            dispenserContext.TransactionDetails.ToArray().Should().ContainSingle(x =>
+            _dispenserContext.TransactionDetails.ToArray().Should().ContainSingle(x =>
                 x.Id == MockDispenserContext.TransactionDetail.Id &&
                 x.PoolId == MockDispenserContext.TransactionDetail.PoolId &&
                 x.ChainId == MockDispenserContext.TransactionDetail.ChainId
             );
-            dispenserContext.Builders.ToArray().Should().HaveCount(2);
+            _dispenserContext.Builders.ToArray().Should().HaveCount(2);
         }
     }
 }

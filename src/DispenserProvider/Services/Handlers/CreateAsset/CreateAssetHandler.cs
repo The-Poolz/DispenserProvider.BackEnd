@@ -1,25 +1,20 @@
 ﻿using FluentValidation;
 using DispenserProvider.DataBase;
-using TokenSchedule.FluentValidation.Models;
+using DispenserProvider.MessageTemplate.Models.Validators;
 using DispenserProvider.Services.Handlers.CreateAsset.Models;
-using DispenserProvider.Services.Validators.AdminRequest.Models;
 using DispenserProvider.Services.Handlers.CreateAsset.Models.DatabaseWrappers;
 
 namespace DispenserProvider.Services.Handlers.CreateAsset;
 
-public class CreateAssetHandler(
-    DispenserContext dispenserContext,
-    IValidator<AdminValidationRequest<CreateAssetMessage>> requestValidator,
-    IValidator<IEnumerable<IValidatedScheduleItem>> scheduleValidator
-)
-    : IRequestHandler<CreateAssetRequest, CreateAssetResponse>
+public class CreateAssetHandler(DispenserContext dispenserContext, IValidator<CreateValidatorSettings> requestValidator) : IRequestHandler<CreateAssetRequest, CreateAssetResponse>
 {
-    private const string NameOfDispenserRole = "DispenserAdmin";
-
     public CreateAssetResponse Handle(CreateAssetRequest request)
     {
-        requestValidator.ValidateAndThrow(new AdminValidationRequest<CreateAssetMessage>(NameOfDispenserRole, request));
-        scheduleValidator.ValidateAndThrow(request.Message.Schedules);
+        requestValidator.ValidateAndThrow(new CreateValidatorSettings(
+            new AdminRequestValidatorSettings(request.Signature, request.Message.Eip712Message),
+            request.Message.UsersToValidate,
+            request.Message.ScheduleToValidate
+        ));
 
         Save(request);
 

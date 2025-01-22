@@ -1,6 +1,6 @@
 {
    "CreateAssetRequest":{
-      "Signature":"0xfdfbbb533af39f08d872311a1970c30f70c7fc5fae7ed1205e9275c7703b8f93442c8c89ca5547065708a9e59feeb73b855dac2c2df88d56aa7b74851fdc5fa81c",
+      "Signature":"0xe3657e63c115eb155b3b41b5c25984e3f52c0aa446210345a63526ef0e1226186d5ad6ac2a21a401d2d8c1c28878239a44903050efc83d8123b0936b16bb28751b",
       "Message":{
          "ChainId":1,
          "PoolId":3,

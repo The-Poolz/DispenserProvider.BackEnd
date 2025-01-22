@@ -2,23 +2,23 @@
 using CovalentDb;
 using SecretsManager;
 using FluentValidation;
-using Net.Web3.EthereumWallet;
 using DispenserProvider.Options;
 using DispenserProvider.DataBase;
 using EnvironmentManager.Extensions;
 using Microsoft.EntityFrameworkCore;
-using TokenSchedule.FluentValidation;
 using ConfiguredSqlConnection.Extensions;
 using DispenserProvider.Services.Database;
 using DispenserProvider.Services.Handlers;
-using TokenSchedule.FluentValidation.Models;
 using Microsoft.Extensions.DependencyInjection;
+using DispenserProvider.MessageTemplate.Services;
+using DispenserProvider.MessageTemplate.Validators;
 using DispenserProvider.Services.Handlers.ReadAsset;
 using DispenserProvider.Services.Handlers.CreateAsset;
 using DispenserProvider.Services.Handlers.DeleteAsset;
 using DispenserProvider.Services.Validators.Signature;
 using DispenserProvider.Services.Handlers.ListOfAssets;
 using DispenserProvider.Services.Validators.AdminRequest;
+using DispenserProvider.MessageTemplate.Models.Validators;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using DispenserProvider.Services.Handlers.ReadAsset.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature;
@@ -27,7 +27,6 @@ using DispenserProvider.Services.Handlers.CreateAsset.Models;
 using DispenserProvider.Services.Handlers.DeleteAsset.Models;
 using DispenserProvider.Services.Validators.Signature.Models;
 using DispenserProvider.Services.Handlers.ListOfAssets.Models;
-using DispenserProvider.Services.Validators.AdminRequest.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 using DispenserProvider.Services.Handlers.GenerateSignature.Models;
 using DispenserProvider.Services.Handlers.RetrieveSignature.Models;
@@ -54,12 +53,11 @@ public static class DefaultServiceProvider
     }
 
     private static IServiceCollection Default => new ServiceCollection()
-        .AddScoped<IValidator<AdminValidationRequest<CreateAssetMessage>>, AdminRequestValidator<CreateAssetMessage>>()
-        .AddScoped<IValidator<AdminValidationRequest<DeleteAssetMessage>>, AdminRequestValidator<DeleteAssetMessage>>()
-        .AddScoped<IValidator<IEnumerable<EthereumAddress>>, OrderedUsersValidator>()
+        .AddScoped<IValidator<CreateValidatorSettings>, CreateValidator>()
+        .AddScoped<IValidator<DeleteValidatorSettings>, DeleteValidator>()
+        .AddScoped<IAdminValidationService, AdminValidationService>()
         .AddScoped<IValidator<GenerateSignatureValidatorRequest>, GenerateSignatureValidator>()
         .AddScoped<IValidator<RetrieveSignatureValidatorRequest>, RetrieveSignatureRequestValidator>()
-        .AddScoped<IValidator<IEnumerable<IValidatedScheduleItem>>, ScheduleValidator>()
         .AddScoped<UpdatingSignatureValidator>()
         .AddScoped<RefundSignatureValidator>()
         .AddScoped<AssetAvailabilityValidator>()
