@@ -1,7 +1,7 @@
 ﻿using DispenserProvider.DataBase;
 using EnvironmentManager.Extensions;
-using DispenserProvider.DataBase.Models;
 using Microsoft.EntityFrameworkCore;
+using DispenserProvider.DataBase.Models;
 
 namespace DispenserProvider.Services.Handlers.GenerateSignature.Helpers;
 
@@ -21,7 +21,7 @@ public class SignatureProcessor(IDbContextFactory<DispenserContext> dispenserCon
             Dispenser = dispenser
         };
 
-        using var dispenserContext = dispenserContextFactory.CreateDbContext();
+        var dispenserContext = dispenserContextFactory.CreateDbContext();
         dispenserContext.Signatures.Add(signature);
         dispenserContext.SaveChanges();
 

@@ -10,7 +10,7 @@ public class ListOfAssetsHandlerTests
 {
     public class Handle
     {
-        private readonly ListOfAssetsHandler handler = new(MockDispenserContext.Create(seed: true));
+        private readonly ListOfAssetsHandler _handler = new(new MockDbContextFactory(seed: true));
 
         [Fact]
         internal void WhenAssetsFound_ShouldReturnsExpectedAssets()
@@ -19,7 +19,7 @@ public class ListOfAssetsHandlerTests
                 UserAddress = MockDispenserContext.Dispenser.UserAddress
             };
 
-            var response = handler.Handle(request);
+            var response = _handler.Handle(request);
 
             response.Assets.Should().HaveCount(1)
                 .And.ContainSingle(x =>
@@ -42,7 +42,7 @@ public class ListOfAssetsHandlerTests
                 UserAddress = "0x0000000000000000000000000000000000000101"
             };
 
-            var response = handler.Handle(request);
+            var response = _handler.Handle(request);
 
             response.Assets.Should().BeEmpty();
         }

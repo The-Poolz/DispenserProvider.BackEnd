@@ -24,7 +24,7 @@ public class CreateAssetHandler(IDbContextFactory<DispenserContext> dispenserCon
 
     private void Save(CreateAssetRequest request)
     {
-        using var dispenserContext = dispenserContextFactory.CreateDbContext();
+        var dispenserContext = dispenserContextFactory.CreateDbContext();
         dispenserContext.Logs.Add(new LogWrapper(request.Signature));
 
         foreach (var user in request.Message.Users)

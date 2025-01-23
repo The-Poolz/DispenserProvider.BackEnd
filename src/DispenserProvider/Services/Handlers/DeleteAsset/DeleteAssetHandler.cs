@@ -24,7 +24,7 @@ public class DeleteAssetHandler(IDbContextFactory<DispenserContext> dispenserCon
 
     private void MarkAsDeleted(DeleteAssetRequest request)
     {
-        using var dispenserContext = dispenserContextFactory.CreateDbContext();
+        var dispenserContext = dispenserContextFactory.CreateDbContext();
         var dispensers = dispenserContext.Dispenser
             .Where(d => d.DeletionLogSignature == null && request.Message.ToDelete.Select(x => x.Value).Contains(d.Id))
             .ToList();

@@ -21,19 +21,19 @@ public class SignatureProcessorTests
         internal void WhenSavedSuccessfully()
         {
             const string signature = "0x";
-            var context = MockDispenserContext.Create(seed: true);
+            var dbFactory = new MockDbContextFactory();
             var signatureGenerator = new Mock<ISignatureGenerator>();
             signatureGenerator.Setup(x => x.GenerateSignature(It.IsAny<TransactionDetailDTO>(), It.IsAny<DateTime>()))
                 .Returns(signature);
 
             const bool isRefund = false;
-            var dispenser = context.Dispenser.First();
+            var dispenser = dbFactory.Current.Dispenser.First();
 
-            var signatureProcessor = new SignatureProcessor(context, signatureGenerator.Object);
+            var signatureProcessor = new SignatureProcessor(dbFactory, signatureGenerator.Object);
 
             var response = signatureProcessor.SaveSignature(dispenser, isRefund);
 
-            context.Signatures.ToArray().Should().HaveCount(1)
+            dbFactory.Current.Signatures.ToArray().Should().HaveCount(1)
                 .And.ContainSingle(x =>
                     x.IsRefund == isRefund &&
                     x.DispenserId == MockDispenserContext.Dispenser.Id &&
