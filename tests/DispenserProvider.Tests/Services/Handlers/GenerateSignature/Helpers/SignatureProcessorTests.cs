@@ -21,7 +21,7 @@ public class SignatureProcessorTests
         internal void WhenSavedSuccessfully()
         {
             const string signature = "0x";
-            var dbFactory = new MockDbContextFactory();
+            var dbFactory = new MockDbContextFactory(seed: true);
             var signatureGenerator = new Mock<ISignatureGenerator>();
             signatureGenerator.Setup(x => x.GenerateSignature(It.IsAny<TransactionDetailDTO>(), It.IsAny<DateTime>()))
                 .Returns(signature);
