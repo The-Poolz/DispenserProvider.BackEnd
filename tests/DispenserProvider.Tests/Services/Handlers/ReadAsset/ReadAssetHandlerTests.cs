@@ -10,7 +10,7 @@ public class ReadAssetHandlerTests
 {
     public class Handle
     {
-        private readonly ReadAssetHandler handler = new(MockDispenserContext.Create(seed: true));
+        private readonly ReadAssetHandler _handler = new(new MockDbContextFactory(seed: true));
 
         [Fact]
         internal void WhenAssetFound_ShouldReturnsExpectedAsset()
@@ -24,7 +24,7 @@ public class ReadAssetHandlerTests
                 ]
             };
 
-            var response = handler.Handle(request);
+            var response = _handler.Handle(request);
 
             response.Assets.Should().HaveCount(1)
                 .And.ContainSingle(asset =>
@@ -59,7 +59,7 @@ public class ReadAssetHandlerTests
                 ]
             };
 
-            var response = handler.Handle(request);
+            var response = _handler.Handle(request);
 
             response.Assets.Should().HaveCount(1)
                 .And.ContainSingle(asset =>

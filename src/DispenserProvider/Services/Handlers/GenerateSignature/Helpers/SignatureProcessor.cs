@@ -1,10 +1,11 @@
 ﻿using DispenserProvider.DataBase;
 using EnvironmentManager.Extensions;
+using Microsoft.EntityFrameworkCore;
 using DispenserProvider.DataBase.Models;
 
 namespace DispenserProvider.Services.Handlers.GenerateSignature.Helpers;
 
-public class SignatureProcessor(DispenserContext dispenserContext, ISignatureGenerator signatureGenerator) : ISignatureProcessor
+public class SignatureProcessor(IDbContextFactory<DispenserContext> dispenserContextFactory, ISignatureGenerator signatureGenerator) : ISignatureProcessor
 {
     public DateTime SaveSignature(DispenserDTO dispenser, bool isRefund)
     {
@@ -17,9 +18,10 @@ public class SignatureProcessor(DispenserContext dispenserContext, ISignatureGen
             ValidUntil = validUntil,
             ValidFrom = DateTime.UtcNow + TimeSpan.FromSeconds(Env.VALID_FROM_OFFSET_IN_SECONDS.GetRequired<int>()),
             IsRefund = isRefund,
-            Dispenser = dispenser
+            DispenserId = dispenser.Id
         };
 
+        var dispenserContext = dispenserContextFactory.CreateDbContext();
         dispenserContext.Signatures.Add(signature);
         dispenserContext.SaveChanges();
 

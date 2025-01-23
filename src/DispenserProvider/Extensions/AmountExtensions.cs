@@ -1,5 +1,5 @@
-﻿using System.Numerics;
-using Nethereum.Util;
+﻿using Nethereum.Util;
+using System.Numerics;
 
 namespace DispenserProvider.Extensions;
 

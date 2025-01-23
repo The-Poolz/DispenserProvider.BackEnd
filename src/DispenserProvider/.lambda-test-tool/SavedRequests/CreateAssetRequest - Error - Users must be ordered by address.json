@@ -1,6 +1,6 @@
 {
    "CreateAssetRequest":{
-      "Signature":"0x1ad671eaa4782bceff9843d3346472fcabfa89d75614e374cc8ee8bcbe441278494724bd6e435660193ac9d44691b103abddd0697279b3e280b84090b67572641b",
+      "Signature":"0x4345a362c7e0fc2470f0c86c2adf0050448b47bf30ac5f81ac8a093a8235756f0e5c13f5622e8be82fc3b55951efb3d7cc0b6ee3bd2bb7d0fe9ca3a7964fa9a21c",
       "Message":{
          "ChainId":1,
          "PoolId":3,
@@ -17,17 +17,19 @@
          "Schedules":[
             {
                "ProviderAddress":"0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-               "Ratio":0.5,
-               "StartTime":1763486000
+               "WeiRatio":"500000000000000000",
+               "StartTime":1763486000,
+               "FinishTime":0
             },
             {
                "ProviderAddress":"0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-               "Ratio":0.3,
-               "StartTime":1763586000
+               "WeiRatio":"300000000000000000",
+               "StartTime":1763586000,
+               "FinishTime":0
             },
             {
                "ProviderAddress":"0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-               "Ratio":0.2,
+               "WeiRatio":"200000000000000000",
                "StartTime":1763586000,
                "FinishTime":1763758800
             }

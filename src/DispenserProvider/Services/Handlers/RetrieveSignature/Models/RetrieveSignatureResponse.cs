@@ -2,4 +2,9 @@
 
 namespace DispenserProvider.Services.Handlers.RetrieveSignature.Models;
 
-public class RetrieveSignatureResponse : IHandlerResponse;
+public class RetrieveSignatureResponse(Asset asset) : IHandlerResponse
+{
+    public RetrieveSignatureResponse() : this(default!) { }
+
+    public Asset Asset { get; } = asset;
+}

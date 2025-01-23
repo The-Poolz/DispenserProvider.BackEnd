@@ -4,8 +4,9 @@ using System.Text;
 using FluentValidation;
 using FluentAssertions;
 using DispenserProvider.Tests.Mocks.DataBase;
+using DispenserProvider.MessageTemplate.Validators;
 using DispenserProvider.Services.Handlers.DeleteAsset;
-using DispenserProvider.Services.Validators.AdminRequest;
+using DispenserProvider.Tests.Mocks.Services.Validators;
 using DispenserProvider.Services.Handlers.DeleteAsset.Models;
 using DispenserProvider.Tests.Mocks.Services.Handlers.DeleteAsset.Models;
 
@@ -15,16 +16,13 @@ public class DeleteAssetHandlerTests
 {
     public class Handle
     {
-        private readonly AdminRequestValidator<DeleteAssetMessage> requestValidator = new(
-            MockAuthContext.Create(),
-            new OrderedUsersValidator()
-        );
+        private readonly DeleteValidator _requestValidator = new(new MockAdminValidationService());
 
         [Fact]
         internal void WhenValidationFailed_ShouldThrowException()
         {
-            var dispenserContext = MockDispenserContext.Create();
-            var handler = new DeleteAssetHandler(dispenserContext, requestValidator);
+            var dbFactory = new MockDbContextFactory(seed: false);
+            var handler = new DeleteAssetHandler(dbFactory, _requestValidator);
 
             var request = new DeleteAssetRequest
             {
@@ -35,14 +33,15 @@ public class DeleteAssetHandlerTests
             var testCode = () => handler.Handle(request);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage($"Validation failed: {Environment.NewLine} -- : Recovered address '{MockUsers.UnauthorizedUser.Address}' is not '{MockAuthContext.Role.Name}'. Severity: Error");
+                .Which.Errors.Should().ContainSingle()
+                .Which.ErrorMessage.Should().Be($"Recovered address '{MockUsers.UnauthorizedUser.Address}' is not valid.");
         }
 
         [Fact]
         internal void WhenRequestMessageIsInvalid_ShouldThrowException()
         {
-            var dispenserContext = MockDispenserContext.Create(seed: true);
-            var handler = new DeleteAssetHandler(dispenserContext, requestValidator);
+            var dbFactory = new MockDbContextFactory(seed: true);
+            var handler = new DeleteAssetHandler(dbFactory, _requestValidator);
 
             var request = new DeleteAssetRequest
             {
@@ -66,17 +65,18 @@ public class DeleteAssetHandlerTests
         [Fact]
         internal void WhenMarkedAsDeletedSuccessfully_ShouldContextUpdatedSuccessfully()
         {
-            var dispenserContext = MockDispenserContext.Create(seed: true);
-            var handler = new DeleteAssetHandler(dispenserContext, requestValidator);
+            var dbFactory = new MockDbContextFactory(seed: true);
+            var handler = new DeleteAssetHandler(dbFactory, _requestValidator);
 
             var response = handler.Handle(MockDeleteAssetRequest.Request);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
-            dispenserContext.Logs.ToArray().Should().ContainSingle(x =>
+
+            dbFactory.Current.Logs.ToArray().Should().ContainSingle(x =>
                 x.Signature == MockDeleteAssetRequest.Request.Signature &&
                 x.IsCreation == false
             );
-            dispenserContext.Dispenser.ToArray().Should().ContainSingle(x =>
+            dbFactory.Current.Dispenser.ToArray().Should().ContainSingle(x =>
                 x.Id == MockDispenserContext.Dispenser.Id &&
                 x.UserAddress == MockDispenserContext.Dispenser.UserAddress &&
                 x.RefundFinishTime == MockDispenserContext.Dispenser.RefundFinishTime &&

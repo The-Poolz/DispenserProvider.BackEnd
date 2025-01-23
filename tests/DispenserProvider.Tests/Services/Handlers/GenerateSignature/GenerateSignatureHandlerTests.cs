@@ -1,13 +1,14 @@
-﻿using DispenserProvider.DataBase.Models;
-using Moq;
+﻿using Moq;
 using Xunit;
 using FluentValidation;
 using FluentAssertions;
+using DispenserProvider.DataBase.Models;
+using DispenserProvider.Services.Database;
 using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.Services.Handlers.GenerateSignature;
+using DispenserProvider.Services.Validators.Signature.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature.Helpers;
-using DispenserProvider.Services.Validators.GenerateSignature.Models;
 
 namespace DispenserProvider.Tests.Services.Handlers.GenerateSignature;
 
@@ -33,7 +34,7 @@ public class GenerateSignatureHandlerTests
         internal void WhenDispenserNotFound_ShouldThrowException()
         {
             var handler = new GenerateSignatureHandler(
-                MockDispenserContext.Create(seed: false),
+                new DispenserManager(new MockDbContextFactory(seed: false)),
                 new Mock<ISignatureProcessor>().Object,
                 new Mock<IValidator<GenerateSignatureValidatorRequest>>().Object
             );
@@ -48,7 +49,7 @@ public class GenerateSignatureHandlerTests
         internal void WhenDispenserFoundAndIsNotRefund_ShouldReturnExpectedResult()
         {
             var handler = new GenerateSignatureHandler(
-                MockDispenserContext.Create(seed: true),
+                new DispenserManager(new MockDbContextFactory(seed: true)),
                 new Mock<ISignatureProcessor>().Object,
                 new Mock<IValidator<GenerateSignatureValidatorRequest>>().Object
             );
@@ -61,19 +62,19 @@ public class GenerateSignatureHandlerTests
         [Fact]
         internal void When_DispenserFound_AndIsRefund_ShouldReturnExpectedResult()
         {
-            var context = MockDispenserContext.Create(seed: true);
+            var dispenserContextFactory = new MockDbContextFactory(seed: true);
             var refundDetail = new TransactionDetailDTO
             {
                 Id = 2,
                 ChainId = _refundRequest.ChainId,
                 PoolId = _refundRequest.PoolId,
-                RefundDispenser = context.Dispenser.First()
+                RefundDispenser = dispenserContextFactory.Current.Dispenser.First()
             };
-            context.Add(refundDetail);
-            context.SaveChanges();
+            dispenserContextFactory.Current.Add(refundDetail);
+            dispenserContextFactory.Current.SaveChanges();
 
             var handler = new GenerateSignatureHandler(
-                context,
+                new DispenserManager(dispenserContextFactory),
                 new Mock<ISignatureProcessor>().Object,
                 new Mock<IValidator<GenerateSignatureValidatorRequest>>().Object
             );

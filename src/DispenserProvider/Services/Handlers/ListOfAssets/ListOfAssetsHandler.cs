@@ -7,15 +7,12 @@ using DispenserProvider.Services.Handlers.ListOfAssets.Models.DatabaseWrappers;
 
 namespace DispenserProvider.Services.Handlers.ListOfAssets;
 
-public class ListOfAssetsHandler(
-    DispenserContext dispenserContext,
-    AssetAvailabilityValidator assetValidator
-)
-    : IRequestHandler<ListOfAssetsRequest, ListOfAssetsResponse>
+public class ListOfAssetsHandler(IDbContextFactory<DispenserContext> dispenserContextFactory) : IRequestHandler<ListOfAssetsRequest, ListOfAssetsResponse>
 {
     public ListOfAssetsResponse Handle(ListOfAssetsRequest request)
     {
-        var dispensers = dispenserContext.Dispenser
+        using var dispenserContext = dispenserContextFactory.CreateDbContext();
+        var assets = dispenserContext.Dispenser
             .Where(x =>
                 x.UserAddress == request.UserAddress.Address &&
                 x.DeletionLogSignature == null
