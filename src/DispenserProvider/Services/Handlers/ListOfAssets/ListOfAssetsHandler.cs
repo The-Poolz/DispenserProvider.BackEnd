@@ -4,10 +4,11 @@ using DispenserProvider.Services.Handlers.ListOfAssets.Models;
 
 namespace DispenserProvider.Services.Handlers.ListOfAssets;
 
-public class ListOfAssetsHandler(DispenserContext dispenserContext) : IRequestHandler<ListOfAssetsRequest, ListOfAssetsResponse>
+public class ListOfAssetsHandler(IDbContextFactory<DispenserContext> dispenserContextFactory) : IRequestHandler<ListOfAssetsRequest, ListOfAssetsResponse>
 {
     public ListOfAssetsResponse Handle(ListOfAssetsRequest request)
     {
+        using var dispenserContext = dispenserContextFactory.CreateDbContext();
         var assets = dispenserContext.Dispenser
             .Where(x =>
                 x.UserAddress == request.UserAddress.Address &&
