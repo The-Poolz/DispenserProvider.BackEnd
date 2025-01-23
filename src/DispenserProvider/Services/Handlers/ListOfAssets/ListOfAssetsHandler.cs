@@ -1,18 +1,18 @@
 ﻿using DispenserProvider.DataBase;
 using Microsoft.EntityFrameworkCore;
 using DispenserProvider.DataBase.Models;
-using DispenserProvider.Services.Validators.GenerateSignature;
+using DispenserProvider.Services.Validators.Signature;
 using DispenserProvider.Services.Handlers.ListOfAssets.Models;
 using DispenserProvider.Services.Handlers.ListOfAssets.Models.DatabaseWrappers;
 
 namespace DispenserProvider.Services.Handlers.ListOfAssets;
 
-public class ListOfAssetsHandler(IDbContextFactory<DispenserContext> dispenserContextFactory) : IRequestHandler<ListOfAssetsRequest, ListOfAssetsResponse>
+public class ListOfAssetsHandler(IDbContextFactory<DispenserContext> dispenserContextFactory, AssetAvailabilityValidator assetValidator) : IRequestHandler<ListOfAssetsRequest, ListOfAssetsResponse>
 {
     public ListOfAssetsResponse Handle(ListOfAssetsRequest request)
     {
         using var dispenserContext = dispenserContextFactory.CreateDbContext();
-        var assets = dispenserContext.Dispenser
+        var dispensers = dispenserContext.Dispenser
             .Where(x =>
                 x.UserAddress == request.UserAddress.Address &&
                 x.DeletionLogSignature == null

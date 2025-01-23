@@ -1,8 +1,10 @@
 ﻿using Xunit;
 using FluentAssertions;
 using DispenserProvider.Tests.Mocks.DataBase;
+using DispenserProvider.Services.Validators.Signature;
 using DispenserProvider.Services.Handlers.ListOfAssets;
 using DispenserProvider.Services.Handlers.ListOfAssets.Models;
+using DispenserProvider.Tests.Mocks.Services.Handlers.GenerateSignature.Web3;
 
 namespace DispenserProvider.Tests.Services.Handlers.ListOfAssets;
 
@@ -10,7 +12,15 @@ public class ListOfAssetsHandlerTests
 {
     public class Handle
     {
-        private readonly ListOfAssetsHandler _handler = new(new MockDbContextFactory(seed: true));
+        private readonly ListOfAssetsHandler _handler;
+
+        public Handle()
+        {
+            var dbFactory = new MockDbContextFactory(seed: true);
+            var dispenser = dbFactory.Current.Dispenser.First();
+            var dispenserContract = MockDispenserProviderContract.Create(dispenser, isWithdrawn: false, isRefunded: false);
+            _handler = new ListOfAssetsHandler(dbFactory, new AssetAvailabilityValidator(dispenserContract));
+        }
 
         [Fact]
         internal void WhenAssetsFound_ShouldReturnsExpectedAssets()

@@ -1,5 +1,5 @@
 ﻿using DispenserProvider.DataBase.Models;
-using DispenserProvider.Services.Validators.GenerateSignature;
+using DispenserProvider.Services.Validators.Signature;
 
 namespace DispenserProvider.Services.Handlers.ListOfAssets.Models.DatabaseWrappers;
 
