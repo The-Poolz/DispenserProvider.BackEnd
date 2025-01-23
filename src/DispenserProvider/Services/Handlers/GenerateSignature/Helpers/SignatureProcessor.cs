@@ -18,7 +18,7 @@ public class SignatureProcessor(IDbContextFactory<DispenserContext> dispenserCon
             ValidUntil = validUntil,
             ValidFrom = DateTime.UtcNow + TimeSpan.FromSeconds(Env.VALID_FROM_OFFSET_IN_SECONDS.GetRequired<int>()),
             IsRefund = isRefund,
-            Dispenser = dispenser
+            DispenserId = dispenser.Id
         };
 
         var dispenserContext = dispenserContextFactory.CreateDbContext();
