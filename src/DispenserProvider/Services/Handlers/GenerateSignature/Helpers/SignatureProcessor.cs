@@ -17,7 +17,7 @@ public class SignatureProcessor(DispenserContext dispenserContext, ISignatureGen
             ValidUntil = validUntil,
             ValidFrom = DateTime.UtcNow + TimeSpan.FromSeconds(Env.VALID_FROM_OFFSET_IN_SECONDS.GetRequired<int>()),
             IsRefund = isRefund,
-            Dispenser = dispenser
+            DispenserId = dispenser.Id
         };
 
         dispenserContext.Signatures.Add(signature);
