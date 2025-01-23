@@ -5,10 +5,11 @@ using DispenserProvider.Services.Database.Models;
 
 namespace DispenserProvider.Services.Database;
 
-public class DispenserManager(DispenserContext dispenserContext) : IDispenserManager
+public class DispenserManager(IDbContextFactory<DispenserContext> dispenserContextFactory) : IDispenserManager
 {
     public DispenserDTO GetDispenser(IGetDispenserRequest request)
     {
+        using var dispenserContext = dispenserContextFactory.CreateDbContext();
         return dispenserContext.Dispenser
             .Include(x => x.UserSignatures)
             .Include(x => x.WithdrawalDetail)
