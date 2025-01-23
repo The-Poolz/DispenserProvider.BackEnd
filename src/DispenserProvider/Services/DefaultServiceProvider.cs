@@ -51,7 +51,7 @@ public static class DefaultServiceProvider
         };
         return services.BuildServiceProvider();
     }
-    
+
     private static IServiceCollection Default => new ServiceCollection()
         .AddScoped<IValidator<CreateValidatorSettings>, CreateValidator>()
         .AddScoped<IValidator<DeleteValidatorSettings>, DeleteValidator>()

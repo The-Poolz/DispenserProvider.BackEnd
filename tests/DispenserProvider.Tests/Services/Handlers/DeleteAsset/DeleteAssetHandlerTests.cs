@@ -21,8 +21,8 @@ public class DeleteAssetHandlerTests
         [Fact]
         internal void WhenValidationFailed_ShouldThrowException()
         {
-            var dispenserContextFactory = new MockDbContextFactory(seed: false);
-            var handler = new DeleteAssetHandler(dispenserContextFactory, _requestValidator);
+            var dbFactory = new MockDbContextFactory(seed: false);
+            var handler = new DeleteAssetHandler(dbFactory, _requestValidator);
 
             var request = new DeleteAssetRequest
             {
@@ -40,8 +40,8 @@ public class DeleteAssetHandlerTests
         [Fact]
         internal void WhenRequestMessageIsInvalid_ShouldThrowException()
         {
-            var dispenserContextFactory = new MockDbContextFactory(seed: true);
-            var handler = new DeleteAssetHandler(dispenserContextFactory, _requestValidator);
+            var dbFactory = new MockDbContextFactory(seed: true);
+            var handler = new DeleteAssetHandler(dbFactory, _requestValidator);
 
             var request = new DeleteAssetRequest
             {
@@ -65,18 +65,18 @@ public class DeleteAssetHandlerTests
         [Fact]
         internal void WhenMarkedAsDeletedSuccessfully_ShouldContextUpdatedSuccessfully()
         {
-            var dispenserContextFactory = new MockDbContextFactory(seed: true);
-            var handler = new DeleteAssetHandler(dispenserContextFactory, _requestValidator);
+            var dbFactory = new MockDbContextFactory(seed: true);
+            var handler = new DeleteAssetHandler(dbFactory, _requestValidator);
 
             var response = handler.Handle(MockDeleteAssetRequest.Request);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            dispenserContextFactory.Current.Logs.ToArray().Should().ContainSingle(x =>
+            dbFactory.Current.Logs.ToArray().Should().ContainSingle(x =>
                 x.Signature == MockDeleteAssetRequest.Request.Signature &&
                 x.IsCreation == false
             );
-            dispenserContextFactory.Current.Dispenser.ToArray().Should().ContainSingle(x =>
+            dbFactory.Current.Dispenser.ToArray().Should().ContainSingle(x =>
                 x.Id == MockDispenserContext.Dispenser.Id &&
                 x.UserAddress == MockDispenserContext.Dispenser.UserAddress &&
                 x.RefundFinishTime == MockDispenserContext.Dispenser.RefundFinishTime &&
