@@ -7,7 +7,7 @@ public sealed class TakenTrack : TakenTrackDTO
 {
     public TakenTrack(string errorCode, DispenserDTO dispenser)
     {
-        IsRefunded = errorCode == AssetAvailabilityValidator.Refunded;
+        IsRefunded = errorCode == AssetAvailabilityValidator.ErrorCodeRefunded;
         Dispenser = dispenser;
         DispenserId = dispenser.Id;
     }

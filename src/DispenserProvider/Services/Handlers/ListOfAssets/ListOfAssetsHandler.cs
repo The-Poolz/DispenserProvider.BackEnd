@@ -1,6 +1,5 @@
 ﻿using DispenserProvider.DataBase;
 using Microsoft.EntityFrameworkCore;
-using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Validators.Signature;
 using DispenserProvider.Services.Handlers.ListOfAssets.Models;
 using DispenserProvider.Services.Handlers.ListOfAssets.Models.DatabaseWrappers;
@@ -12,7 +11,7 @@ public class ListOfAssetsHandler(IDbContextFactory<DispenserContext> dispenserCo
     public ListOfAssetsResponse Handle(ListOfAssetsRequest request)
     {
         using var dispenserContext = dispenserContextFactory.CreateDbContext();
-        var dispensers = dispenserContext.Dispenser
+        var validationResults = dispenserContext.Dispenser
             .Where(x =>
                 x.UserAddress == request.UserAddress.Address &&
                 x.DeletionLogSignature == null
@@ -21,24 +20,26 @@ public class ListOfAssetsHandler(IDbContextFactory<DispenserContext> dispenserCo
                 .ThenInclude(x => x.Builders)
             .Include(x => x.RefundDetail)
                 .ThenInclude(x => x!.Builders)
+            .ToArray()
+            .Select(x => new
+            {
+                Dispenser = x,
+                Validation = assetValidator.Validate(x)
+            })
             .ToList();
 
-        var takenDispensers = new List<DispenserDTO>();
-        foreach (var dispenser in dispensers)
+        validationResults.ForEach(x =>
         {
-            var isTaken = assetValidator.Validate(dispenser);
-            if (isTaken.Errors.Count > 0)
+            if (!x.Validation.IsValid)
             {
-                takenDispensers.Add(dispenser);
-                dispenserContext.TakenTrack.Add(new TakenTrack(isTaken.Errors[0].ErrorCode, dispenser));
+                dispenserContext.TakenTrack.Add(new TakenTrack(x.Validation.Errors[0].ErrorCode, x.Dispenser));
             }
-        }
-        if (takenDispensers.Count > 0) dispenserContext.SaveChanges();
+        });
 
-        var assets = dispensers.Except(takenDispensers)
-            .Select(dispenser => new Asset(dispenser))
-            .ToArray();
-
-        return new ListOfAssetsResponse(assets);
+        return new ListOfAssetsResponse(validationResults
+            .Where(x => x.Validation.IsValid)
+            .Select(x => new Asset(x.Dispenser))
+            .ToArray()
+        );
     }
 }
