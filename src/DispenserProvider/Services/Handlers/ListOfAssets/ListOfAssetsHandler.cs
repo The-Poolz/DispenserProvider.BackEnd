@@ -10,11 +10,12 @@ public class ListOfAssetsHandler(IDbContextFactory<DispenserContext> dispenserCo
 {
     public ListOfAssetsResponse Handle(ListOfAssetsRequest request)
     {
-        using var dispenserContext = dispenserContextFactory.CreateDbContext();
+        var dispenserContext = dispenserContextFactory.CreateDbContext();
         var validationResults = dispenserContext.Dispenser
             .Where(x =>
                 x.UserAddress == request.UserAddress.Address &&
-                x.DeletionLogSignature == null
+                x.DeletionLogSignature == null &&
+                x.TakenTrack == null
             )
             .Include(x => x.WithdrawalDetail)
                 .ThenInclude(x => x.Builders)
