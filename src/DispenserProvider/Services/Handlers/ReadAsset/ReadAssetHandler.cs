@@ -8,7 +8,7 @@ public class ReadAssetHandler(IDbContextFactory<DispenserContext> dispenserConte
 {
     public ReadAssetResponse Handle(ReadAssetRequest request)
     {
-        using var dispenserContext = dispenserContextFactory.CreateDbContext();
+        var dispenserContext = dispenserContextFactory.CreateDbContext();
         var assets = request.AssetContext.Select(assetContext =>
             new Asset(assetContext, dispenserContext.TransactionDetails
                 .Where(x =>
@@ -16,7 +16,9 @@ public class ReadAssetHandler(IDbContextFactory<DispenserContext> dispenserConte
                     x.ChainId == assetContext.ChainId
                 )
                 .Include(x => x.WithdrawalDispenser)
+                    .ThenInclude(x => x!.TakenTrack)
                 .Include(x => x.RefundDispenser)
+                    .ThenInclude(x => x!.TakenTrack)
                 .Include(x => x.Builders)
                 .ToArray()
                 .Where(x =>

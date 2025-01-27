@@ -6,6 +6,8 @@ namespace DispenserProvider.Services.Handlers.ReadAsset.Models;
 
 public class Dispenser(DispenserDTO dispenser, IEnumerable<BuilderDTO> builders)
 {
+    public bool IsTaken { get; } = dispenser.TakenTrack != null;
+
     public string UserAddress { get; } = dispenser.UserAddress;
 
     [JsonConverter(typeof(UnixDateTimeConverter))]
