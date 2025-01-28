@@ -29,13 +29,14 @@ public class ListOfAssetsHandler(IDbContextFactory<DispenserContext> dispenserCo
             })
             .ToList();
 
+        var isTracksAdded = false;
         validationResults.ForEach(x =>
         {
-            if (!x.Validation.IsValid)
-            {
-                dispenserContext.TakenTrack.Add(new TakenTrack(x.Validation.Errors[0].ErrorCode, x.Dispenser));
-            }
+            if (x.Validation.IsValid) return;
+            dispenserContext.TakenTrack.Add(new TakenTrack(x.Validation.Errors[0].ErrorCode, x.Dispenser));
+            isTracksAdded = true;
         });
+        if (isTracksAdded) dispenserContext.SaveChanges();
 
         return new ListOfAssetsResponse(validationResults
             .Where(x => x.Validation.IsValid)
