@@ -35,6 +35,7 @@ public class ReadAssetHandler(IDbContextFactory<DispenserContext> dispenserConte
             )
         ).ToList();
 
+        var isTracksAdded = false;
         assets.ForEach(asset =>
         {
             asset.Dispensers.ToList().ForEach(dispenser =>
@@ -45,8 +46,10 @@ public class ReadAssetHandler(IDbContextFactory<DispenserContext> dispenserConte
                 if (validation.IsValid) return;
 
                 dispenserContext.TakenTrack.Add(new TakenTrack(validation.Errors[0].ErrorCode, dispenser.DTO));
+                isTracksAdded = true;
             });
         });
+        if (isTracksAdded) dispenserContext.SaveChanges();
 
         return new ReadAssetResponse(assets);
     }
