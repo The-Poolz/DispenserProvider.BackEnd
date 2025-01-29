@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using DispenserProvider.Services.Validators.Signature;
 using DispenserProvider.Services.Handlers.ReadAsset.Models;
-using DispenserProvider.Services.Handlers.ReadAsset.Models.DatabaseWrappers;
+using DispenserProvider.Services.Handlers.ListOfAssets.Models.DatabaseWrappers;
 
 namespace DispenserProvider.Services.Handlers.ReadAsset;
 
