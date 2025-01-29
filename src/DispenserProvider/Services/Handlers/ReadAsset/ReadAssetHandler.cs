@@ -1,5 +1,4 @@
-﻿using Nethereum.Util;
-using DispenserProvider.DataBase;
+﻿using DispenserProvider.DataBase;
 using Microsoft.EntityFrameworkCore;
 using DispenserProvider.Services.Validators.Signature;
 using DispenserProvider.Services.Handlers.ReadAsset.Models;
