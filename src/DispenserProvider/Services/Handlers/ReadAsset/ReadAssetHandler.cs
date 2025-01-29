@@ -12,64 +12,43 @@ public class ReadAssetHandler(IDbContextFactory<DispenserContext> dispenserConte
     public ReadAssetResponse Handle(ReadAssetRequest request)
     {
         var dispenserContext = dispenserContextFactory.CreateDbContext();
-        var assetDict = request.AssetContext.ToDictionary(key => key, value =>
-        {
-            return dispenserContext.TransactionDetails
+        var assets = request.AssetContext.Select(assetContext =>
+            new Asset(assetContext, dispenserContext.TransactionDetails
                 .Where(x =>
-                    x.PoolId == value.PoolId &&
-                    x.ChainId == value.ChainId
+                    x.PoolId == assetContext.PoolId &&
+                    x.ChainId == assetContext.ChainId
                 )
                 .Include(x => x.WithdrawalDispenser)
-                    .ThenInclude(x => x!.TakenTrack)
+                .ThenInclude(x => x!.TakenTrack)
                 .Include(x => x.RefundDispenser)
-                    .ThenInclude(x => x!.TakenTrack)
+                .ThenInclude(x => x!.TakenTrack)
                 .Include(x => x.Builders)
                 .ToArray()
                 .Where(x =>
                     x.WithdrawalDispenser?.DeletionLogSignature == null &&
                     x.RefundDispenser?.DeletionLogSignature == null
                 )
-                .Select(x => x.RefundDispenser != null ? x.RefundDispenser! : x.WithdrawalDispenser!)
-                .ToList();
-        });
+                .Select(x => new Dispenser(
+                    x.RefundDispenser != null ? x.RefundDispenser! : x.WithdrawalDispenser!,
+                    x.Builders
+                ))
+                .ToArray()
+            )
+        ).ToList();
 
-        assetDict.ForEachAsync(kvp =>
+        assets.ForEach(asset =>
         {
-            kvp.Value.ForEach(dispenser =>
+            asset.Dispensers.ToList().ForEach(dispenser =>
             {
-                if (dispenser.TakenTrack != null) return;
-                var validation = assetValidator.Validate(dispenser);
+                if (dispenser.IsTaken) return;
+
+                var validation = assetValidator.Validate(dispenser.DTO);
                 if (validation.IsValid) return;
-                dispenserContext.TakenTrack.Add(new TakenTrack(validation.Errors[0].ErrorCode, dispenser));
+
+                dispenserContext.TakenTrack.Add(new TakenTrack(validation.Errors[0].ErrorCode, dispenser.DTO));
             });
-            return Task.CompletedTask;
         });
 
-        //var assets = request.AssetContext.Select(assetContext =>
-        //    new Asset(assetContext, dispenserContext.TransactionDetails
-        //        .Where(x =>
-        //            x.PoolId == assetContext.PoolId &&
-        //            x.ChainId == assetContext.ChainId
-        //        )
-        //        .Include(x => x.WithdrawalDispenser)
-        //        .ThenInclude(x => x!.TakenTrack)
-        //        .Include(x => x.RefundDispenser)
-        //        .ThenInclude(x => x!.TakenTrack)
-        //        .Include(x => x.Builders)
-        //        .ToArray()
-        //        .Where(x =>
-        //            x.WithdrawalDispenser?.DeletionLogSignature == null &&
-        //            x.RefundDispenser?.DeletionLogSignature == null
-        //        )
-        //        .Select(x => new Dispenser(
-        //            x.RefundDispenser != null ? x.RefundDispenser! : x.WithdrawalDispenser!,
-        //            x.Builders
-        //        ))
-        //        .ToArray()
-        //    )
-        //).ToList();
-
-
-        return new ReadAssetResponse();
+        return new ReadAssetResponse(assets);
     }
 }

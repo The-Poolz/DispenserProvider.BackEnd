@@ -14,4 +14,7 @@ public class Dispenser(DispenserDTO dispenser, IEnumerable<BuilderDTO> builders)
     public DateTime? RefundFinishTime { get; } = dispenser.RefundFinishTime;
 
     public Builder[] Builders { get; } = builders.Select(x => new Builder(x)).ToArray();
+
+    [JsonIgnore]
+    internal DispenserDTO DTO { get; } = dispenser;
 }
