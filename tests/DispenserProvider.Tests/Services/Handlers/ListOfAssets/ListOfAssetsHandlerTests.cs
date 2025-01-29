@@ -4,7 +4,6 @@ using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.Services.Validators.Signature;
 using DispenserProvider.Services.Handlers.ListOfAssets;
 using DispenserProvider.Services.Handlers.ListOfAssets.Models;
-using DispenserProvider.Services.Handlers.ListOfAssets.Models.DatabaseWrappers;
 using DispenserProvider.Tests.Mocks.Services.Handlers.GenerateSignature.Web3;
 
 namespace DispenserProvider.Tests.Services.Handlers.ListOfAssets;
@@ -39,6 +38,7 @@ public class ListOfAssetsHandlerTests
                     x.WithdrawalDetail.Builders[0].FinishTime == MockDispenserContext.Builder.FinishTime &&
                     x.RefundDetail == null
                 );
+            dbFactory.Current.TakenTrack.ToArray().Should().BeEmpty();
         }
 
         [Fact]
@@ -56,7 +56,12 @@ public class ListOfAssetsHandlerTests
             var response = handler.Handle(request);
 
             response.Assets.Should().HaveCount(0);
-            dbFactory.Current.TakenTrack.ToArray().Should().BeEmpty();
+            dbFactory.Current.TakenTrack.ToArray().Should().HaveCount(1)
+                .And.ContainSingle(x =>
+                    x.IsRefunded == false &&
+                    x.IsWithdrawn == true &&
+                    x.DispenserId == dispenser.Id
+                );
         }
 
         [Fact]
@@ -74,6 +79,7 @@ public class ListOfAssetsHandlerTests
             var response = handler.Handle(request);
 
             response.Assets.Should().BeEmpty();
+            dbFactory.Current.TakenTrack.ToArray().Should().BeEmpty();
         }
     }
 }
