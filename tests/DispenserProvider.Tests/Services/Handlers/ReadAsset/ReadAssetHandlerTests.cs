@@ -1,5 +1,6 @@
 ﻿using Xunit;
 using FluentAssertions;
+using DispenserProvider.Services.Database;
 using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.Services.Handlers.ReadAsset;
 using DispenserProvider.Services.Validators.Signature;
@@ -18,7 +19,8 @@ public class ReadAssetHandlerTests
             var dbFactory = new MockDbContextFactory(seed: true);
             var dispenser = dbFactory.Current.Dispenser.First();
             var dispenserContract = MockDispenserProviderContract.Create(dispenser, isWithdrawn: false, isRefunded: false);
-            var handler = new ReadAssetHandler(dbFactory, new AssetAvailabilityValidator(dispenserContract));
+            var takenTrackManager = new TakenTrackManager(dbFactory, new AssetAvailabilityValidator(dispenserContract));
+            var handler = new ReadAssetHandler(dbFactory, takenTrackManager);
 
             var request = new ReadAssetRequest {
                 AssetContext = [
@@ -58,7 +60,8 @@ public class ReadAssetHandlerTests
             var dbFactory = new MockDbContextFactory(seed: true);
             var dispenser = dbFactory.Current.Dispenser.First();
             var dispenserContract = MockDispenserProviderContract.Create(dispenser, isWithdrawn: true, isRefunded: false);
-            var handler = new ReadAssetHandler(dbFactory, new AssetAvailabilityValidator(dispenserContract));
+            var takenTrackManager = new TakenTrackManager(dbFactory, new AssetAvailabilityValidator(dispenserContract));
+            var handler = new ReadAssetHandler(dbFactory, takenTrackManager);
 
             var request = new ReadAssetRequest {
                 AssetContext = [
@@ -105,7 +108,8 @@ public class ReadAssetHandlerTests
             var dbFactory = new MockDbContextFactory(seed: true);
             var dispenser = dbFactory.Current.Dispenser.First();
             var dispenserContract = MockDispenserProviderContract.Create(dispenser, isWithdrawn: false, isRefunded: false);
-            var handler = new ReadAssetHandler(dbFactory, new AssetAvailabilityValidator(dispenserContract));
+            var takenTrackManager = new TakenTrackManager(dbFactory, new AssetAvailabilityValidator(dispenserContract));
+            var handler = new ReadAssetHandler(dbFactory, takenTrackManager);
 
             var request = new ReadAssetRequest {
                 AssetContext = [

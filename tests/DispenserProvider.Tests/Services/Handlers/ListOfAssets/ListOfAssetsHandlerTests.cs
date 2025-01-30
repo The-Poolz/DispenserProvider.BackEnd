@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using DispenserProvider.Services.Database;
+using Xunit;
 using FluentAssertions;
 using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.Services.Validators.Signature;
@@ -18,7 +19,8 @@ public class ListOfAssetsHandlerTests
             var dbFactory = new MockDbContextFactory(seed: true);
             var dispenser = dbFactory.Current.Dispenser.First();
             var dispenserContract = MockDispenserProviderContract.Create(dispenser, isWithdrawn: false, isRefunded: false);
-            var handler = new ListOfAssetsHandler(dbFactory, new AssetAvailabilityValidator(dispenserContract));
+            var takenTrackManager = new TakenTrackManager(dbFactory, new AssetAvailabilityValidator(dispenserContract));
+            var handler = new ListOfAssetsHandler(dbFactory, takenTrackManager);
 
             var request = new ListOfAssetsRequest {
                 UserAddress = MockDispenserContext.Dispenser.UserAddress
@@ -47,7 +49,8 @@ public class ListOfAssetsHandlerTests
             var dbFactory = new MockDbContextFactory(seed: true);
             var dispenser = dbFactory.Current.Dispenser.First();
             var dispenserContract = MockDispenserProviderContract.Create(dispenser, isWithdrawn: true, isRefunded: false);
-            var handler = new ListOfAssetsHandler(dbFactory, new AssetAvailabilityValidator(dispenserContract));
+            var takenTrackManager = new TakenTrackManager(dbFactory, new AssetAvailabilityValidator(dispenserContract));
+            var handler = new ListOfAssetsHandler(dbFactory, takenTrackManager);
 
             var request = new ListOfAssetsRequest {
                 UserAddress = MockDispenserContext.Dispenser.UserAddress
@@ -70,7 +73,8 @@ public class ListOfAssetsHandlerTests
             var dbFactory = new MockDbContextFactory(seed: true);
             var dispenser = dbFactory.Current.Dispenser.First();
             var dispenserContract = MockDispenserProviderContract.Create(dispenser, isWithdrawn: false, isRefunded: false);
-            var handler = new ListOfAssetsHandler(dbFactory, new AssetAvailabilityValidator(dispenserContract));
+            var takenTrackManager = new TakenTrackManager(dbFactory, new AssetAvailabilityValidator(dispenserContract));
+            var handler = new ListOfAssetsHandler(dbFactory, takenTrackManager);
 
             var request = new ListOfAssetsRequest {
                 UserAddress = "0x0000000000000000000000000000000000000101"
