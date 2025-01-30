@@ -1,12 +1,11 @@
 ﻿using DispenserProvider.DataBase;
 using Microsoft.EntityFrameworkCore;
-using DispenserProvider.Services.Validators.Signature;
+using DispenserProvider.Services.Database;
 using DispenserProvider.Services.Handlers.ReadAsset.Models;
-using DispenserProvider.Services.Handlers.ListOfAssets.Models.DatabaseWrappers;
 
 namespace DispenserProvider.Services.Handlers.ReadAsset;
 
-public class ReadAssetHandler(IDbContextFactory<DispenserContext> dispenserContextFactory, AssetAvailabilityValidator assetValidator) : IRequestHandler<ReadAssetRequest, ReadAssetResponse>
+public class ReadAssetHandler(IDbContextFactory<DispenserContext> dispenserContextFactory, ITakenTrackManager takenTrackManager) : IRequestHandler<ReadAssetRequest, ReadAssetResponse>
 {
     public ReadAssetResponse Handle(ReadAssetRequest request)
     {
@@ -35,21 +34,7 @@ public class ReadAssetHandler(IDbContextFactory<DispenserContext> dispenserConte
             )
         ).ToList();
 
-        var isTracksAdded = false;
-        assets.ForEach(asset =>
-        {
-            asset.Dispensers.ToList().ForEach(dispenser =>
-            {
-                if (dispenser.IsTaken) return;
-
-                var validation = assetValidator.Validate(dispenser.DTO);
-                if (validation.IsValid) return;
-
-                dispenserContext.TakenTrack.Add(new TakenTrack(validation.Errors[0].ErrorCode, dispenser.DTO));
-                isTracksAdded = true;
-            });
-        });
-        if (isTracksAdded) dispenserContext.SaveChanges();
+        takenTrackManager.ProcessTakenTracks(assets.SelectMany(a => a.Dispensers.Select(d => d.DTO)));
 
         return new ReadAssetResponse(assets);
     }
