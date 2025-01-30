@@ -2,9 +2,9 @@
 
 namespace DispenserProvider.Services.Handlers.ListOfAssets.Models;
 
-public class ListOfAssetsResponse(Asset[] assets) : IHandlerResponse
+public class ListOfAssetsResponse(IEnumerable<Asset> assets) : IHandlerResponse
 {
     public ListOfAssetsResponse() : this([]) { }
 
-    public Asset[] Assets { get; } = assets;
+    public IEnumerable<Asset> Assets { get; } = assets;
 }
