@@ -8,10 +8,10 @@ namespace DispenserProvider.Services.Database;
 
 public class TakenTrackManager(IDbContextFactory<DispenserContext> dispenserContextFactory, AssetAvailabilityValidator assetValidator) : ITakenTrackManager
 {
-    public void ProcessTakenTracks(IEnumerable<DispenserDTO> dispensers)
+    public IEnumerable<DispenserDTO> ProcessTakenTracks(IEnumerable<DispenserDTO> dispensers)
     {
         var dispenserContext = dispenserContextFactory.CreateDbContext();
-        var isTracksAdded = false;
+        var processed = new List<DispenserDTO>();
 
         dispensers.ToList().ForEach(dispenser =>
         {
@@ -21,9 +21,11 @@ public class TakenTrackManager(IDbContextFactory<DispenserContext> dispenserCont
             if (validation.IsValid) return;
 
             dispenserContext.TakenTrack.Add(new TakenTrack(validation.Errors[0].ErrorCode, dispenser));
-            isTracksAdded = true;
+            processed.Add(dispenser);
         });
 
-        if (isTracksAdded) dispenserContext.SaveChanges();
+        if (processed.Count > 0) dispenserContext.SaveChanges();
+
+        return processed;
     }
 }

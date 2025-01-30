@@ -22,8 +22,11 @@ public class ListOfAssetsHandler(IDbContextFactory<DispenserContext> dispenserCo
                 .ThenInclude(x => x!.Builders)
             .ToArray();
 
-        takenTrackManager.ProcessTakenTracks(dispensers);
+        var processed = takenTrackManager.ProcessTakenTracks(dispensers);
 
-        return new ListOfAssetsResponse(dispensers.Select(x => new Asset(x)));
+        return new ListOfAssetsResponse(dispensers
+            .ExceptBy(processed.Select(x => x.Id), x => x.Id)
+            .Select(x => new Asset(x))
+        );
     }
 }

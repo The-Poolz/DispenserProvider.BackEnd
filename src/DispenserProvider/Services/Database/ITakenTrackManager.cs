@@ -4,5 +4,5 @@ namespace DispenserProvider.Services.Database;
 
 public interface ITakenTrackManager
 {
-    public void ProcessTakenTracks(IEnumerable<DispenserDTO> dispensers);
+    public IEnumerable<DispenserDTO> ProcessTakenTracks(IEnumerable<DispenserDTO> dispensers);
 }
