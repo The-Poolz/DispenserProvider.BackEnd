@@ -1,6 +1,6 @@
-﻿using DispenserProvider.Services.Database;
-using Xunit;
+﻿using Xunit;
 using FluentAssertions;
+using DispenserProvider.Services.Database;
 using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.Services.Validators.Signature;
 using DispenserProvider.Services.Handlers.ListOfAssets;
