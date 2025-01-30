@@ -1,4 +1,5 @@
 ﻿using Xunit;
+using Nethereum.Util;
 using FluentAssertions;
 using FluentValidation;
 using DispenserProvider.DataBase.Models;
@@ -106,7 +107,7 @@ public class GenerateSignatureValidatorTests
             var testCode = () => validator.ValidateAndThrow(request);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage($"**Cannot generate signature for refund, because refund time ({dispenser.RefundFinishTime}) has expired.**");
+                .WithMessage($"**Cannot generate signature for refund, because refund time ({dispenser.RefundFinishTime.Value.ToUnixTimestamp()}) has expired.**");
         }
 
         [Fact]
@@ -143,7 +144,7 @@ public class GenerateSignatureValidatorTests
             var testCode = () => validator.ValidateAndThrow(request);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage($"**Cannot generate signature, because it is still valid until ({signature.ValidUntil}). Please try again after ({UpdatingSignatureValidator.NextTry(signature)}).**");
+                .WithMessage($"**Cannot generate signature, because it is still valid until ({signature.ValidUntil.ToUnixTimestamp()}). Please try again after ({UpdatingSignatureValidator.NextTry(signature).ToUnixTimestamp()}).**");
         }
 
         [Fact]
@@ -180,7 +181,7 @@ public class GenerateSignatureValidatorTests
             var testCode = () => validator.ValidateAndThrow(request);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage($"**Cannot generate signature, because the next valid time for generation has not yet arrived. Please try again after ({UpdatingSignatureValidator.NextTry(signature)}).**");
+                .WithMessage($"**Cannot generate signature, because the next valid time for generation has not yet arrived. Please try again after ({UpdatingSignatureValidator.NextTry(signature).ToUnixTimestamp()}).**");
         }
 
         [Fact]
