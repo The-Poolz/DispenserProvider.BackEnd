@@ -66,6 +66,7 @@ public static class DefaultServiceProvider
         .AddScoped<ISignatureProcessor, SignatureProcessor>()
         .AddScoped<IChainProvider, ChainProvider>()
         .AddScoped<IDispenserProviderContract, DispenserProviderContract>()
+        .AddScoped<ITakenTrackManager, TakenTrackManager>()
         .AddScoped<IRequestHandler<CreateAssetRequest, CreateAssetResponse>, CreateAssetHandler>()
         .AddScoped<IRequestHandler<DeleteAssetRequest, DeleteAssetResponse>, DeleteAssetHandler>()
         .AddScoped<IRequestHandler<ReadAssetRequest, ReadAssetResponse>, ReadAssetHandler>()

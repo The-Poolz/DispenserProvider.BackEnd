@@ -7,8 +7,8 @@ using DispenserProvider.Services.Database;
 using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.Services.Handlers.GenerateSignature;
 using DispenserProvider.Services.Validators.Signature.Models;
-using DispenserProvider.Services.Handlers.GenerateSignature.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
+using DispenserProvider.Services.Handlers.GenerateSignature.Models;
 
 namespace DispenserProvider.Tests.Services.Handlers.GenerateSignature;
 

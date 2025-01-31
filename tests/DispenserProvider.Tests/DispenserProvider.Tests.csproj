@@ -28,8 +28,4 @@
     <ProjectReference Include="..\..\src\DispenserProvider\DispenserProvider.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\Handlers\GenerateSignature\Helpers\" />
-  </ItemGroup>
-
 </Project>
