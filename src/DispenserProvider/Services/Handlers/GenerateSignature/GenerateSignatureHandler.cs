@@ -2,7 +2,7 @@
 using DispenserProvider.Services.Database;
 using DispenserProvider.Services.Validators.Signature.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature.Models;
-using DispenserProvider.Services.Handlers.GenerateSignature.Helpers;
+using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
 namespace DispenserProvider.Services.Handlers.GenerateSignature;
 

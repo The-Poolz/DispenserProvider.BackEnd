@@ -1,12 +1,10 @@
-﻿using Moq;
-using Xunit;
+﻿using Xunit;
 using FluentAssertions;
-using Nethereum.Signer;
 using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
-using DispenserProvider.Services.Handlers.GenerateSignature.Helpers;
+using DispenserProvider.Tests.Mocks.Services.Handlers.GenerateSignature.Web3;
 
-namespace DispenserProvider.Tests.Services.Handlers.GenerateSignature.Helpers;
+namespace DispenserProvider.Tests.Services.Handlers.GenerateSignature.Web3;
 
 public class SignatureGeneratorTests
 {
@@ -23,17 +21,15 @@ public class SignatureGeneratorTests
         [Fact]
         internal void WhenGeneratedSuccessfully_ShouldReturnSignature()
         {
-            var signerManager = new Mock<ISignerManager>();
-            signerManager.Setup(x => x.GetSigner())
-                .Returns(new EthECKey(PrivateKey));
+            var signerManager = new MockSignerManager(PrivateKey);
+            var chainProvider = new ChainProvider(MockCovalentContext.Create());
+            var signatureGenerator = new SignatureGenerator(signerManager, chainProvider);
 
             var transactionDetail = MockDispenserContext.TransactionDetail;
+            transactionDetail.Builders = [MockDispenserContext.Builder];
             transactionDetail.WithdrawalDispenser = MockDispenserContext.Dispenser;
-            var validUntil = DateTime.UtcNow.AddMinutes(10);
 
-            var signatureGenerator = new SignatureGenerator(signerManager.Object);
-
-            var signature = signatureGenerator.GenerateSignature(transactionDetail, validUntil);
+            var signature = signatureGenerator.GenerateSignature(transactionDetail, DateTime.UtcNow.AddMinutes(10));
 
             signature.Should().NotBeNullOrWhiteSpace();
         }

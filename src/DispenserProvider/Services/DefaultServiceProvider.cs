@@ -30,7 +30,6 @@ using DispenserProvider.Services.Handlers.ListOfAssets.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 using DispenserProvider.Services.Handlers.GenerateSignature.Models;
 using DispenserProvider.Services.Handlers.RetrieveSignature.Models;
-using DispenserProvider.Services.Handlers.GenerateSignature.Helpers;
 
 namespace DispenserProvider.Services;
 
@@ -67,7 +66,6 @@ public static class DefaultServiceProvider
         .AddScoped<ISignatureProcessor, SignatureProcessor>()
         .AddScoped<IChainProvider, ChainProvider>()
         .AddScoped<IDispenserProviderContract, DispenserProviderContract>()
-        .AddScoped<ITakenTrackManager, TakenTrackManager>()
         .AddScoped<IRequestHandler<CreateAssetRequest, CreateAssetResponse>, CreateAssetHandler>()
         .AddScoped<IRequestHandler<DeleteAssetRequest, DeleteAssetResponse>, DeleteAssetHandler>()
         .AddScoped<IRequestHandler<ReadAssetRequest, ReadAssetResponse>, ReadAssetHandler>()

@@ -3,7 +3,7 @@ using EnvironmentManager.Extensions;
 using Microsoft.EntityFrameworkCore;
 using DispenserProvider.DataBase.Models;
 
-namespace DispenserProvider.Services.Handlers.GenerateSignature.Helpers;
+namespace DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
 public class SignatureProcessor(IDbContextFactory<DispenserContext> dispenserContextFactory, ISignatureGenerator signatureGenerator) : ISignatureProcessor
 {

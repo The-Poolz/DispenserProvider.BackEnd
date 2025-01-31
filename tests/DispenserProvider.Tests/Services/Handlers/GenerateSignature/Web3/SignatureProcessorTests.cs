@@ -3,9 +3,9 @@ using Xunit;
 using FluentAssertions;
 using DispenserProvider.DataBase.Models;
 using DispenserProvider.Tests.Mocks.DataBase;
-using DispenserProvider.Services.Handlers.GenerateSignature.Helpers;
+using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
-namespace DispenserProvider.Tests.Services.Handlers.GenerateSignature.Helpers;
+namespace DispenserProvider.Tests.Services.Handlers.GenerateSignature.Web3;
 
 public class SignatureProcessorTests
 {
