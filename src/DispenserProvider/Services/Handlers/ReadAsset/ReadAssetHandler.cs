@@ -1,14 +1,15 @@
 ﻿using DispenserProvider.DataBase;
 using Microsoft.EntityFrameworkCore;
+using DispenserProvider.Services.Database;
 using DispenserProvider.Services.Handlers.ReadAsset.Models;
 
 namespace DispenserProvider.Services.Handlers.ReadAsset;
 
-public class ReadAssetHandler(IDbContextFactory<DispenserContext> dispenserContextFactory) : IRequestHandler<ReadAssetRequest, ReadAssetResponse>
+public class ReadAssetHandler(IDbContextFactory<DispenserContext> dispenserContextFactory, ITakenTrackManager takenTrackManager) : IRequestHandler<ReadAssetRequest, ReadAssetResponse>
 {
     public ReadAssetResponse Handle(ReadAssetRequest request)
     {
-        using var dispenserContext = dispenserContextFactory.CreateDbContext();
+        var dispenserContext = dispenserContextFactory.CreateDbContext();
         var assets = request.AssetContext.Select(assetContext =>
             new Asset(assetContext, dispenserContext.TransactionDetails
                 .Where(x =>
@@ -16,7 +17,9 @@ public class ReadAssetHandler(IDbContextFactory<DispenserContext> dispenserConte
                     x.ChainId == assetContext.ChainId
                 )
                 .Include(x => x.WithdrawalDispenser)
+                    .ThenInclude(x => x!.TakenTrack)
                 .Include(x => x.RefundDispenser)
+                    .ThenInclude(x => x!.TakenTrack)
                 .Include(x => x.Builders)
                 .ToArray()
                 .Where(x =>
@@ -24,13 +27,14 @@ public class ReadAssetHandler(IDbContextFactory<DispenserContext> dispenserConte
                     x.RefundDispenser?.DeletionLogSignature == null
                 )
                 .Select(x => new Dispenser(
-                        x.RefundDispenser != null ? x.RefundDispenser! : x.WithdrawalDispenser!,
-                        x.Builders
-                    )
-                )
+                    x.RefundDispenser != null ? x.RefundDispenser! : x.WithdrawalDispenser!,
+                    x.Builders
+                ))
                 .ToArray()
             )
-        ).ToArray();
+        ).ToList();
+
+        takenTrackManager.ProcessTakenTracks(assets.SelectMany(a => a.Dispensers.Select(d => d.DTO)));
 
         return new ReadAssetResponse(assets);
     }

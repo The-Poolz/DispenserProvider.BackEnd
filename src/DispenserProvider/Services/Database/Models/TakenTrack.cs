@@ -1,7 +1,7 @@
 ﻿using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Validators.Signature;
 
-namespace DispenserProvider.Services.Handlers.ListOfAssets.Models.DatabaseWrappers;
+namespace DispenserProvider.Services.Database.Models;
 
 public sealed class TakenTrack : TakenTrackDTO
 {

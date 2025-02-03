@@ -1,17 +1,16 @@
 ﻿using DispenserProvider.DataBase;
 using Microsoft.EntityFrameworkCore;
-using DispenserProvider.Services.Validators.Signature;
+using DispenserProvider.Services.Database;
 using DispenserProvider.Services.Handlers.ListOfAssets.Models;
-using DispenserProvider.Services.Handlers.ListOfAssets.Models.DatabaseWrappers;
 
 namespace DispenserProvider.Services.Handlers.ListOfAssets;
 
-public class ListOfAssetsHandler(IDbContextFactory<DispenserContext> dispenserContextFactory, AssetAvailabilityValidator assetValidator) : IRequestHandler<ListOfAssetsRequest, ListOfAssetsResponse>
+public class ListOfAssetsHandler(IDbContextFactory<DispenserContext> dispenserContextFactory, ITakenTrackManager takenTrackManager) : IRequestHandler<ListOfAssetsRequest, ListOfAssetsResponse>
 {
     public ListOfAssetsResponse Handle(ListOfAssetsRequest request)
     {
         var dispenserContext = dispenserContextFactory.CreateDbContext();
-        var validationResults = dispenserContext.Dispenser
+        var dispensers = dispenserContext.Dispenser
             .Where(x =>
                 x.UserAddress == request.UserAddress.Address &&
                 x.DeletionLogSignature == null &&
@@ -21,27 +20,13 @@ public class ListOfAssetsHandler(IDbContextFactory<DispenserContext> dispenserCo
                 .ThenInclude(x => x.Builders)
             .Include(x => x.RefundDetail)
                 .ThenInclude(x => x!.Builders)
-            .ToArray()
-            .Select(x => new
-            {
-                Dispenser = x,
-                Validation = assetValidator.Validate(x)
-            })
-            .ToList();
+            .ToArray();
 
-        var isTracksAdded = false;
-        validationResults.ForEach(x =>
-        {
-            if (x.Validation.IsValid) return;
-            dispenserContext.TakenTrack.Add(new TakenTrack(x.Validation.Errors[0].ErrorCode, x.Dispenser));
-            isTracksAdded = true;
-        });
-        if (isTracksAdded) dispenserContext.SaveChanges();
+        var processed = takenTrackManager.ProcessTakenTracks(dispensers);
 
-        return new ListOfAssetsResponse(validationResults
-            .Where(x => x.Validation.IsValid)
-            .Select(x => new Asset(x.Dispenser))
-            .ToArray()
+        return new ListOfAssetsResponse(dispensers
+            .ExceptBy(processed.Select(x => x.Id), x => x.Id)
+            .Select(x => new Asset(x))
         );
     }
 }
