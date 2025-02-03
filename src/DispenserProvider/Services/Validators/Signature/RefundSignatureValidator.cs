@@ -10,6 +10,10 @@ public class RefundSignatureValidator : AbstractValidator<DispenserDTO>
     {
         RuleFor(x => x)
             .Must(x => DateTime.UtcNow <= x.RefundFinishTime)
+            .WithState(x => new
+            {
+                RefundFinishTime = x.RefundFinishTime!.Value.ToUnixTimestamp()
+            })
             .WithMessage(x => $"Cannot generate signature for refund, because refund time ({x.RefundFinishTime!.Value.ToUnixTimestamp()}) has expired.");
     }
 }

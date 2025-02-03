@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Nethereum.Util;
+using FluentValidation;
 using DispenserProvider.Services.Validators.Signature.Models;
 
 namespace DispenserProvider.Services.Validators.Signature;
@@ -15,12 +16,20 @@ public class RetrieveSignatureRequestValidator : AbstractValidator<RetrieveSigna
 
         RuleFor(x => x.Dispenser.LastUserSignature)
             .Must(x => DateTime.UtcNow >= x!.ValidFrom)
+            .WithState(x => new
+            {
+                ValidFrom = x.Dispenser.LastUserSignature!.ValidFrom.ToUnixTimestamp()
+            })
             .WithMessage(x =>
-                $"Cannot retrieve signature, because the valid time for retrieving has not yet arrived. Please try again after ({x.Dispenser.LastUserSignature!.ValidFrom})."
+                $"Cannot retrieve signature, because the valid time for retrieving has not yet arrived. Please try again after ({x.Dispenser.LastUserSignature!.ValidFrom.ToUnixTimestamp()})."
             )
             .Must(x => DateTime.UtcNow <= x!.ValidUntil)
+            .WithState(x => new
+            {
+                ValidUntil = x.Dispenser.LastUserSignature!.ValidUntil.ToUnixTimestamp()
+            })
             .WithMessage(x =>
-                $"Cannot retrieve signature, because the valid time ({x.Dispenser.LastUserSignature!.ValidUntil}) for using signature is expired."
+                $"Cannot retrieve signature, because the valid time ({x.Dispenser.LastUserSignature!.ValidUntil.ToUnixTimestamp()}) for using signature is expired."
             );
 
         RuleFor(x => x)
@@ -28,6 +37,10 @@ public class RetrieveSignatureRequestValidator : AbstractValidator<RetrieveSigna
                 x.IsRefund == x.Dispenser.LastUserSignature!.IsRefund ||
                 !x.IsRefund == !x.Dispenser.LastUserSignature!.IsRefund
             )
+            .WithState(x => new
+            {
+                IsRefund = x.IsRefund == x.Dispenser.LastUserSignature!.IsRefund
+            })
             .WithMessage(x =>
                 $"Cannot retrieve signature, because it was generated for a {(x.IsRefund == x.Dispenser.LastUserSignature!.IsRefund ? "refund" : "withdraw")} operation."
             );
