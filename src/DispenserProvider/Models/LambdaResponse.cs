@@ -4,9 +4,9 @@ namespace DispenserProvider.Models;
 
 public class LambdaResponse
 {
-    public LambdaResponse(IHandlerResponse data)
+    public LambdaResponse(IHandlerResponse handlerResponse)
     {
-        Data = data;
+        Data = handlerResponse;
     }
 
     public LambdaResponse(Exception exception)
