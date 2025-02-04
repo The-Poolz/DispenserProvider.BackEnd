@@ -12,6 +12,7 @@ public class RetrieveSignatureRequestValidator : AbstractValidator<RetrieveSigna
 
         RuleFor(x => x.Dispenser.LastUserSignature)
             .NotNull()
+            .WithErrorCode(ErrorCode.SIGNATURE_NOT_FOUND.ToString())
             .WithMessage("Signature for user, not found.");
 
         RuleFor(x => x.Dispenser.LastUserSignature)
@@ -20,6 +21,7 @@ public class RetrieveSignatureRequestValidator : AbstractValidator<RetrieveSigna
             {
                 ValidFrom = x.Dispenser.LastUserSignature!.ValidFrom.ToUnixTimestamp()
             })
+            .WithErrorCode(ErrorCode.SIGNATURE_VALID_TIME_NOT_ARRIVED.ToString())
             .WithMessage(x =>
                 $"Cannot retrieve signature, because the valid time for retrieving has not yet arrived. Please try again after ({x.Dispenser.LastUserSignature!.ValidFrom.ToUnixTimestamp()})."
             )
@@ -28,6 +30,7 @@ public class RetrieveSignatureRequestValidator : AbstractValidator<RetrieveSigna
             {
                 ValidUntil = x.Dispenser.LastUserSignature!.ValidUntil.ToUnixTimestamp()
             })
+            .WithErrorCode(ErrorCode.SIGNATURE_VALID_TIME_IS_EXPIRED.ToString())
             .WithMessage(x =>
                 $"Cannot retrieve signature, because the valid time ({x.Dispenser.LastUserSignature!.ValidUntil.ToUnixTimestamp()}) for using signature is expired."
             );
@@ -41,6 +44,7 @@ public class RetrieveSignatureRequestValidator : AbstractValidator<RetrieveSigna
             {
                 IsRefund = x.IsRefund == x.Dispenser.LastUserSignature!.IsRefund
             })
+            .WithErrorCode(ErrorCode.SIGNATURE_TYPE_IS_INVALID.ToString())
             .WithMessage(x =>
                 $"Cannot retrieve signature, because it was generated for a {(x.IsRefund == x.Dispenser.LastUserSignature!.IsRefund ? "refund" : "withdraw")} operation."
             );

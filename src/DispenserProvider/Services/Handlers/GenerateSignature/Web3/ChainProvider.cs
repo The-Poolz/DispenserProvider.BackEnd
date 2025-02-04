@@ -1,6 +1,7 @@
 ﻿using CovalentDb;
 using Nethereum.Web3;
 using Net.Web3.EthereumWallet;
+using DispenserProvider.Extensions;
 
 namespace DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
@@ -16,7 +17,8 @@ public class ChainProvider(CovalentContext context) : IChainProvider
     public IWeb3 Web3(long chainId)
     {
         var chain = context.Chains.FirstOrDefault(x => x.ChainId == chainId)
-            ?? throw new InvalidOperationException($"ChainId={chainId}, not supported.");
+            ?? throw $"ChainId={chainId}, not supported."
+                .ToException(ErrorCode.CHAIN_NOT_SUPPORTED);
         return new Nethereum.Web3.Web3(chain.RpcConnection);
     }
 

@@ -1,4 +1,5 @@
 ﻿using DispenserProvider.DataBase;
+using DispenserProvider.Extensions;
 using Microsoft.EntityFrameworkCore;
 using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Database.Models;
@@ -21,6 +22,6 @@ public class DispenserManager(IDbContextFactory<DispenserContext> dispenserConte
                 x.UserAddress == request.UserAddress.Address &&
                 ((x.WithdrawalDetail.ChainId == request.ChainId && x.WithdrawalDetail.PoolId == request.PoolId) ||
                  (x.RefundDetail != null && x.RefundDetail.ChainId == request.ChainId && x.RefundDetail.PoolId == request.PoolId))
-            ) ?? throw new InvalidOperationException($"Asset by provided PoolId={request.PoolId} and ChainId={request.ChainId} for '{request.UserAddress}' user, not found.");
+            ) ?? throw $"Asset by provided PoolId={request.PoolId} and ChainId={request.ChainId} for '{request.UserAddress}' user, not found.".ToException(ErrorCode.DISPENSER_NOT_FOUND);
     }
 }

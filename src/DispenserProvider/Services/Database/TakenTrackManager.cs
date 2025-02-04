@@ -20,7 +20,7 @@ public class TakenTrackManager(IDbContextFactory<DispenserContext> dispenserCont
                 var validation = assetValidator.Validate(dispenser);
                 if (validation.IsValid) return;
 
-                dispenserContext.TakenTrack.Add(new TakenTrack(validation.Errors[0].ErrorCode, dispenser));
+                dispenserContext.TakenTrack.Add(new TakenTrack(validation.Errors[0].ErrorCode == ErrorCode.ASSET_ALREADY_REFUNDED.ToString(), dispenser));
                 processed.Add(dispenser);
             });
 

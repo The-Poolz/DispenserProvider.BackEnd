@@ -1,4 +1,5 @@
 ﻿using DispenserProvider.Models;
+using DispenserProvider.Extensions;
 using DispenserProvider.Services.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 using DispenserProvider.Services.Handlers.ReadAsset.Models;
@@ -22,7 +23,7 @@ public class HandlerFactory(IServiceProvider serviceProvider) : IHandlerFactory
             { ListOfAssetsRequest: not null } => serviceProvider.GetRequiredService<IRequestHandler<ListOfAssetsRequest, ListOfAssetsResponse>>().Handle(request.ListOfAssetsRequest),
             { GenerateSignatureRequest: not null } => serviceProvider.GetRequiredService<IRequestHandler<GenerateSignatureRequest, GenerateSignatureResponse>>().Handle(request.GenerateSignatureRequest),
             { RetrieveSignatureRequest: not null } => serviceProvider.GetRequiredService<IRequestHandler<RetrieveSignatureRequest, RetrieveSignatureResponse>>().Handle(request.RetrieveSignatureRequest),
-            _ => throw new NotImplementedException("No one implemented request found.")
+            _ => throw "No one implemented request found.".ToException(ErrorCode.INVALID_HANDLER_REQUEST)
         };
     }
 }
