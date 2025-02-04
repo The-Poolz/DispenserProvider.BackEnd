@@ -51,7 +51,7 @@ public class DeleteAssetHandlerTests
 
             var testCode = () => handler.Handle(request);
 
-            testCode.Should().Throw<InvalidOperationException>()
+            testCode.Should().Throw<ValidationException>()
                 .WithMessage(new StringBuilder($"The following addresses, specified by ChainId={request.Message.ChainId} and PoolId={request.Message.PoolId}, were not found:")
                     .AppendLine()
                     .AppendJoin(Environment.NewLine, MockDeleteAssetRequest.InvalidMessage.Users

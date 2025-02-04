@@ -1,6 +1,7 @@
 ﻿using Moq;
 using Xunit;
 using FluentAssertions;
+using FluentValidation;
 using DispenserProvider.Models;
 using DispenserProvider.Services;
 using DispenserProvider.Services.Handlers;
@@ -100,7 +101,7 @@ public class HandlerFactoryTests
 
             var testCode = () => factory.Handle(request);
 
-            testCode.Should().Throw<NotImplementedException>()
+            testCode.Should().Throw<ValidationException>()
                 .WithMessage("No one implemented request found.");
         }
     }

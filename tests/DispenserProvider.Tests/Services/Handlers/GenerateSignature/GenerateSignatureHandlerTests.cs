@@ -41,7 +41,7 @@ public class GenerateSignatureHandlerTests
 
             var testCode = () => handler.Handle(_withdrawnRequest);
 
-            testCode.Should().Throw<InvalidOperationException>()
+            testCode.Should().Throw<ValidationException>()
                 .WithMessage($"*Asset by provided PoolId={_withdrawnRequest.PoolId} and ChainId={_withdrawnRequest.ChainId} for '{_withdrawnRequest.UserAddress}' user, not found.*");
         }
 
