@@ -46,7 +46,7 @@ public static class DefaultServiceProvider
             {
                 ProductionMode.Prod => Prod,
                 ProductionMode.Stage => Stage,
-                _ => throw $"No one valid stage in '{nameof(Env.PRODUCTION_MODE)}' environment variable found.".ToException(ErrorCode.INVALID_STAGE)
+                _ => throw ErrorCode.INVALID_STAGE.ToException()
             }
         };
         return services.BuildServiceProvider();
