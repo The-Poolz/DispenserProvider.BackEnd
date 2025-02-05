@@ -1,7 +1,7 @@
-﻿using DispenserProvider.Extensions;
-using Xunit;
+﻿using Xunit;
 using FluentAssertions;
 using FluentValidation;
+using DispenserProvider.Extensions;
 using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
