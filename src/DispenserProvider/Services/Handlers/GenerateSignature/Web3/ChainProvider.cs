@@ -8,9 +8,9 @@ public class ChainProvider(CovalentContext context) : IChainProvider
 {
     private readonly Dictionary<long, EthereumAddress> _contractsAddresses = new()
     {
-        { 1, "0x55eB3e27355c09854f7F85371600C360Bd95d42F" },
-        { 56, "0x55eB3e27355c09854f7F85371600C360Bd95d42F" },
-        { 97, "0x55eB3e27355c09854f7F85371600C360Bd95d42F" }
+        { 1, "0x8080092b3BB79564EF59193f5417421A41E52b99" },
+        { 56, "0x8080092b3BB79564EF59193f5417421A41E52b99" },
+        { 97, "0x8080092b3BB79564EF59193f5417421A41E52b99" }
     };
 
     public IWeb3 Web3(long chainId)
