@@ -8,12 +8,13 @@ namespace DispenserProvider.Extensions;
 
 public static class ErrorCodeExtensions
 {
-    public static ValidationException ToException(this ErrorCode error, [CallerMemberName] string propertyName = "")
+    public static ValidationException ToException(this ErrorCode error, object? customState = null, [CallerMemberName] string propertyName = "")
     {
         var errorMessage = error.ToErrorMessage();
         var failure = new ValidationFailure(propertyName, errorMessage)
         {
-            ErrorCode = error.ToErrorCode()
+            ErrorCode = error.ToErrorCode(),
+            CustomState = customState
         };
         return new ValidationException(errorMessage, [failure]);
     }

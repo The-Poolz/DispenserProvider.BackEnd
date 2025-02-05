@@ -17,8 +17,10 @@ public class ChainProvider(CovalentContext context) : IChainProvider
     public IWeb3 Web3(long chainId)
     {
         var chain = context.Chains.FirstOrDefault(x => x.ChainId == chainId)
-            ?? throw $"ChainId={chainId}, not supported."
-                .ToException(ErrorCode.CHAIN_NOT_SUPPORTED);
+            ?? throw ErrorCode.CHAIN_NOT_SUPPORTED.ToException(new
+            {
+                ChainId = chainId
+            });
         return new Nethereum.Web3.Web3(chain.RpcConnection);
     }
 

@@ -22,6 +22,6 @@ public class DispenserManager(IDbContextFactory<DispenserContext> dispenserConte
                 x.UserAddress == request.UserAddress.Address &&
                 ((x.WithdrawalDetail.ChainId == request.ChainId && x.WithdrawalDetail.PoolId == request.PoolId) ||
                  (x.RefundDetail != null && x.RefundDetail.ChainId == request.ChainId && x.RefundDetail.PoolId == request.PoolId))
-            ) ?? throw $"Asset by provided PoolId={request.PoolId} and ChainId={request.ChainId} for '{request.UserAddress}' user, not found.".ToException(ErrorCode.DISPENSER_NOT_FOUND);
+            ) ?? throw ErrorCode.DISPENSER_NOT_FOUND.ToException();
     }
 }

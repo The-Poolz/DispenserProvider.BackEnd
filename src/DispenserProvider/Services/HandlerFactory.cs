@@ -23,7 +23,7 @@ public class HandlerFactory(IServiceProvider serviceProvider) : IHandlerFactory
             { ListOfAssetsRequest: not null } => serviceProvider.GetRequiredService<IRequestHandler<ListOfAssetsRequest, ListOfAssetsResponse>>().Handle(request.ListOfAssetsRequest),
             { GenerateSignatureRequest: not null } => serviceProvider.GetRequiredService<IRequestHandler<GenerateSignatureRequest, GenerateSignatureResponse>>().Handle(request.GenerateSignatureRequest),
             { RetrieveSignatureRequest: not null } => serviceProvider.GetRequiredService<IRequestHandler<RetrieveSignatureRequest, RetrieveSignatureResponse>>().Handle(request.RetrieveSignatureRequest),
-            _ => throw "No one implemented request found.".ToException(ErrorCode.INVALID_HANDLER_REQUEST)
+            _ => throw ErrorCode.INVALID_HANDLER_REQUEST.ToException()
         };
     }
 }
