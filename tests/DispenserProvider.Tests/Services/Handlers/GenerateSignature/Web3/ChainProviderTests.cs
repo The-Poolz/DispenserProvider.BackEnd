@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using DispenserProvider.Extensions;
+using Xunit;
 using FluentAssertions;
 using FluentValidation;
 using DispenserProvider.Tests.Mocks.DataBase;
@@ -34,7 +35,7 @@ public class ChainProviderTests
             var testCode = () => chainProvider.Web3(chainId);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage($"ChainId={chainId}, not supported.");
+                .WithMessage(ErrorCode.CHAIN_NOT_SUPPORTED.ToErrorMessage());
         }
     }
 

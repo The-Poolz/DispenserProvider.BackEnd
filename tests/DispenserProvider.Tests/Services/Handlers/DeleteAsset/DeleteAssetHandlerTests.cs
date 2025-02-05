@@ -1,8 +1,8 @@
 ﻿using Xunit;
 using System.Net;
-using System.Text;
 using FluentValidation;
 using FluentAssertions;
+using DispenserProvider.Extensions;
 using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.MessageTemplate.Validators;
 using DispenserProvider.Services.Handlers.DeleteAsset;
@@ -52,14 +52,7 @@ public class DeleteAssetHandlerTests
             var testCode = () => handler.Handle(request);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage(new StringBuilder($"The following addresses, specified by ChainId={request.Message.ChainId} and PoolId={request.Message.PoolId}, were not found:")
-                    .AppendLine()
-                    .AppendJoin(Environment.NewLine, MockDeleteAssetRequest.InvalidMessage.Users
-                        .Select(x => x.Address)
-                        .Except(MockDeleteAssetRequest.Message.Users.Select(x => x.Address))
-                    )
-                    .ToString()
-                );
+                .WithMessage(ErrorCode.USERS_FOR_DELETE_NOT_FOUND.ToErrorMessage());
         }
 
         [Fact]

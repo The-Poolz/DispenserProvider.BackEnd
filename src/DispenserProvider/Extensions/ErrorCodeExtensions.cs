@@ -26,6 +26,10 @@ public static class ErrorCodeExtensions
 
     public static string ToErrorMessage(this ErrorCode error)
     {
-        return error.GetType().GetCustomAttribute<ErrorAttribute>()!.Message;
+        return error
+            .GetType()
+            .GetField(error.ToString())!
+            .GetCustomAttribute<ErrorAttribute>()!
+            .Message;
     }
 }

@@ -13,13 +13,13 @@ public class AssetAvailabilityValidator : AbstractValidator<DispenserDTO>
 
         RuleFor(x => x)
             .Must(x => !dispenserContract.IsTaken(x.WithdrawalDetail.ChainId, x.WithdrawalDetail.PoolId, x.UserAddress))
-            .WithMessage(ErrorCode.ASSET_ALREADY_WITHDRAWN.ToErrorCode())
-            .WithErrorCode(ErrorCode.ASSET_ALREADY_WITHDRAWN.ToErrorMessage());
+            .WithErrorCode(ErrorCode.ASSET_ALREADY_WITHDRAWN.ToErrorMessage())
+            .WithMessage(ErrorCode.ASSET_ALREADY_WITHDRAWN.ToErrorMessage());
 
         RuleFor(x => x)
             .Must(x => !dispenserContract.IsTaken(x.RefundDetail!.ChainId, x.RefundDetail.PoolId, x.UserAddress))
             .When(x => x.RefundDetail != null)
-            .WithMessage(ErrorCode.ASSET_ALREADY_REFUNDED.ToErrorCode())
-            .WithErrorCode(ErrorCode.ASSET_ALREADY_REFUNDED.ToErrorMessage());
+            .WithErrorCode(ErrorCode.ASSET_ALREADY_REFUNDED.ToErrorCode())
+            .WithMessage(ErrorCode.ASSET_ALREADY_REFUNDED.ToErrorMessage());
     }
 }

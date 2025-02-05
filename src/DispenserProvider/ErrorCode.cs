@@ -12,7 +12,7 @@ public enum ErrorCode
     DISPENSER_NOT_FOUND,
     [Error("Some addresses, specified by ChainId and PoolId, were not found.")]
     USERS_FOR_DELETE_NOT_FOUND,
-    [Error("ChainId, not supported.")]
+    [Error("ChainId not supported.")]
     CHAIN_NOT_SUPPORTED,
     [Error("Cannot generate signature, because asset already withdrawn.")]
     ASSET_ALREADY_WITHDRAWN,

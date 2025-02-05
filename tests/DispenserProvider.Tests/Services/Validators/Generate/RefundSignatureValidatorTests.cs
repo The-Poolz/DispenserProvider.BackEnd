@@ -1,7 +1,7 @@
 ﻿using Xunit;
-using Nethereum.Util;
 using FluentAssertions;
 using FluentValidation;
+using DispenserProvider.Extensions;
 using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Validators.Signature;
 
@@ -23,7 +23,7 @@ public class RefundSignatureValidatorTests
             var testCode = () => validator.ValidateAndThrow(dispenser);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage($"**Cannot generate signature for refund, because refund time ({dispenser.RefundFinishTime.Value.ToUnixTimestamp()}) has expired.**");
+                .WithMessage($"*{ErrorCode.REFUND_TIME_IS_EXPIRED.ToErrorMessage()}*");
         }
 
         [Fact]
