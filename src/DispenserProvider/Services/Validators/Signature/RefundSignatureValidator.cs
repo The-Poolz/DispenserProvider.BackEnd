@@ -1,5 +1,6 @@
 ﻿using Nethereum.Util;
 using FluentValidation;
+using DispenserProvider.Extensions;
 using DispenserProvider.DataBase.Models;
 
 namespace DispenserProvider.Services.Validators.Signature;
@@ -14,7 +15,7 @@ public class RefundSignatureValidator : AbstractValidator<DispenserDTO>
             {
                 RefundFinishTime = x.RefundFinishTime!.Value.ToUnixTimestamp()
             })
-            .WithErrorCode(ErrorCode.REFUND_TIME_IS_EXPIRED.ToString())
-            .WithMessage(x => $"Cannot generate signature for refund, because refund time ({x.RefundFinishTime!.Value.ToUnixTimestamp()}) has expired.");
+            .WithErrorCode(ErrorCode.REFUND_TIME_IS_EXPIRED.ToErrorCode())
+            .WithMessage(ErrorCode.REFUND_TIME_IS_EXPIRED.ToErrorMessage());
     }
 }
