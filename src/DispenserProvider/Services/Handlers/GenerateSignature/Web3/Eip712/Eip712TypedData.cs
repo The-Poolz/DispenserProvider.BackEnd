@@ -13,7 +13,7 @@ public class Eip712TypedData : TypedData<Eip712Domain>
     {
         Domain = new Eip712Domain(transactionDetail, verifyingContract);
         DomainRawValues = MemberValueFactory.CreateFromMessage(Domain);
-        PrimaryType = "SigStruct";
+        PrimaryType = "MessageStruct";
         Types = MemberDescriptionFactory.GetTypesMemberDescription(
             types: [typeof(Builder), typeof(SignatureStruct), typeof(Eip712Domain)]
         );

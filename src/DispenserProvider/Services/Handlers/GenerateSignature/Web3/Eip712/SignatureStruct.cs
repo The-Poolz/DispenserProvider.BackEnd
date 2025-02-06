@@ -6,7 +6,7 @@ using Nethereum.ABI.FunctionEncoding.Attributes;
 
 namespace DispenserProvider.Services.Handlers.GenerateSignature.Web3.Eip712;
 
-[Struct(name: "SigStruct")]
+[Struct(name: "MessageStruct")]
 public class SignatureStruct(long poolId, EthereumAddress receiver, DateTime validUntil, IEnumerable<Builder> builders)
 {
     public SignatureStruct(long poolId, EthereumAddress receiver, long validUntil, IEnumerable<Builder> builders)
