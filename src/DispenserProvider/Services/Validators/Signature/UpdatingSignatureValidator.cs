@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using Nethereum.Util;
+using FluentValidation;
+using DispenserProvider.Extensions;
 using EnvironmentManager.Extensions;
 using DispenserProvider.DataBase.Models;
 
@@ -11,9 +13,20 @@ public class UpdatingSignatureValidator : AbstractValidator<DispenserDTO>
         RuleFor(x => x.LastUserSignature!)
             .Cascade(CascadeMode.Stop)
             .Must(x => DateTime.UtcNow >= x.ValidUntil)
-            .WithMessage(x => $"Cannot generate signature, because it is still valid until ({x.LastUserSignature!.ValidUntil}). Please try again after ({NextTry(x)}).")
+            .WithState(x => new
+            {
+                ValidUntil = x.LastUserSignature!.ValidUntil.ToUnixTimestamp(),
+                NextTry = NextTry(x).ToUnixTimestamp()
+            })
+            .WithErrorCode(ErrorCode.SIGNATURE_IS_STILL_VALID.ToErrorCode())
+            .WithMessage(ErrorCode.SIGNATURE_IS_STILL_VALID.ToErrorMessage())
             .Must(x => DateTime.UtcNow >= NextTry(x))
-            .WithMessage(x => $"Cannot generate signature, because the next valid time for generation has not yet arrived. Please try again after ({NextTry(x)}).");
+            .WithState(x => new
+            {
+                NextTry = NextTry(x).ToUnixTimestamp()
+            })
+            .WithErrorCode(ErrorCode.SIGNATURE_GENERATION_VALID_TIME_NOT_ARRIVED.ToErrorCode())
+            .WithMessage(ErrorCode.SIGNATURE_GENERATION_VALID_TIME_NOT_ARRIVED.ToErrorMessage());
     }
 
     public static DateTime NextTry(SignatureDTO signature) => signature.ValidUntil + TimeSpan.FromSeconds(Env.COOLDOWN_OFFSET_IN_SECONDS.GetRequired<int>());

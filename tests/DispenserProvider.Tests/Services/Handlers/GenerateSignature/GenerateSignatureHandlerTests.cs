@@ -2,6 +2,7 @@
 using Xunit;
 using FluentValidation;
 using FluentAssertions;
+using DispenserProvider.Extensions;
 using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Database;
 using DispenserProvider.Tests.Mocks.DataBase;
@@ -41,8 +42,8 @@ public class GenerateSignatureHandlerTests
 
             var testCode = () => handler.Handle(_withdrawnRequest);
 
-            testCode.Should().Throw<InvalidOperationException>()
-                .WithMessage($"*Asset by provided PoolId={_withdrawnRequest.PoolId} and ChainId={_withdrawnRequest.ChainId} for '{_withdrawnRequest.UserAddress}' user, not found.*");
+            testCode.Should().Throw<ValidationException>()
+                .WithMessage(ErrorCode.DISPENSER_NOT_FOUND.ToErrorMessage());
         }
 
         [Fact]

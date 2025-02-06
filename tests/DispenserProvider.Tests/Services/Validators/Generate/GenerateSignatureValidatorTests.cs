@@ -1,6 +1,7 @@
 ﻿using Xunit;
 using FluentAssertions;
 using FluentValidation;
+using DispenserProvider.Extensions;
 using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Validators.Signature;
 using DispenserProvider.Services.Validators.Signature.Models;
@@ -42,7 +43,7 @@ public class GenerateSignatureValidatorTests
             var testCode = () => validator.ValidateAndThrow(request);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage("**Cannot generate signature, because asset already withdrawn.**");
+                .WithMessage($"*{ErrorCode.ASSET_ALREADY_WITHDRAWN.ToErrorMessage()}*");
         }
 
         [Fact]
@@ -74,7 +75,7 @@ public class GenerateSignatureValidatorTests
             var testCode = () => validator.ValidateAndThrow(request);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage("**Cannot generate signature, because asset already refunded.**");
+                .WithMessage($"*{ErrorCode.ASSET_ALREADY_REFUNDED.ToErrorMessage()}*");
         }
 
         [Fact]
@@ -106,7 +107,7 @@ public class GenerateSignatureValidatorTests
             var testCode = () => validator.ValidateAndThrow(request);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage($"**Cannot generate signature for refund, because refund time ({dispenser.RefundFinishTime}) has expired.**");
+                .WithMessage($"*{ErrorCode.REFUND_TIME_IS_EXPIRED.ToErrorMessage()}*");
         }
 
         [Fact]
@@ -143,7 +144,7 @@ public class GenerateSignatureValidatorTests
             var testCode = () => validator.ValidateAndThrow(request);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage($"**Cannot generate signature, because it is still valid until ({signature.ValidUntil}). Please try again after ({UpdatingSignatureValidator.NextTry(signature)}).**");
+                .WithMessage($"*{ErrorCode.SIGNATURE_IS_STILL_VALID.ToErrorMessage()}*");
         }
 
         [Fact]
@@ -180,7 +181,7 @@ public class GenerateSignatureValidatorTests
             var testCode = () => validator.ValidateAndThrow(request);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage($"**Cannot generate signature, because the next valid time for generation has not yet arrived. Please try again after ({UpdatingSignatureValidator.NextTry(signature)}).**");
+                .WithMessage($"*{ErrorCode.SIGNATURE_GENERATION_VALID_TIME_NOT_ARRIVED.ToErrorMessage()}*");
         }
 
         [Fact]

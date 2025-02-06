@@ -1,6 +1,8 @@
 ﻿using Xunit;
+using Nethereum.Util;
 using FluentAssertions;
 using FluentValidation;
+using DispenserProvider.Extensions;
 using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Validators.Signature;
 
@@ -31,7 +33,7 @@ public class UpdatingSignatureValidatorTests
             var testCode = () => validator.ValidateAndThrow(dispenser);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage($"**Cannot generate signature, because it is still valid until ({signature.ValidUntil}). Please try again after ({UpdatingSignatureValidator.NextTry(signature)}).**");
+                .WithMessage($"*{ErrorCode.SIGNATURE_IS_STILL_VALID.ToErrorMessage()}*");
         }
 
         [Fact]
@@ -50,7 +52,7 @@ public class UpdatingSignatureValidatorTests
             var testCode = () => validator.ValidateAndThrow(dispenser);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage($"**Cannot generate signature, because the next valid time for generation has not yet arrived. Please try again after ({UpdatingSignatureValidator.NextTry(signature)}).**");
+                .WithMessage($"*{ErrorCode.SIGNATURE_GENERATION_VALID_TIME_NOT_ARRIVED.ToErrorMessage()}*");
         }
 
         [Fact]

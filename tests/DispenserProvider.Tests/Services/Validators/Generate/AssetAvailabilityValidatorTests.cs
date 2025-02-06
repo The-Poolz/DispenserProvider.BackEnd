@@ -1,6 +1,7 @@
 ﻿using Xunit;
 using FluentAssertions;
 using FluentValidation;
+using DispenserProvider.Extensions;
 using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Validators.Signature;
 using DispenserProvider.Tests.Mocks.Services.Handlers.GenerateSignature.Web3;
@@ -29,7 +30,7 @@ public class AssetAvailabilityValidatorTests
             var testCode = () => validator.ValidateAndThrow(dispenser);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage("**Cannot generate signature, because asset already withdrawn.**");
+                .WithMessage($"*{ErrorCode.ASSET_ALREADY_WITHDRAWN.ToErrorMessage()}*");
         }
 
         [Fact]
@@ -54,7 +55,7 @@ public class AssetAvailabilityValidatorTests
             var testCode = () => validator.ValidateAndThrow(dispenser);
 
             testCode.Should().Throw<ValidationException>()
-                .WithMessage("**Cannot generate signature, because asset already refunded.**");
+                .WithMessage($"*{ErrorCode.ASSET_ALREADY_REFUNDED.ToErrorMessage()}*");
         }
 
         [Fact]
