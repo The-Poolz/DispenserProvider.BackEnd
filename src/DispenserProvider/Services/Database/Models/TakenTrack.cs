@@ -1,13 +1,12 @@
 ﻿using DispenserProvider.DataBase.Models;
-using DispenserProvider.Services.Validators.Signature;
 
 namespace DispenserProvider.Services.Database.Models;
 
 public sealed class TakenTrack : TakenTrackDTO
 {
-    public TakenTrack(string errorCode, DispenserDTO dispenser)
+    public TakenTrack(bool isRefunded, DispenserDTO dispenser)
     {
-        IsRefunded = errorCode == AssetAvailabilityValidator.ErrorCodeRefunded;
+        IsRefunded = isRefunded;
         Dispenser = dispenser;
         DispenserId = dispenser.Id;
     }

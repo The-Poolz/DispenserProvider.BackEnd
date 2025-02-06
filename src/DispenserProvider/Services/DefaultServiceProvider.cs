@@ -4,6 +4,7 @@ using SecretsManager;
 using FluentValidation;
 using DispenserProvider.Options;
 using DispenserProvider.DataBase;
+using DispenserProvider.Extensions;
 using EnvironmentManager.Extensions;
 using Microsoft.EntityFrameworkCore;
 using ConfiguredSqlConnection.Extensions;
@@ -45,7 +46,7 @@ public static class DefaultServiceProvider
             {
                 ProductionMode.Prod => Prod,
                 ProductionMode.Stage => Stage,
-                _ => throw new NotImplementedException($"No one valid stage in '{nameof(Env.PRODUCTION_MODE)}' environment variable found.")
+                _ => throw ErrorCode.INVALID_STAGE.ToException()
             }
         };
         return services.BuildServiceProvider();

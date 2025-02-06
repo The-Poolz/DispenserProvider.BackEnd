@@ -1,6 +1,6 @@
-﻿using System.Text;
-using FluentValidation;
+﻿using FluentValidation;
 using DispenserProvider.DataBase;
+using DispenserProvider.Extensions;
 using Microsoft.EntityFrameworkCore;
 using DispenserProvider.MessageTemplate.Models.Validators;
 using DispenserProvider.Services.Handlers.DeleteAsset.Models;
@@ -31,15 +31,13 @@ public class DeleteAssetHandler(IDbContextFactory<DispenserContext> dispenserCon
 
         if (request.Message.ToDelete.Count != dispensers.Count)
         {
-            throw new InvalidOperationException(
-                new StringBuilder($"The following addresses, specified by ChainId={request.Message.ChainId} and PoolId={request.Message.PoolId}, were not found:")
-                    .AppendLine()
-                    .AppendJoin(Environment.NewLine, request.Message.ToDelete
-                        .Select(x => x.Key.Address)
-                        .Except(dispensers.Select(x => x.UserAddress))
-                    )
-                    .ToString()
-            );
+            throw ErrorCode.USERS_FOR_DELETE_NOT_FOUND.ToException(customState: new
+            {
+                Users = request.Message.ToDelete
+                    .Select(x => x.Key.Address)
+                    .Except(dispensers.Select(x => x.UserAddress))
+                    .ToArray()
+            });
         }
 
         dispenserContext.Logs.Add(new LogWrapper(request.Signature));

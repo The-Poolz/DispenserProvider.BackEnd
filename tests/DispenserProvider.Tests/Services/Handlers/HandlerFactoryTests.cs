@@ -1,8 +1,10 @@
 ﻿using Moq;
 using Xunit;
 using FluentAssertions;
+using FluentValidation;
 using DispenserProvider.Models;
 using DispenserProvider.Services;
+using DispenserProvider.Extensions;
 using DispenserProvider.Services.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 using DispenserProvider.Services.Handlers.ReadAsset.Models;
@@ -100,8 +102,8 @@ public class HandlerFactoryTests
 
             var testCode = () => factory.Handle(request);
 
-            testCode.Should().Throw<NotImplementedException>()
-                .WithMessage("No one implemented request found.");
+            testCode.Should().Throw<ValidationException>()
+                .WithMessage(ErrorCode.INVALID_HANDLER_REQUEST.ToErrorMessage());
         }
     }
 }

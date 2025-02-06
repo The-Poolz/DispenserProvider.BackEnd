@@ -30,12 +30,12 @@ public class DispenserProviderLambdaTests
             {
                 CreateAssetRequest = new CreateAssetRequest()
             };
-            var expectedResponse = new CreateAssetResponse();
+            var handlerResponse = new CreateAssetResponse();
 
             var serviceProvider = new ServiceCollection()
                 .AddScoped(_ => {
                     var handler = new Mock<IHandlerFactory>();
-                    handler.Setup(x => x.Handle(request)).Returns(expectedResponse);
+                    handler.Setup(x => x.Handle(request)).Returns(handlerResponse);
                     return handler.Object;
                 })
                 .BuildServiceProvider();
@@ -44,7 +44,7 @@ public class DispenserProviderLambdaTests
 
             var response = lambda.Run(request);
 
-            response.Should().Be(expectedResponse);
+            response.Should().BeEquivalentTo(new LambdaResponse(handlerResponse));
         }
     }
 }

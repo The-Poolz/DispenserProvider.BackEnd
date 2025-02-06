@@ -1,3 +1,4 @@
+using FluentValidation;
 using Amazon.Lambda.Core;
 using DispenserProvider.Models;
 using DispenserProvider.Services;
@@ -11,8 +12,22 @@ public class DispenserProviderLambda(IServiceProvider serviceProvider)
 {
     public DispenserProviderLambda() : this(DefaultServiceProvider.Build()) { }
 
-    public IHandlerResponse Run(LambdaRequest request)
+    public LambdaResponse Run(LambdaRequest request)
     {
-        return serviceProvider.GetRequiredService<IHandlerFactory>().Handle(request);
+        try
+        {
+            return new LambdaResponse(serviceProvider
+                .GetRequiredService<IHandlerFactory>()
+                .Handle(request)
+            );
+        }
+        catch (ValidationException ex)
+        {
+            return new LambdaResponse(ex);
+        }
+        catch (Exception ex)
+        {
+            return new LambdaResponse(ex);
+        }
     }
 }
