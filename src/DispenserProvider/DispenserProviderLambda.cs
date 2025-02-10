@@ -27,6 +27,7 @@ public class DispenserProviderLambda(IServiceProvider serviceProvider)
         }
         catch (Exception ex)
         {
+            LambdaLogger.Log(ex.ToString());
             return new LambdaResponse(ex);
         }
     }
