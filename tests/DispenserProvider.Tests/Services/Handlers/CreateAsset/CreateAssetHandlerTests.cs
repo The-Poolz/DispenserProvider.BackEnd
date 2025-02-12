@@ -34,7 +34,15 @@ public class CreateAssetHandlerTests
 
             testCode.Should().Throw<ValidationException>()
                 .Which.Errors.Should().ContainSingle()
-                .Which.ErrorMessage.Should().Be($"Recovered address '{MockUsers.UnauthorizedUser.Address}' is not valid.");
+                .Which.Should().BeEquivalentTo(new
+                {
+                    ErrorCode = "RECOVERED_ADDRESS_IS_INVALID",
+                    ErrorMessage = "Recovered address is not valid.",
+                    CustomState = new
+                    {
+                        RecoveredAddress = MockUsers.UnauthorizedUser.Address
+                    }
+                });
         }
 
         [Fact]
