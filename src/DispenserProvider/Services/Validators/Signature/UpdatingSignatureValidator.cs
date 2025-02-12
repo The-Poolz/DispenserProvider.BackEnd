@@ -15,7 +15,7 @@ public class UpdatingSignatureValidator : AbstractValidator<DispenserDTO>
             .Must(x => DateTime.UtcNow >= x.ValidUntil)
             .WithState(x => new
             {
-                ValidUntil = x.LastUserSignature!.ValidUntil.ToUnixTimestamp(),
+                ValidFrom = x.LastUserSignature!.ValidFrom.ToUnixTimestamp(),
                 NextTry = NextTry(x).ToUnixTimestamp()
             })
             .WithErrorCode(ErrorCode.SIGNATURE_IS_STILL_VALID.ToErrorCode())
