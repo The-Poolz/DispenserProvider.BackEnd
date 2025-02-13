@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using DispenserProvider.Extensions;
 using DispenserProvider.DataBase.Models;
-using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
+using DispenserProvider.Services.Web3;
 
 namespace DispenserProvider.Services.Validators.Signature;
 

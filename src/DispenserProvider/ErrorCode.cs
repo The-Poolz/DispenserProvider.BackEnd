@@ -14,6 +14,8 @@ public enum ErrorCode
     USERS_FOR_DELETE_NOT_FOUND,
     [Error("ChainId not supported.")]
     CHAIN_NOT_SUPPORTED,
+    [Error("LockDealNFT contract in the selected chain not supported.")]
+    LOCK_DEAL_NFT_NOT_SUPPORTED,
     [Error("Cannot generate signature, because asset already withdrawn.")]
     ASSET_ALREADY_WITHDRAWN,
     [Error("Cannot generate signature, because asset already refunded.")]
@@ -31,5 +33,5 @@ public enum ErrorCode
     [Error("Cannot generate signature, because it is still valid until.")]
     SIGNATURE_IS_STILL_VALID,
     [Error("Cannot generate signature, because the next valid time for generation has not yet arrived.")]
-    SIGNATURE_GENERATION_VALID_TIME_NOT_ARRIVED
+    SIGNATURE_GENERATION_VALID_TIME_NOT_ARRIVED,
 }

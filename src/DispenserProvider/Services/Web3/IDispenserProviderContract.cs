@@ -1,6 +1,6 @@
 ﻿using Net.Web3.EthereumWallet;
 
-namespace DispenserProvider.Services.Handlers.GenerateSignature.Web3;
+namespace DispenserProvider.Services.Web3;
 
 public interface IDispenserProviderContract
 {

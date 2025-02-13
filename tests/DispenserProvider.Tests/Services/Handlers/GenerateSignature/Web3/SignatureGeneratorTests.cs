@@ -1,5 +1,6 @@
 ﻿using Xunit;
 using FluentAssertions;
+using DispenserProvider.Services.Web3;
 using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 using DispenserProvider.Tests.Mocks.Services.Handlers.GenerateSignature.Web3;

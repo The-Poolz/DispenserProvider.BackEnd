@@ -2,7 +2,7 @@
 using Nethereum.Signer;
 using EnvironmentManager.Extensions;
 
-namespace DispenserProvider.Services.Handlers.GenerateSignature.Web3;
+namespace DispenserProvider.Services.Web3;
 
 public class SignerManager(SecretManager secretManager) : ISignerManager
 {

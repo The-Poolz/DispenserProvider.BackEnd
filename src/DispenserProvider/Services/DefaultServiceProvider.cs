@@ -31,6 +31,7 @@ using DispenserProvider.Services.Handlers.ListOfAssets.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 using DispenserProvider.Services.Handlers.GenerateSignature.Models;
 using DispenserProvider.Services.Handlers.RetrieveSignature.Models;
+using DispenserProvider.Services.Web3;
 
 namespace DispenserProvider.Services;
 
