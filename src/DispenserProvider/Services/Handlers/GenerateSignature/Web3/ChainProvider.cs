@@ -9,8 +9,6 @@ public class ChainProvider(CovalentContext context) : IChainProvider
 {
     private readonly Dictionary<long, EthereumAddress> _contractsAddresses = new()
     {
-        { 1, "0xa9c68640C1AA52E91A75F4c5e2786F68049541Ad" },
-        { 56, "0xa9c68640C1AA52E91A75F4c5e2786F68049541Ad" },
         { 97, "0xa9c68640C1AA52E91A75F4c5e2786F68049541Ad" }
     };
 

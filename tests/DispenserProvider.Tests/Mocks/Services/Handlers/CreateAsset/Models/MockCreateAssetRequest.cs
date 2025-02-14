@@ -17,7 +17,7 @@ internal class MockCreateAssetRequest : MockAssetRequest
     internal static CreateAssetMessage Message => new()
     {
         PoolId = 1,
-        ChainId = 1,
+        ChainId = 97,
         Users = [
             new User {
                 UserAddress = "0x0000000000000000000000000000000000000001",

@@ -26,7 +26,7 @@ public class ReadAssetHandlerTests
                 AssetContext = [
                     new AssetContext {
                         PoolId = 1,
-                        ChainId = 1
+                        ChainId = 97
                     }
                 ]
             };
@@ -67,7 +67,7 @@ public class ReadAssetHandlerTests
                 AssetContext = [
                     new AssetContext {
                         PoolId = 1,
-                        ChainId = 1
+                        ChainId = 97
                     }
                 ]
             };

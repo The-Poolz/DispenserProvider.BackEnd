@@ -18,7 +18,7 @@ internal class MockDeleteAssetRequest : MockAssetRequest
     internal static DeleteAssetMessage Message => new()
     {
         PoolId = 1,
-        ChainId = 1,
+        ChainId = 97,
         Users = [
             "0x0000000000000000000000000000000000000001"
         ]
@@ -26,7 +26,7 @@ internal class MockDeleteAssetRequest : MockAssetRequest
     internal static DeleteAssetMessage InvalidMessage => new()
     {
         PoolId = 1,
-        ChainId = 1,
+        ChainId = 97,
         Users = [
             "0x0000000000000000000000000000000000000001",
             "0x0000000000000000000000000000000000000101",
