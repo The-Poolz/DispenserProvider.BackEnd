@@ -1,16 +1,14 @@
-﻿using Xunit;
+﻿using Moq;
+using Xunit;
 using FluentAssertions;
 using FluentValidation;
+using Net.Web3.EthereumWallet;
+using DispenserProvider.Services.Web3;
 using Net.Utils.ErrorHandler.Extensions;
-using DispenserProvider.DataBase.Models;
 using DispenserProvider.Tests.Mocks.Services.Web3;
-using DispenserProvider.Services.Validators.Signature;
 using DispenserProvider.Services.Validators.AdminRequest;
 using DispenserProvider.Services.Validators.AdminRequest.Models;
-using DispenserProvider.Services.Web3;
 using DispenserProvider.Tests.Mocks.DataBase;
-using Moq;
-using Net.Web3.EthereumWallet;
 
 namespace DispenserProvider.Tests.Services.Validators.AdminRequest;
 

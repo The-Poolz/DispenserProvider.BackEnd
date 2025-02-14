@@ -1,11 +1,9 @@
 ﻿using Xunit;
-using Nethereum.Util;
 using FluentAssertions;
 using FluentValidation;
-using DispenserProvider.Extensions;
 using DispenserProvider.DataBase.Models;
-using DispenserProvider.Services.Validators.Signature;
 using Net.Utils.ErrorHandler.Extensions;
+using DispenserProvider.Services.Validators.Signature;
 
 namespace DispenserProvider.Tests.Services.Validators.Generate;
 

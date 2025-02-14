@@ -2,14 +2,13 @@
 using System.Net;
 using FluentValidation;
 using FluentAssertions;
-using DispenserProvider.Extensions;
+using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.MessageTemplate.Validators;
 using DispenserProvider.Services.Handlers.DeleteAsset;
 using DispenserProvider.Tests.Mocks.Services.Validators;
 using DispenserProvider.Services.Handlers.DeleteAsset.Models;
 using DispenserProvider.Tests.Mocks.Services.Handlers.DeleteAsset.Models;
-using Net.Utils.ErrorHandler.Extensions;
 
 namespace DispenserProvider.Tests.Services.Handlers.DeleteAsset;
 

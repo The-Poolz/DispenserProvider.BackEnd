@@ -4,7 +4,7 @@ using FluentAssertions;
 using FluentValidation;
 using DispenserProvider.Models;
 using DispenserProvider.Services;
-using DispenserProvider.Extensions;
+using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.Services.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 using DispenserProvider.Services.Handlers.ReadAsset.Models;
@@ -13,7 +13,6 @@ using DispenserProvider.Services.Handlers.DeleteAsset.Models;
 using DispenserProvider.Services.Handlers.ListOfAssets.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature.Models;
 using DispenserProvider.Services.Handlers.RetrieveSignature.Models;
-using Net.Utils.ErrorHandler.Extensions;
 
 namespace DispenserProvider.Tests.Services.Handlers;
 

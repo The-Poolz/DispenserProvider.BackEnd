@@ -1,11 +1,10 @@
 ﻿using Xunit;
 using FluentAssertions;
 using FluentValidation;
-using DispenserProvider.Extensions;
+using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.DataBase.Models;
 using DispenserProvider.Tests.Mocks.Services.Web3;
 using DispenserProvider.Services.Validators.Signature;
-using Net.Utils.ErrorHandler.Extensions;
 
 namespace DispenserProvider.Tests.Services.Validators.Generate;
 

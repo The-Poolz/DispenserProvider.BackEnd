@@ -1,6 +1,6 @@
-﻿using DispenserProvider.Extensions;
-using Nethereum.Util;
+﻿using Nethereum.Util;
 using FluentValidation;
+using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.Services.Validators.Signature.Models;
 
 namespace DispenserProvider.Services.Validators.Signature;
