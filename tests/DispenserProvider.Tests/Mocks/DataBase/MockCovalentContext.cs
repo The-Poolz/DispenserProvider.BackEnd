@@ -9,8 +9,8 @@ internal static class MockCovalentContext
 {
     internal static Chain Chain => new()
     {
-        ChainId = 1,
-        Name = "Ethereum",
+        ChainId = 97,
+        Name = "BSC Testnet",
         RpcConnection = "http://localhost"
     };
 
