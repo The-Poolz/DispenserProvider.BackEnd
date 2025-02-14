@@ -4,6 +4,7 @@ using FluentValidation;
 using DispenserProvider.Extensions;
 using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Validators.Signature;
+using Net.Utils.ErrorHandler.Extensions;
 
 namespace DispenserProvider.Tests.Services.Validators.Generate;
 

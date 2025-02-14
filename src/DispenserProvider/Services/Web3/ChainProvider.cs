@@ -2,7 +2,7 @@
 using Nethereum.Web3;
 using CovalentDb.Types;
 using Net.Web3.EthereumWallet;
-using DispenserProvider.Extensions;
+using Net.Utils.ErrorHandler.Extensions;
 
 namespace DispenserProvider.Services.Web3;
 

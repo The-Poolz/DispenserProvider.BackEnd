@@ -28,4 +28,8 @@
     <ProjectReference Include="..\..\src\DispenserProvider\DispenserProvider.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Mocks\Services\Handlers\GenerateSignature\" />
+  </ItemGroup>
+
 </Project>

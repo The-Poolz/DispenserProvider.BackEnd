@@ -1,8 +1,8 @@
 ﻿using Moq;
-using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Web3;
+using DispenserProvider.DataBase.Models;
 
-namespace DispenserProvider.Tests.Mocks.Services.Handlers.GenerateSignature.Web3;
+namespace DispenserProvider.Tests.Mocks.Services.Web3;
 
 public static class MockDispenserProviderContract
 {

@@ -5,7 +5,8 @@ using DispenserProvider.Extensions;
 using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Validators.Signature;
 using DispenserProvider.Services.Validators.Signature.Models;
-using DispenserProvider.Tests.Mocks.Services.Handlers.GenerateSignature.Web3;
+using DispenserProvider.Tests.Mocks.Services.Web3;
+using Net.Utils.ErrorHandler.Extensions;
 
 namespace DispenserProvider.Tests.Services.Validators.Generate;
 

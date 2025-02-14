@@ -1,4 +1,4 @@
-﻿using DispenserProvider.Attributes;
+﻿using Net.Utils.ErrorHandler.Attributes;
 
 namespace DispenserProvider;
 
@@ -34,4 +34,6 @@ public enum ErrorCode
     SIGNATURE_IS_STILL_VALID,
     [Error("Cannot generate signature, because the next valid time for generation has not yet arrived.")]
     SIGNATURE_GENERATION_VALID_TIME_NOT_ARRIVED,
+    [Error("Owner of provided PoolId in the provided ChainId is invalid.")]
+    INVALID_TOKEN_OWNER
 }

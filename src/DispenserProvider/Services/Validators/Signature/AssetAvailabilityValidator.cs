@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
-using DispenserProvider.Extensions;
 using DispenserProvider.DataBase.Models;
+using DispenserProvider.Extensions;
 using DispenserProvider.Services.Web3;
 
 namespace DispenserProvider.Services.Validators.Signature;
@@ -13,13 +13,11 @@ public class AssetAvailabilityValidator : AbstractValidator<DispenserDTO>
 
         RuleFor(x => x)
             .Must(x => !dispenserContract.IsTaken(x.WithdrawalDetail.ChainId, x.WithdrawalDetail.PoolId, x.UserAddress))
-            .WithErrorCode(ErrorCode.ASSET_ALREADY_WITHDRAWN.ToErrorMessage())
-            .WithMessage(ErrorCode.ASSET_ALREADY_WITHDRAWN.ToErrorMessage());
+            .WithError(ErrorCode.ASSET_ALREADY_WITHDRAWN);
 
         RuleFor(x => x)
             .Must(x => !dispenserContract.IsTaken(x.RefundDetail!.ChainId, x.RefundDetail.PoolId, x.UserAddress))
             .When(x => x.RefundDetail != null)
-            .WithErrorCode(ErrorCode.ASSET_ALREADY_REFUNDED.ToErrorCode())
-            .WithMessage(ErrorCode.ASSET_ALREADY_REFUNDED.ToErrorMessage());
+            .WithError(ErrorCode.ASSET_ALREADY_REFUNDED);
     }
 }

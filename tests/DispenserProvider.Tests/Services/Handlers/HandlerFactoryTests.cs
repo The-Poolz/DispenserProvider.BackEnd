@@ -13,6 +13,7 @@ using DispenserProvider.Services.Handlers.DeleteAsset.Models;
 using DispenserProvider.Services.Handlers.ListOfAssets.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature.Models;
 using DispenserProvider.Services.Handlers.RetrieveSignature.Models;
+using Net.Utils.ErrorHandler.Extensions;
 
 namespace DispenserProvider.Tests.Services.Handlers;
 
