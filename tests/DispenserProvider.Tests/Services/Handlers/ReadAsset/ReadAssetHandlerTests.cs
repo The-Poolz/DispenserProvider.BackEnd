@@ -5,7 +5,7 @@ using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.Services.Handlers.ReadAsset;
 using DispenserProvider.Services.Validators.Signature;
 using DispenserProvider.Services.Handlers.ReadAsset.Models;
-using DispenserProvider.Tests.Mocks.Services.Handlers.GenerateSignature.Web3;
+using DispenserProvider.Tests.Mocks.Services.Web3;
 
 namespace DispenserProvider.Tests.Services.Handlers.ReadAsset;
 

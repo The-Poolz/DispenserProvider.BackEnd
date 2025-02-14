@@ -3,11 +3,17 @@ using DispenserProvider.DataBase;
 using Microsoft.EntityFrameworkCore;
 using DispenserProvider.MessageTemplate.Models.Validators;
 using DispenserProvider.Services.Handlers.CreateAsset.Models;
+using DispenserProvider.Services.Validators.AdminRequest.Models;
 using DispenserProvider.Services.Handlers.CreateAsset.Models.DatabaseWrappers;
 
 namespace DispenserProvider.Services.Handlers.CreateAsset;
 
-public class CreateAssetHandler(IDbContextFactory<DispenserContext> dispenserContextFactory, IValidator<CreateValidatorSettings> requestValidator) : IRequestHandler<CreateAssetRequest, CreateAssetResponse>
+public class CreateAssetHandler(
+    IDbContextFactory<DispenserContext> dispenserContextFactory,
+    IValidator<CreateValidatorSettings> requestValidator,
+    IValidator<PoolOwnershipValidatorRequest> poolOwnershipValidator
+)
+    : IRequestHandler<CreateAssetRequest, CreateAssetResponse>
 {
     public CreateAssetResponse Handle(CreateAssetRequest request)
     {
@@ -15,6 +21,10 @@ public class CreateAssetHandler(IDbContextFactory<DispenserContext> dispenserCon
             new AdminRequestValidatorSettings(request.Signature, request.Message.Eip712Message),
             request.Message.UsersToValidate,
             request.Message.ScheduleToValidate
+        ));
+        poolOwnershipValidator.ValidateAndThrow(new PoolOwnershipValidatorRequest(
+            withdraw: new ChainPoolPair(request.Message.ChainId, request.Message.PoolId),
+            refund: request.Message.Refund != null ? new ChainPoolPair(request.Message.Refund.ChainId, request.Message.Refund.PoolId) : null
         ));
 
         Save(request);

@@ -9,6 +9,7 @@ using DispenserProvider.Services.Handlers.DeleteAsset;
 using DispenserProvider.Tests.Mocks.Services.Validators;
 using DispenserProvider.Services.Handlers.DeleteAsset.Models;
 using DispenserProvider.Tests.Mocks.Services.Handlers.DeleteAsset.Models;
+using Net.Utils.ErrorHandler.Extensions;
 
 namespace DispenserProvider.Tests.Services.Handlers.DeleteAsset;
 

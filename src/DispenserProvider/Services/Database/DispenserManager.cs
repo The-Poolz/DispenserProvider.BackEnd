@@ -1,6 +1,6 @@
 ﻿using DispenserProvider.DataBase;
-using DispenserProvider.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Database.Models;
 

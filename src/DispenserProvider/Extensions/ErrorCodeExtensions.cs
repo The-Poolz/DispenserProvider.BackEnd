@@ -1,35 +1,16 @@
 ﻿using FluentValidation;
-using System.Reflection;
-using FluentValidation.Results;
-using DispenserProvider.Attributes;
-using System.Runtime.CompilerServices;
+using Net.Utils.ErrorHandler.Extensions;
 
 namespace DispenserProvider.Extensions;
 
 public static class ErrorCodeExtensions
 {
-    public static ValidationException ToException(this ErrorCode error, object? customState = null, [CallerMemberName] string propertyName = "")
+    // TODO: Move into `Net.Utils.ErrorHandler` library
+    public static IRuleBuilderOptions<T, TProperty> WithError<T, TProperty>(this IRuleBuilderOptions<T, TProperty> rule, ErrorCode error, Func<T, object>? stateProvider = null)
     {
-        var errorMessage = error.ToErrorMessage();
-        var failure = new ValidationFailure(propertyName, errorMessage)
-        {
-            ErrorCode = error.ToErrorCode(),
-            CustomState = customState
-        };
-        return new ValidationException(errorMessage, [failure]);
-    }
-
-    public static string ToErrorCode(this ErrorCode error)
-    {
-        return error.ToString();
-    }
-
-    public static string ToErrorMessage(this ErrorCode error)
-    {
-        return error
-            .GetType()
-            .GetField(error.ToString())!
-            .GetCustomAttribute<ErrorAttribute>()!
-            .Message;
+        if (stateProvider != null) rule.WithState(stateProvider);
+        return rule
+            .WithErrorCode(error)
+            .WithErrorMessage(error);
     }
 }
