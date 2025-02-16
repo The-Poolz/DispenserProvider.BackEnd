@@ -69,6 +69,7 @@ public static class DefaultServiceProvider
         .AddScoped<ISignatureGenerator, SignatureGenerator>()
         .AddScoped<ISignatureProcessor, SignatureProcessor>()
         .AddScoped<IChainProvider, ChainProvider>()
+        .AddScoped<ILockDealNFTContract, LockDealNFTContract>()
         .AddScoped<IDispenserProviderContract, DispenserProviderContract>()
         .AddScoped<ITakenTrackManager, TakenTrackManager>()
         .AddScoped<IRequestHandler<CreateAssetRequest, CreateAssetResponse>, CreateAssetHandler>()
