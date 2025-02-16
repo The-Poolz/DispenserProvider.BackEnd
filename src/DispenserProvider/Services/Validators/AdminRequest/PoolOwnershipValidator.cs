@@ -9,6 +9,8 @@ public class PoolOwnershipValidator : AbstractValidator<PoolOwnershipValidatorRe
 {
 	public PoolOwnershipValidator(ISignerManager signerManager, ILockDealNFTContract lockDealNFT)
     {
+        ClassLevelCascadeMode = CascadeMode.Stop;
+
         RuleFor(x => x.Withdraw)
             .Must(x => signerManager.GetSigner().GetPublicAddress() == lockDealNFT.OwnerOf(x.ChainId, x.PoolId))
             .WithError(ErrorCode.INVALID_TOKEN_OWNER, x => new
