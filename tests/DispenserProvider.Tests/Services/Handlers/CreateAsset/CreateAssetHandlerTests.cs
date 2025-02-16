@@ -3,9 +3,11 @@ using System.Net;
 using FluentAssertions;
 using FluentValidation;
 using DispenserProvider.Tests.Mocks.DataBase;
+using DispenserProvider.Tests.Mocks.Services.Web3;
 using DispenserProvider.MessageTemplate.Validators;
 using DispenserProvider.Services.Handlers.CreateAsset;
 using DispenserProvider.Tests.Mocks.Services.Validators;
+using DispenserProvider.Services.Validators.AdminRequest;
 using DispenserProvider.Services.Handlers.CreateAsset.Models;
 using DispenserProvider.Tests.Mocks.Services.Handlers.CreateAsset.Models;
 
@@ -16,12 +18,16 @@ public class CreateAssetHandlerTests
     public class Handle
     {
         [Fact]
-        internal void WhenValidationFailed_ShouldThrowException()
+        internal void WhenRequestValidationFailed_ShouldThrowException()
         {
             var handler = new CreateAssetHandler(
                 new MockDbContextFactory(),
                 new CreateValidator(
                     new MockAdminValidationService()
+                ),
+                new PoolOwnershipValidator(
+                    new MockSignerManager(MockUsers.Admin.PrivateKey),
+                    MockLockDealNFTContract.Create(MockCreateAssetRequest.Message, MockUsers.Admin.Address)
                 )
             );
             var request = new CreateAssetRequest
@@ -46,6 +52,36 @@ public class CreateAssetHandlerTests
         }
 
         [Fact]
+        internal void WhenPoolOwnershipValidationFailed_ShouldThrowException()
+        {
+            var handler = new CreateAssetHandler(
+                new MockDbContextFactory(),
+                new CreateValidator(
+                    new MockAdminValidationService()
+                ),
+                new PoolOwnershipValidator(
+                    new MockSignerManager(MockUsers.Admin.PrivateKey),
+                    MockLockDealNFTContract.Create(MockCreateAssetRequest.Message, MockUsers.Admin.Address)
+                )
+            );
+
+            var testCode = () => handler.Handle(MockCreateAssetRequest.Request);
+
+            testCode.Should().Throw<ValidationException>()
+                .Which.Errors.Should().ContainSingle()
+                .Which.Should().BeEquivalentTo(new
+                {
+                    ErrorCode = "INVALID_TOKEN_OWNER",
+                    ErrorMessage = "Owner of provided PoolId in the provided ChainId is invalid.",
+                    CustomState = new
+                    {
+                        MockCreateAssetRequest.Message.Refund!.ChainId,
+                        MockCreateAssetRequest.Message.Refund!.PoolId
+                    }
+                });
+        }
+
+        [Fact]
         internal void WhenSavingSuccessfully_ShouldContextContainsExpectedEntities()
         {
             var dbFactory = new MockDbContextFactory();
@@ -53,6 +89,10 @@ public class CreateAssetHandlerTests
                 dbFactory,
                 new CreateValidator(
                     new MockAdminValidationService()
+                ),
+                new PoolOwnershipValidator(
+                    new MockSignerManager(MockUsers.Admin.PrivateKey),
+                    MockLockDealNFTContract.Create(MockCreateAssetRequest.Message, MockUsers.Admin.Address, MockUsers.Admin.Address)
                 )
             );
             var response = handler.Handle(MockCreateAssetRequest.Request);
@@ -63,7 +103,7 @@ public class CreateAssetHandlerTests
                 x.IsCreation == true
             );
             dbFactory.Current.Dispenser.ToArray().Should().ContainSingle(x =>
-                x.Id == MockDispenserContext.Dispenser.Id && 
+                x.Id == MockDispenserContext.Dispenser.Id &&
                 x.UserAddress == MockDispenserContext.Dispenser.UserAddress &&
                 x.RefundFinishTime == MockDispenserContext.Dispenser.RefundFinishTime
             );

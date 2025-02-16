@@ -2,7 +2,7 @@
 using Xunit;
 using FluentValidation;
 using FluentAssertions;
-using DispenserProvider.Extensions;
+using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Database;
 using DispenserProvider.Tests.Mocks.DataBase;

@@ -4,9 +4,10 @@ using SecretsManager;
 using FluentValidation;
 using DispenserProvider.Options;
 using DispenserProvider.DataBase;
-using DispenserProvider.Extensions;
 using EnvironmentManager.Extensions;
 using Microsoft.EntityFrameworkCore;
+using DispenserProvider.Services.Web3;
+using Net.Utils.ErrorHandler.Extensions;
 using ConfiguredSqlConnection.Extensions;
 using DispenserProvider.Services.Database;
 using DispenserProvider.Services.Handlers;
@@ -28,6 +29,7 @@ using DispenserProvider.Services.Handlers.CreateAsset.Models;
 using DispenserProvider.Services.Handlers.DeleteAsset.Models;
 using DispenserProvider.Services.Validators.Signature.Models;
 using DispenserProvider.Services.Handlers.ListOfAssets.Models;
+using DispenserProvider.Services.Validators.AdminRequest.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 using DispenserProvider.Services.Handlers.GenerateSignature.Models;
 using DispenserProvider.Services.Handlers.RetrieveSignature.Models;
@@ -58,6 +60,7 @@ public static class DefaultServiceProvider
         .AddScoped<IAdminValidationService, AdminValidationService>()
         .AddScoped<IValidator<GenerateSignatureValidatorRequest>, GenerateSignatureValidator>()
         .AddScoped<IValidator<RetrieveSignatureValidatorRequest>, RetrieveSignatureRequestValidator>()
+        .AddScoped<IValidator<PoolOwnershipValidatorRequest>, PoolOwnershipValidator>()
         .AddScoped<UpdatingSignatureValidator>()
         .AddScoped<RefundSignatureValidator>()
         .AddScoped<AssetAvailabilityValidator>()
@@ -66,6 +69,7 @@ public static class DefaultServiceProvider
         .AddScoped<ISignatureGenerator, SignatureGenerator>()
         .AddScoped<ISignatureProcessor, SignatureProcessor>()
         .AddScoped<IChainProvider, ChainProvider>()
+        .AddScoped<ILockDealNFTContract, LockDealNFTContract>()
         .AddScoped<IDispenserProviderContract, DispenserProviderContract>()
         .AddScoped<ITakenTrackManager, TakenTrackManager>()
         .AddScoped<IRequestHandler<CreateAssetRequest, CreateAssetResponse>, CreateAssetHandler>()

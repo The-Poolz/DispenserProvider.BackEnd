@@ -1,4 +1,5 @@
 ﻿using Nethereum.Signer.EIP712;
+using DispenserProvider.Services.Web3;
 using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature.Web3.Eip712;
 
@@ -10,7 +11,7 @@ public class SignatureGenerator(ISignerManager signerManager, IChainProvider cha
     {
         var typedData = new Eip712TypedData(
             transactionDetail,
-            chainProvider.ContractAddress(transactionDetail.ChainId),
+            chainProvider.DispenserProviderContract(transactionDetail.ChainId),
             validUntil
         );
         return new Eip712TypedDataSigner().SignTypedDataV4(

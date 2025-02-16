@@ -4,7 +4,7 @@ using FluentAssertions;
 using FluentValidation;
 using DispenserProvider.Models;
 using DispenserProvider.Services;
-using DispenserProvider.Extensions;
+using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.Services.Handlers;
 using Microsoft.Extensions.DependencyInjection;
 using DispenserProvider.Services.Handlers.ReadAsset.Models;

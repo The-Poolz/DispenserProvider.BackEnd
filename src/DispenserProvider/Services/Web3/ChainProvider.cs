@@ -1,9 +1,10 @@
 ﻿using CovalentDb;
 using Nethereum.Web3;
+using CovalentDb.Types;
 using Net.Web3.EthereumWallet;
-using DispenserProvider.Extensions;
+using Net.Utils.ErrorHandler.Extensions;
 
-namespace DispenserProvider.Services.Handlers.GenerateSignature.Web3;
+namespace DispenserProvider.Services.Web3;
 
 public class ChainProvider(CovalentContext context) : IChainProvider
 {
@@ -22,8 +23,18 @@ public class ChainProvider(CovalentContext context) : IChainProvider
         return new Nethereum.Web3.Web3(chain.RpcConnection);
     }
 
-    public EthereumAddress ContractAddress(long chainId)
+    public EthereumAddress DispenserProviderContract(long chainId)
     {
         return _contractsAddresses[chainId];
+    }
+
+    public EthereumAddress LockDealNFTContract(long chainId)
+    {
+        var lockDealNFT = context.DownloaderSettings.FirstOrDefault(x => x.ChainId == chainId && x.ResponseType == ResponseType.LDNFTContractApproved)
+           ?? throw ErrorCode.LOCK_DEAL_NFT_NOT_SUPPORTED.ToException(new 
+           {
+               ChainId = chainId
+           });
+        return lockDealNFT.ContractAddress;
     }
 }

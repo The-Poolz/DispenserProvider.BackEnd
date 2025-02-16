@@ -2,7 +2,7 @@
 using System.Net;
 using FluentValidation;
 using FluentAssertions;
-using DispenserProvider.Extensions;
+using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.MessageTemplate.Validators;
 using DispenserProvider.Services.Handlers.DeleteAsset;

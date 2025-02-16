@@ -1,9 +1,9 @@
 ﻿using Xunit;
 using FluentAssertions;
 using FluentValidation;
-using DispenserProvider.Extensions;
+using DispenserProvider.Services.Web3;
+using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.Tests.Mocks.DataBase;
-using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
 namespace DispenserProvider.Tests.Services.Handlers.GenerateSignature.Web3;
 
@@ -47,7 +47,7 @@ public class ChainProviderTests
 
             var chainProvider = new ChainProvider(context);
 
-            var response = chainProvider.ContractAddress(MockCovalentContext.Chain.ChainId);
+            var response = chainProvider.DispenserProviderContract(MockCovalentContext.Chain.ChainId);
 
             response.Should().NotBeNull();
         }
@@ -60,7 +60,7 @@ public class ChainProviderTests
 
             var chainProvider = new ChainProvider(context);
 
-            var testCode = () => chainProvider.ContractAddress(chainId);
+            var testCode = () => chainProvider.DispenserProviderContract(chainId);
 
             testCode.Should().Throw<KeyNotFoundException>()
                 .WithMessage($"The given key '{chainId}' was not present in the dictionary.");

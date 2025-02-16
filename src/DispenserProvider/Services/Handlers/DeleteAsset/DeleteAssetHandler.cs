@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using DispenserProvider.DataBase;
-using DispenserProvider.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.MessageTemplate.Models.Validators;
 using DispenserProvider.Services.Handlers.DeleteAsset.Models;
 using DispenserProvider.Services.Handlers.DeleteAsset.Models.DatabaseWrappers;
