@@ -20,7 +20,7 @@ public class GenerateSignatureHandlerTests
         private readonly GenerateSignatureRequest _withdrawnRequest = new()
         {
             PoolId = 1,
-            ChainId = 1,
+            ChainId = 97,
             UserAddress = "0x0000000000000000000000000000000000000001"
         };
 

@@ -14,12 +14,11 @@ public class ChainProviderTests
         [Fact]
         internal void WhenChainIdIsSupported_ShouldReturnsWeb3()
         {
-            var chainId = 1;
             var context = MockCovalentContext.Create();
 
             var chainProvider = new ChainProvider(context);
 
-            var response = chainProvider.Web3(chainId);
+            var response = chainProvider.Web3(MockCovalentContext.Chain.ChainId);
 
             response.Should().NotBeNull();
         }
@@ -44,12 +43,11 @@ public class ChainProviderTests
         [Fact]
         internal void WhenChainIdIsSupported_ShouldReturnsContractAddress()
         {
-            var chainId = 1;
             var context = MockCovalentContext.Create();
 
             var chainProvider = new ChainProvider(context);
 
-            var response = chainProvider.DispenserProviderContract(chainId);
+            var response = chainProvider.DispenserProviderContract(MockCovalentContext.Chain.ChainId);
 
             response.Should().NotBeNull();
         }

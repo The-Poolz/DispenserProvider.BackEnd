@@ -90,5 +90,5 @@ public static class DefaultServiceProvider
         .AddDbContextFactory<DispenserContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Staging, "DispenserStage")))
         .AddDbContext<AuthContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Staging, "AuthStage")))
         .AddDbContext<CovalentContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Staging, "DownloaderStage")))
-        .AddScoped<ISignerManager, EnvSignerManager>();
+        .AddScoped<ISignerManager, SignerManager>();
 }
