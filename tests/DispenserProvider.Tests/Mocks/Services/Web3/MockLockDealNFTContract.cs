@@ -1,8 +1,8 @@
 ﻿using Moq;
 using Net.Web3.EthereumWallet;
-using DispenserProvider.Services.Web3;
 using DispenserProvider.Services.Handlers.CreateAsset.Models;
 using DispenserProvider.Services.Validators.AdminRequest.Models;
+using DispenserProvider.Services.Web3.Contracts;
 
 namespace DispenserProvider.Tests.Mocks.Services.Web3;
 

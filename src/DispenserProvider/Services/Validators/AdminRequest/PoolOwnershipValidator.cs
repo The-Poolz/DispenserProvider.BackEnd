@@ -2,6 +2,7 @@
 using DispenserProvider.Services.Web3;
 using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.Services.Validators.AdminRequest.Models;
+using DispenserProvider.Services.Web3.Contracts;
 
 namespace DispenserProvider.Services.Validators.AdminRequest;
 

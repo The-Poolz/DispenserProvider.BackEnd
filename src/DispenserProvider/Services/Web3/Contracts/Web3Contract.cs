@@ -3,7 +3,7 @@ using Nethereum.RPC.Eth.DTOs;
 using Net.Web3.EthereumWallet;
 using Nethereum.ABI.FunctionEncoding;
 
-namespace DispenserProvider.Services.Web3;
+namespace DispenserProvider.Services.Web3.Contracts;
 
 public class Web3Contract(IChainProvider chainProvider)
 {

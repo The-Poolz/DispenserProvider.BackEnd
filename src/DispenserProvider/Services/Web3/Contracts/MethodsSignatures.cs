@@ -1,4 +1,4 @@
-﻿namespace DispenserProvider.Services.Web3;
+﻿namespace DispenserProvider.Services.Web3.Contracts;
 
 public static class MethodsSignatures
 {

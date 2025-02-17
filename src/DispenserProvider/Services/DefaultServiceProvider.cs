@@ -33,6 +33,7 @@ using DispenserProvider.Services.Validators.AdminRequest.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 using DispenserProvider.Services.Handlers.GenerateSignature.Models;
 using DispenserProvider.Services.Handlers.RetrieveSignature.Models;
+using DispenserProvider.Services.Web3.Contracts;
 
 namespace DispenserProvider.Services;
 

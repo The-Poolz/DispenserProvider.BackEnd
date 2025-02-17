@@ -1,7 +1,7 @@
 ﻿using Nethereum.ABI.Decoders;
 using Net.Web3.EthereumWallet;
 
-namespace DispenserProvider.Services.Web3;
+namespace DispenserProvider.Services.Web3.Contracts;
 
 public class BuilderContract(IChainProvider chainProvider) : Web3Contract(chainProvider), IBuilderContract
 {
