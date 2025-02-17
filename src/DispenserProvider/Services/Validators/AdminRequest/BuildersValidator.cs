@@ -7,6 +7,8 @@ public class BuildersValidator : AbstractValidator<BuildersValidatorRequest>
 {
     public BuildersValidator(IValidator<ChainAddressPair> builderValidator)
     {
+        ClassLevelCascadeMode = CascadeMode.Stop;
+
         RuleForEach(x => x.Withdraw)
             .SetValidator(builderValidator);
 

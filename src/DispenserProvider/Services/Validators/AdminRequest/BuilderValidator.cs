@@ -12,6 +12,7 @@ public class BuilderValidator : AbstractValidator<ChainAddressPair>
     public BuilderValidator(ILockDealNFTContract lockDealNFT, IBuilderContract builderContract)
     {
         RuleFor(x => x)
+            .Cascade(CascadeMode.Stop)
             .Must(x => lockDealNFT.ApprovedContract(x.ChainId, x.Address))
             .WithError(ErrorCode.BUILDER_MUST_BE_APPROVED_IN_LOCK_DEAL_NFT, x => new
             {
