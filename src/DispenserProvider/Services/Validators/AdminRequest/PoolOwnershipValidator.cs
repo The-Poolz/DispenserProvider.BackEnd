@@ -13,11 +13,7 @@ public class PoolOwnershipValidator : AbstractValidator<PoolOwnershipValidatorRe
 
         RuleFor(x => x.Withdraw)
             .Must(x => signerManager.GetSigner().GetPublicAddress() == lockDealNFT.OwnerOf(x.ChainId, x.PoolId))
-            .WithError(ErrorCode.INVALID_TOKEN_OWNER, x => new
-            {
-                x.Withdraw.ChainId,
-                x.Withdraw.PoolId
-            });
+            .WithError(ErrorCode.INVALID_TOKEN_OWNER, x => x.Withdraw);
 
         RuleFor(x => x.Refund!)
             .Must(x => Equals(
@@ -25,10 +21,6 @@ public class PoolOwnershipValidator : AbstractValidator<PoolOwnershipValidatorRe
                 lockDealNFT.OwnerOf(x.ChainId, x.PoolId).Address
             ))
             .When(x => x.Refund != null)
-            .WithError(ErrorCode.INVALID_TOKEN_OWNER, x => new
-            {
-                x.Refund!.ChainId,
-                x.Refund!.PoolId
-            });
+            .WithError(ErrorCode.INVALID_TOKEN_OWNER, x => x.Refund!);
     }
 }
