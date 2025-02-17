@@ -10,5 +10,6 @@ public static class MethodsSignatures
     public static class LockDealNFT
     {
         public const string OwnerOf = "0x6352211e";
+        public const string ApprovedContract = "0x26749ad7";
     }
 }
