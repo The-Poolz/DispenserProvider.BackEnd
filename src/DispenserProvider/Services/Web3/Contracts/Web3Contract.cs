@@ -12,7 +12,7 @@ public class Web3Contract(IChainProvider chainProvider)
     protected TResponse CallFunctionWithParameters<TDecoder, TResponse>(long chainId, EthereumAddress contractAddress, string encodedData)
         where TDecoder : TypeDecoder, new()
     {
-        return InternalCallFunction<TDecoder, TResponse>(chainId, contractAddress, new CallInput(
+        return InternalCallFunction<TDecoder, TResponse>(chainId, new CallInput(
             data: encodedData,
             addressTo: contractAddress
         ));
@@ -21,13 +21,13 @@ public class Web3Contract(IChainProvider chainProvider)
     protected TResponse CallFunction<TDecoder, TResponse>(long chainId, EthereumAddress contractAddress, string sha3Signature)
         where TDecoder : TypeDecoder, new()
     {
-        return InternalCallFunction<TDecoder, TResponse>(chainId, contractAddress, new CallInput(
+        return InternalCallFunction<TDecoder, TResponse>(chainId, new CallInput(
             data: new FunctionCallEncoder().EncodeRequest(sha3Signature),
             addressTo: contractAddress
         ));
     }
 
-    private TResponse InternalCallFunction<TDecoder, TResponse>(long chainId, EthereumAddress contractAddress, CallInput callInput)
+    private TResponse InternalCallFunction<TDecoder, TResponse>(long chainId, CallInput callInput)
         where TDecoder : TypeDecoder, new()
     {
         var web3 = ChainProvider.Web3(chainId);
