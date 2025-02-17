@@ -14,16 +14,8 @@ public class BuilderValidator : AbstractValidator<ChainAddressPair>
         RuleFor(x => x)
             .Cascade(CascadeMode.Stop)
             .Must(x => lockDealNFT.ApprovedContract(x.ChainId, x.Address))
-            .WithError(ErrorCode.BUILDER_MUST_BE_APPROVED_IN_LOCK_DEAL_NFT, x => new
-            {
-                x.ChainId,
-                x.Address
-            })
+            .WithError(ErrorCode.BUILDER_MUST_BE_APPROVED_IN_LOCK_DEAL_NFT, x => x)
             .Must(x => _validProviderNames.Contains(builderContract.Name(x.ChainId, x.Address)))
-            .WithError(ErrorCode.BUILDER_MUST_BE_SIMPLE_PROVIDER, x => new
-            {
-                x.ChainId,
-                x.Address
-            });
+            .WithError(ErrorCode.BUILDER_MUST_BE_SIMPLE_PROVIDER, x => x);
     }
 }
