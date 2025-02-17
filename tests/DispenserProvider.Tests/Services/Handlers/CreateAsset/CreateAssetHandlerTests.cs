@@ -104,6 +104,47 @@ public class CreateAssetHandlerTests
         }
 
         [Fact]
+        internal void WhenBuilderValidationFailed_ShouldThrowException()
+        {
+            var lockDealNFT = new MockLockDealNFTContractBuilder()
+                .WithOwnerOf(MockCreateAssetRequest.Message.ChainId, MockCreateAssetRequest.Message.PoolId, MockUsers.Admin.Address)
+                .WithOwnerOf(MockCreateAssetRequest.Message.Refund!.ChainId, MockCreateAssetRequest.Message.Refund!.PoolId, MockUsers.Admin.Address)
+                .Build();
+
+            var handler = new CreateAssetHandler(
+                new MockDbContextFactory(),
+                new CreateValidator(
+                    new MockAdminValidationService()
+                ),
+                new PoolOwnershipValidator(
+                    new MockSignerManager(MockUsers.Admin.PrivateKey),
+                    lockDealNFT
+                ),
+                new BuildersValidator(
+                    new BuilderValidator(
+                        lockDealNFT,
+                        new MockBuilderContract(isConfigured: false)
+                    )
+                )
+            );
+
+            var testCode = () => handler.Handle(MockCreateAssetRequest.Request);
+
+            testCode.Should().Throw<ValidationException>()
+                .Which.Errors.Should().ContainSingle()
+                .Which.Should().BeEquivalentTo(new
+                {
+                    ErrorCode = "BUILDER_MUST_BE_APPROVED_IN_LOCK_DEAL_NFT",
+                    ErrorMessage = "Provided builder address not approved in the LockDealNFT contract.",
+                    CustomState = new
+                    {
+                        MockCreateAssetRequest.Message.ChainId,
+                        Address = MockCreateAssetRequest.Message.Schedules[0].ProviderAddress
+                    }
+                });
+        }
+
+        [Fact]
         internal void WhenSavingSuccessfully_ShouldContextContainsExpectedEntities()
         {
             var lockDealNFT = new MockLockDealNFTContractBuilder()
