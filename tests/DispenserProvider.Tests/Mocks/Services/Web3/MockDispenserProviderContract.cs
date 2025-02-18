@@ -1,6 +1,6 @@
 ﻿using Moq;
-using DispenserProvider.Services.Web3;
 using DispenserProvider.DataBase.Models;
+using DispenserProvider.Services.Web3.Contracts;
 
 namespace DispenserProvider.Tests.Mocks.Services.Web3;
 

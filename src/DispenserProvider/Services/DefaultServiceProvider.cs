@@ -12,6 +12,7 @@ using ConfiguredSqlConnection.Extensions;
 using DispenserProvider.Services.Database;
 using DispenserProvider.Services.Handlers;
 using Microsoft.Extensions.DependencyInjection;
+using DispenserProvider.Services.Web3.Contracts;
 using DispenserProvider.MessageTemplate.Services;
 using DispenserProvider.MessageTemplate.Validators;
 using DispenserProvider.Services.Handlers.ReadAsset;
@@ -61,6 +62,7 @@ public static class DefaultServiceProvider
         .AddScoped<IValidator<GenerateSignatureValidatorRequest>, GenerateSignatureValidator>()
         .AddScoped<IValidator<RetrieveSignatureValidatorRequest>, RetrieveSignatureRequestValidator>()
         .AddScoped<IValidator<PoolOwnershipValidatorRequest>, PoolOwnershipValidator>()
+        .AddScoped<IValidator<BuildersValidatorRequest>, BuildersValidator>()
         .AddScoped<UpdatingSignatureValidator>()
         .AddScoped<RefundSignatureValidator>()
         .AddScoped<AssetAvailabilityValidator>()
@@ -71,6 +73,7 @@ public static class DefaultServiceProvider
         .AddScoped<IChainProvider, ChainProvider>()
         .AddScoped<ILockDealNFTContract, LockDealNFTContract>()
         .AddScoped<IDispenserProviderContract, DispenserProviderContract>()
+        .AddScoped<IBuilderContract, BuilderContract>()
         .AddScoped<ITakenTrackManager, TakenTrackManager>()
         .AddScoped<IRequestHandler<CreateAssetRequest, CreateAssetResponse>, CreateAssetHandler>()
         .AddScoped<IRequestHandler<DeleteAssetRequest, DeleteAssetResponse>, DeleteAssetHandler>()

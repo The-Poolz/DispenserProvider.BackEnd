@@ -35,5 +35,9 @@ public enum ErrorCode
     [Error("Cannot generate signature, because the next valid time for generation has not yet arrived.")]
     SIGNATURE_GENERATION_VALID_TIME_NOT_ARRIVED,
     [Error("Owner of provided PoolId in the provided ChainId is invalid.")]
-    INVALID_TOKEN_OWNER
+    INVALID_TOKEN_OWNER,
+    [Error("Provided builder address not approved in the LockDealNFT contract.")]
+    BUILDER_MUST_BE_APPROVED_IN_LOCK_DEAL_NFT,
+    [Error("Provided builder address is not a simple provider.")]
+    BUILDER_MUST_BE_SIMPLE_PROVIDER
 }

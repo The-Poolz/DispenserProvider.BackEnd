@@ -2,6 +2,7 @@
 using System.Net;
 using FluentAssertions;
 using FluentValidation;
+using Net.Web3.EthereumWallet;
 using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.Tests.Mocks.Services.Web3;
 using DispenserProvider.MessageTemplate.Validators;
@@ -20,6 +21,10 @@ public class CreateAssetHandlerTests
         [Fact]
         internal void WhenRequestValidationFailed_ShouldThrowException()
         {
+            var lockDealNFT = new MockLockDealNFTContractBuilder()
+                .WithOwnerOf(MockCreateAssetRequest.Message.ChainId, MockCreateAssetRequest.Message.PoolId, MockUsers.Admin.Address)
+                .Build();
+
             var handler = new CreateAssetHandler(
                 new MockDbContextFactory(),
                 new CreateValidator(
@@ -27,7 +32,11 @@ public class CreateAssetHandlerTests
                 ),
                 new PoolOwnershipValidator(
                     new MockSignerManager(MockUsers.Admin.PrivateKey),
-                    MockLockDealNFTContract.Create(MockCreateAssetRequest.Message, MockUsers.Admin.Address)
+                    lockDealNFT
+                ),
+                new BuildersValidator(
+                    lockDealNFT,
+                    new MockBuilderContract(isConfigured: false)
                 )
             );
             var request = new CreateAssetRequest
@@ -54,6 +63,11 @@ public class CreateAssetHandlerTests
         [Fact]
         internal void WhenPoolOwnershipValidationFailed_ShouldThrowException()
         {
+            var lockDealNFT = new MockLockDealNFTContractBuilder()
+                .WithOwnerOf(MockCreateAssetRequest.Message.ChainId, MockCreateAssetRequest.Message.PoolId, MockUsers.Admin.Address)
+                .WithOwnerOf(MockCreateAssetRequest.Message.Refund!.ChainId, MockCreateAssetRequest.Message.Refund!.PoolId, EthereumAddress.ZeroAddress)
+                .Build();
+
             var handler = new CreateAssetHandler(
                 new MockDbContextFactory(),
                 new CreateValidator(
@@ -61,7 +75,11 @@ public class CreateAssetHandlerTests
                 ),
                 new PoolOwnershipValidator(
                     new MockSignerManager(MockUsers.Admin.PrivateKey),
-                    MockLockDealNFTContract.Create(MockCreateAssetRequest.Message, MockUsers.Admin.Address)
+                    lockDealNFT
+                ),
+                new BuildersValidator(
+                    lockDealNFT,
+                    new MockBuilderContract(isConfigured: false)
                 )
             );
 
@@ -82,8 +100,54 @@ public class CreateAssetHandlerTests
         }
 
         [Fact]
+        internal void WhenBuilderValidationFailed_ShouldThrowException()
+        {
+            var lockDealNFT = new MockLockDealNFTContractBuilder()
+                .WithOwnerOf(MockCreateAssetRequest.Message.ChainId, MockCreateAssetRequest.Message.PoolId, MockUsers.Admin.Address)
+                .WithOwnerOf(MockCreateAssetRequest.Message.Refund!.ChainId, MockCreateAssetRequest.Message.Refund!.PoolId, MockUsers.Admin.Address)
+                .Build();
+
+            var handler = new CreateAssetHandler(
+                new MockDbContextFactory(),
+                new CreateValidator(
+                    new MockAdminValidationService()
+                ),
+                new PoolOwnershipValidator(
+                    new MockSignerManager(MockUsers.Admin.PrivateKey),
+                    lockDealNFT
+                ),
+                new BuildersValidator(
+                    lockDealNFT,
+                    new MockBuilderContract(isConfigured: false)
+                )
+            );
+
+            var testCode = () => handler.Handle(MockCreateAssetRequest.Request);
+
+            testCode.Should().Throw<ValidationException>()
+                .Which.Errors.Should().ContainSingle()
+                .Which.Should().BeEquivalentTo(new
+                {
+                    ErrorCode = "BUILDER_MUST_BE_APPROVED_IN_LOCK_DEAL_NFT",
+                    ErrorMessage = "Provided builder address not approved in the LockDealNFT contract.",
+                    CustomState = new
+                    {
+                        MockCreateAssetRequest.Message.ChainId,
+                        Address = MockCreateAssetRequest.Message.Schedules[0].ProviderAddress
+                    }
+                });
+        }
+
+        [Fact]
         internal void WhenSavingSuccessfully_ShouldContextContainsExpectedEntities()
         {
+            var lockDealNFT = new MockLockDealNFTContractBuilder()
+                .WithOwnerOf(MockCreateAssetRequest.Message.ChainId, MockCreateAssetRequest.Message.PoolId, MockUsers.Admin.Address)
+                .WithOwnerOf(MockCreateAssetRequest.Message.Refund!.ChainId, MockCreateAssetRequest.Message.Refund!.PoolId, MockUsers.Admin.Address)
+                .WithApprovedContract(MockCreateAssetRequest.Message.ChainId, MockCreateAssetRequest.Message.Schedules[0].ProviderAddress, true)
+                .WithApprovedContract(MockCreateAssetRequest.Message.Refund!.ChainId, MockCreateAssetRequest.Message.Refund!.DealProvider, true)
+                .Build();
+
             var dbFactory = new MockDbContextFactory();
             var handler = new CreateAssetHandler(
                 dbFactory,
@@ -92,7 +156,11 @@ public class CreateAssetHandlerTests
                 ),
                 new PoolOwnershipValidator(
                     new MockSignerManager(MockUsers.Admin.PrivateKey),
-                    MockLockDealNFTContract.Create(MockCreateAssetRequest.Message, MockUsers.Admin.Address, MockUsers.Admin.Address)
+                    lockDealNFT
+                ),
+                new BuildersValidator(
+                    lockDealNFT,
+                    new MockBuilderContract(isConfigured: true)
                 )
             );
             var response = handler.Handle(MockCreateAssetRequest.Request);

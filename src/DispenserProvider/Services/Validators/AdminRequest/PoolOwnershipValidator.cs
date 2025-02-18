@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using DispenserProvider.Services.Web3;
 using Net.Utils.ErrorHandler.Extensions;
+using DispenserProvider.Services.Web3.Contracts;
 using DispenserProvider.Services.Validators.AdminRequest.Models;
 
 namespace DispenserProvider.Services.Validators.AdminRequest;

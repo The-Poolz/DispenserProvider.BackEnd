@@ -1,6 +1,7 @@
 ﻿using Xunit;
 using FluentAssertions;
 using FluentValidation;
+using Net.Web3.EthereumWallet;
 using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.Tests.Mocks.Services.Web3;
 using DispenserProvider.Services.Validators.AdminRequest;
@@ -20,7 +21,9 @@ public class PoolOwnershipValidatorTests
 
             var validator = new PoolOwnershipValidator(
                 new MockSignerManager(MockUsers.Admin.PrivateKey),
-                MockLockDealNFTContract.Create(request)
+                new MockLockDealNFTContractBuilder()
+                    .WithOwnerOf(withdraw.ChainId, withdraw.PoolId, EthereumAddress.ZeroAddress)
+                    .Build()
             );
 
             var testCode = () => validator.ValidateAndThrow(request);
@@ -48,7 +51,10 @@ public class PoolOwnershipValidatorTests
 
             var validator = new PoolOwnershipValidator(
                 new MockSignerManager(MockUsers.Admin.PrivateKey),
-                MockLockDealNFTContract.Create(request, MockUsers.Admin.Address)
+                new MockLockDealNFTContractBuilder()
+                    .WithOwnerOf(withdraw.ChainId, withdraw.PoolId, MockUsers.Admin.Address)
+                    .WithOwnerOf(refund.ChainId, refund.PoolId, EthereumAddress.ZeroAddress)
+                    .Build()
             );
 
             var testCode = () => validator.ValidateAndThrow(request);
@@ -76,7 +82,10 @@ public class PoolOwnershipValidatorTests
 
             var validator = new PoolOwnershipValidator(
                 new MockSignerManager(MockUsers.Admin.PrivateKey),
-                MockLockDealNFTContract.Create(request, MockUsers.Admin.Address, MockUsers.Admin.Address)
+                new MockLockDealNFTContractBuilder()
+                    .WithOwnerOf(withdraw.ChainId, withdraw.PoolId, MockUsers.Admin.Address)
+                    .WithOwnerOf(refund.ChainId, refund.PoolId, MockUsers.Admin.Address)
+                    .Build()
             );
 
             var testCode = () => validator.ValidateAndThrow(request);
