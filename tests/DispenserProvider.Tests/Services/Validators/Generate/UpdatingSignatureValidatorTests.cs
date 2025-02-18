@@ -36,7 +36,8 @@ public class UpdatingSignatureValidatorTests
                 {
                     ErrorCode = "SIGNATURE_IS_STILL_VALID",
                     ErrorMessage = "Cannot generate signature, because it is still valid until.",
-                    CustomState = new {
+                    CustomState = new
+                    {
                         ValidFrom = dispenser.LastUserSignature!.ValidFrom.ToUnixTimestamp(),
                         NextTry = UpdatingSignatureValidator.NextTry(dispenser).ToUnixTimestamp()
                     }
