@@ -62,7 +62,6 @@ public static class DefaultServiceProvider
         .AddScoped<IValidator<GenerateSignatureValidatorRequest>, GenerateSignatureValidator>()
         .AddScoped<IValidator<RetrieveSignatureValidatorRequest>, RetrieveSignatureRequestValidator>()
         .AddScoped<IValidator<PoolOwnershipValidatorRequest>, PoolOwnershipValidator>()
-        .AddScoped<IValidator<ChainAddressPair>, BuilderValidator>()
         .AddScoped<IValidator<BuildersValidatorRequest>, BuildersValidator>()
         .AddScoped<UpdatingSignatureValidator>()
         .AddScoped<RefundSignatureValidator>()
