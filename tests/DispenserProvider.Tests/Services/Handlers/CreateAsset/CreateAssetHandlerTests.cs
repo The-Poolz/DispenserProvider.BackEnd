@@ -35,10 +35,8 @@ public class CreateAssetHandlerTests
                     lockDealNFT
                 ),
                 new BuildersValidator(
-                    new BuilderValidator(
-                        lockDealNFT,
-                        new MockBuilderContract(isConfigured: false)
-                    )
+                    lockDealNFT,
+                    new MockBuilderContract(isConfigured: false)
                 )
             );
             var request = new CreateAssetRequest
@@ -80,10 +78,8 @@ public class CreateAssetHandlerTests
                     lockDealNFT
                 ),
                 new BuildersValidator(
-                    new BuilderValidator(
-                        lockDealNFT,
-                        new MockBuilderContract(isConfigured: false)
-                    )
+                    lockDealNFT,
+                    new MockBuilderContract(isConfigured: false)
                 )
             );
 
@@ -121,10 +117,8 @@ public class CreateAssetHandlerTests
                     lockDealNFT
                 ),
                 new BuildersValidator(
-                    new BuilderValidator(
-                        lockDealNFT,
-                        new MockBuilderContract(isConfigured: false)
-                    )
+                    lockDealNFT,
+                    new MockBuilderContract(isConfigured: false)
                 )
             );
 
@@ -165,10 +159,8 @@ public class CreateAssetHandlerTests
                     lockDealNFT
                 ),
                 new BuildersValidator(
-                    new BuilderValidator(
-                        lockDealNFT,
-                        new MockBuilderContract(isConfigured: true)
-                    )
+                    lockDealNFT,
+                    new MockBuilderContract(isConfigured: true)
                 )
             );
             var response = handler.Handle(MockCreateAssetRequest.Request);

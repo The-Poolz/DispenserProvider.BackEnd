@@ -21,7 +21,8 @@ public class BuilderValidatorTests
                 new MockLockDealNFTContractBuilder()
                     .WithApprovedContract(withdraw.ChainId, withdraw.Address, false)
                     .Build(),
-                new MockBuilderContract(isConfigured: false)
+                new MockBuilderContract(isConfigured: false),
+                "DealProvider"
             );
 
             var testCode = () => validator.ValidateAndThrow(withdraw);
@@ -45,7 +46,8 @@ public class BuilderValidatorTests
                 new MockLockDealNFTContractBuilder()
                     .WithApprovedContract(withdraw.ChainId, withdraw.Address, true)
                     .Build(),
-                new MockBuilderContract(isConfigured: false)
+                new MockBuilderContract(isConfigured: false),
+                "DealProvider"
             );
 
             var testCode = () => validator.ValidateAndThrow(withdraw);
@@ -69,7 +71,8 @@ public class BuilderValidatorTests
                 new MockLockDealNFTContractBuilder()
                     .WithApprovedContract(withdraw.ChainId, withdraw.Address, true)
                     .Build(),
-                new MockBuilderContract(isConfigured: true)
+                new MockBuilderContract(isConfigured: true),
+                "DealProvider"
             );
 
             var testCode = () => validator.ValidateAndThrow(withdraw);
