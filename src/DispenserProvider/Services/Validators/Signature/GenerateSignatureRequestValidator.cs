@@ -13,7 +13,7 @@ public class GenerateSignatureValidator : AbstractValidator<GenerateSignatureVal
     {
         ClassLevelCascadeMode = CascadeMode.Stop;
 
-        RuleFor(x => x.Dispenser)
+        RuleFor(x => x)
             .SetValidator(updatingValidator)
             .When(x => x.Dispenser.LastUserSignature != null);
 

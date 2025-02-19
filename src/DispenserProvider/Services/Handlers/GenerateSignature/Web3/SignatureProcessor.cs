@@ -16,7 +16,7 @@ public class SignatureProcessor(IDbContextFactory<DispenserContext> dispenserCon
         {
             Signature = signatureGenerator.GenerateSignature(transactionDetail, validUntil),
             ValidUntil = validUntil,
-            ValidFrom = DateTime.UtcNow + TimeSpan.FromSeconds(Env.VALID_FROM_OFFSET_IN_SECONDS.GetRequired<int>()),
+            ValidFrom = CalculateValidFrom(dispenser),
             IsRefund = isRefund,
             DispenserId = dispenser.Id
         };
@@ -26,6 +26,13 @@ public class SignatureProcessor(IDbContextFactory<DispenserContext> dispenserCon
         dispenserContext.SaveChanges();
 
         return signature.ValidFrom;
+    }
+
+    private static DateTime CalculateValidFrom(DispenserDTO dispenser)
+    {
+        return dispenser.LastUserSignature != null
+            ? DateTime.UtcNow + TimeSpan.FromSeconds(Env.VALID_FROM_OFFSET_IN_SECONDS.GetRequired<int>())
+            : DateTime.UtcNow;
     }
 
     private static DateTime CalculateValidUntil(DateTime? refundFinishTime, bool isRefund)
