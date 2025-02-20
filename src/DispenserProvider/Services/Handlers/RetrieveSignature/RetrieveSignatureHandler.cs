@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using MediatR;
+using FluentValidation;
 using DispenserProvider.Services.Database;
 using DispenserProvider.Services.Validators.Signature.Models;
 using DispenserProvider.Services.Handlers.RetrieveSignature.Models;
@@ -11,7 +12,7 @@ public class RetrieveSignatureHandler(
 )
     : IRequestHandler<RetrieveSignatureRequest, RetrieveSignatureResponse>
 {
-    public RetrieveSignatureResponse Handle(RetrieveSignatureRequest request)
+    public Task<RetrieveSignatureResponse> Handle(RetrieveSignatureRequest request, CancellationToken cancellationToken)
     {
         var dispenser = dispenserManager.GetDispenser(request);
         var isRefund = dispenser.RefundDetail != null && dispenser.RefundDetail.ChainId == request.ChainId && dispenser.RefundDetail.PoolId == request.PoolId;
@@ -19,6 +20,6 @@ public class RetrieveSignatureHandler(
         retrieveValidator.ValidateAndThrow(new RetrieveSignatureValidatorRequest(dispenser, isRefund));
 
         var transactionDetail = isRefund ? dispenser.RefundDetail! : dispenser.WithdrawalDetail;
-        return new RetrieveSignatureResponse(new Asset(dispenser, transactionDetail, isRefund));
+        return Task.FromResult(new RetrieveSignatureResponse(new Asset(dispenser, transactionDetail, isRefund)));
     }
 }

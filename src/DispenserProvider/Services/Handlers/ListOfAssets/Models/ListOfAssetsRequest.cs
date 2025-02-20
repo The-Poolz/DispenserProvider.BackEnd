@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using MediatR;
+using Newtonsoft.Json;
 using Net.Web3.EthereumWallet;
-using DispenserProvider.Models;
 using DispenserProvider.Extensions.Pagination;
 
 namespace DispenserProvider.Services.Handlers.ListOfAssets.Models;
 
-public class ListOfAssetsRequest : IPaginated, IHandlerRequest
+public class ListOfAssetsRequest : IPaginated, IRequest<ListOfAssetsResponse>
 {
     [JsonRequired]
     public EthereumAddress UserAddress { get; set; } = null!;

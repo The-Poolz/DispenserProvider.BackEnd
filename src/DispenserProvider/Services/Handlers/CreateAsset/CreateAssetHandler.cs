@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using MediatR;
+using FluentValidation;
 using DispenserProvider.DataBase;
 using Microsoft.EntityFrameworkCore;
 using DispenserProvider.MessageTemplate.Models.Validators;
@@ -16,7 +17,7 @@ public class CreateAssetHandler(
 )
     : IRequestHandler<CreateAssetRequest, CreateAssetResponse>
 {
-    public CreateAssetResponse Handle(CreateAssetRequest request)
+    public Task<CreateAssetResponse> Handle(CreateAssetRequest request, CancellationToken cancellationToken)
     {
         requestValidator.ValidateAndThrow(new CreateValidatorSettings(
             new AdminRequestValidatorSettings(request.Signature, request.Message.Eip712Message),
@@ -36,7 +37,7 @@ public class CreateAssetHandler(
 
         Save(request);
 
-        return new CreateAssetResponse();
+        return Task.FromResult(new CreateAssetResponse());
     }
 
     private void Save(CreateAssetRequest request)

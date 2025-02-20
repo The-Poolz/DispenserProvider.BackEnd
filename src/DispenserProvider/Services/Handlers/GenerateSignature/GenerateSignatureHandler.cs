@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using MediatR;
+using FluentValidation;
 using DispenserProvider.Services.Database;
 using DispenserProvider.Services.Validators.Signature.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
@@ -13,7 +14,7 @@ public class GenerateSignatureHandler(
 )
     : IRequestHandler<GenerateSignatureRequest, GenerateSignatureResponse>
 {
-    public GenerateSignatureResponse Handle(GenerateSignatureRequest request)
+    public Task<GenerateSignatureResponse> Handle(GenerateSignatureRequest request, CancellationToken cancellationToken)
     {
         var dispenser = dispenserManager.GetDispenser(request);
 
@@ -23,6 +24,6 @@ public class GenerateSignatureHandler(
 
         var validFrom = signatureProcessor.SaveSignature(dispenser, isRefund);
 
-        return new GenerateSignatureResponse(validFrom);
+        return Task.FromResult(new GenerateSignatureResponse(validFrom));
     }
 }

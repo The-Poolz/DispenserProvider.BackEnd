@@ -1,11 +1,11 @@
-﻿using Newtonsoft.Json;
+﻿using MediatR;
+using Newtonsoft.Json;
 using Net.Web3.EthereumWallet;
-using DispenserProvider.Models;
 using DispenserProvider.Services.Database.Models;
 
 namespace DispenserProvider.Services.Handlers.RetrieveSignature.Models;
 
-public class RetrieveSignatureRequest : IGetDispenserRequest, IHandlerRequest
+public class RetrieveSignatureRequest : IGetDispenserRequest, IRequest<RetrieveSignatureResponse>
 {
     [JsonRequired]
     public EthereumAddress UserAddress { get; set; } = null!;

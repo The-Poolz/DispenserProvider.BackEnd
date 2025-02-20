@@ -1,4 +1,5 @@
-﻿using DispenserProvider.Services.Handlers.ReadAsset.Models;
+﻿using Net.Utils.ErrorHandler.Extensions;
+using DispenserProvider.Services.Handlers.ReadAsset.Models;
 using DispenserProvider.Services.Handlers.CreateAsset.Models;
 using DispenserProvider.Services.Handlers.DeleteAsset.Models;
 using DispenserProvider.Services.Handlers.ListOfAssets.Models;
@@ -16,4 +17,15 @@ public class LambdaRequest
     public ListOfAssetsRequest? ListOfAssetsRequest { get; set; }
     public GenerateSignatureRequest? GenerateSignatureRequest { get; set; }
     public RetrieveSignatureRequest? RetrieveSignatureRequest { get; set; }
+
+    public object Request => this switch
+    {
+        { CreateAssetRequest: not null } => CreateAssetRequest,
+        { DeleteAssetRequest: not null } => DeleteAssetRequest,
+        { ReadAssetRequest: not null } => ReadAssetRequest,
+        { ListOfAssetsRequest: not null } => ListOfAssetsRequest,
+        { GenerateSignatureRequest: not null } => GenerateSignatureRequest,
+        { RetrieveSignatureRequest: not null } => RetrieveSignatureRequest,
+        _ => throw ErrorCode.INVALID_HANDLER_REQUEST.ToException()
+    };
 }
