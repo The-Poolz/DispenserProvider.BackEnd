@@ -1,6 +1,7 @@
 ﻿using DispenserProvider.DataBase;
 using Microsoft.EntityFrameworkCore;
 using DispenserProvider.Services.Database;
+using DispenserProvider.Extensions.Pagination;
 using DispenserProvider.Services.Handlers.ListOfAssets.Models;
 
 namespace DispenserProvider.Services.Handlers.ListOfAssets;
@@ -20,6 +21,7 @@ public class ListOfAssetsHandler(IDbContextFactory<DispenserContext> dispenserCo
                 .ThenInclude(x => x.Builders)
             .Include(x => x.RefundDetail)
                 .ThenInclude(x => x!.Builders)
+            .Paginate(request, x => x.OrderByDescending(d => d.CreationLog.CreationTime))
             .ToArray();
 
         var processed = takenTrackManager.ProcessTakenTracks(dispensers);
