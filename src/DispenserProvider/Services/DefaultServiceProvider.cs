@@ -1,6 +1,5 @@
 ﻿using AuthDB;
 using CovalentDb;
-using SecretsManager;
 using FluentValidation;
 using System.Reflection;
 using DispenserProvider.Options;
@@ -56,7 +55,6 @@ public static class DefaultServiceProvider
         .AddScoped<RefundSignatureValidator>()
         .AddScoped<AssetAvailabilityValidator>()
         .AddScoped<IDispenserManager, DispenserManager>()
-        .AddScoped<SecretManager>()
         .AddScoped<ISignatureGenerator, SignatureGenerator>()
         .AddScoped<ISignatureProcessor, SignatureProcessor>()
         .AddScoped<IChainProvider, ChainProvider>()
