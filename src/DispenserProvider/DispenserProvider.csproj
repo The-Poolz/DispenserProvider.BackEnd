@@ -17,7 +17,9 @@
     <PackageReference Include="CovalentDB" Version="2.0.20" />
     <PackageReference Include="DispenserProvider.DataBase" Version="1.0.12" />
     <PackageReference Include="DispenserProvider.MessageTemplate" Version="1.0.5" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
     <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="MediatR.Extensions.FluentValidation.AspNetCore" Version="5.1.0" />
     <PackageReference Include="Net.Web3.EthereumWallet.Json" Version="1.2.0" />
     <PackageReference Include="Nethereum.ABI" Version="4.28.0" />
     <PackageReference Include="FluentValidation" Version="11.11.0" />

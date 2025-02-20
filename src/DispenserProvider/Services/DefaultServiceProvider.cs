@@ -14,12 +14,9 @@ using Microsoft.Extensions.DependencyInjection;
 using DispenserProvider.Services.Web3.Contracts;
 using DispenserProvider.MessageTemplate.Services;
 using DispenserProvider.MessageTemplate.Validators;
-using DispenserProvider.Services.Validators.Signature;
+using MediatR.Extensions.FluentValidation.AspNetCore;
 using DispenserProvider.Services.Validators.AdminRequest;
-using DispenserProvider.MessageTemplate.Models.Validators;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using DispenserProvider.Services.Validators.Signature.Models;
-using DispenserProvider.Services.Validators.AdminRequest.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
 namespace DispenserProvider.Services;
@@ -44,16 +41,9 @@ public static class DefaultServiceProvider
 
     private static IServiceCollection Default => new ServiceCollection()
         .AddMediatR(x => x.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()))
-        .AddScoped<IValidator<CreateValidatorSettings>, CreateValidator>()
-        .AddScoped<IValidator<DeleteValidatorSettings>, DeleteValidator>()
+        .AddFluentValidation([Assembly.GetExecutingAssembly()])
+        .AddValidatorsFromAssemblies([Assembly.GetExecutingAssembly(), typeof(CreateValidator).GetTypeInfo().Assembly])
         .AddScoped<IAdminValidationService, AdminValidationService>()
-        .AddScoped<IValidator<GenerateSignatureValidatorRequest>, GenerateSignatureValidator>()
-        .AddScoped<IValidator<RetrieveSignatureValidatorRequest>, RetrieveSignatureRequestValidator>()
-        .AddScoped<IValidator<PoolOwnershipValidatorRequest>, PoolOwnershipValidator>()
-        .AddScoped<IValidator<BuildersValidatorRequest>, BuildersValidator>()
-        .AddScoped<UpdatingSignatureValidator>()
-        .AddScoped<RefundSignatureValidator>()
-        .AddScoped<AssetAvailabilityValidator>()
         .AddScoped<IDispenserManager, DispenserManager>()
         .AddScoped<ISignatureGenerator, SignatureGenerator>()
         .AddScoped<ISignatureProcessor, SignatureProcessor>()
