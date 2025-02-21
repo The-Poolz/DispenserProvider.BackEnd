@@ -13,7 +13,7 @@ public class DispenserProviderLambda(IServiceProvider serviceProvider)
 {
     public DispenserProviderLambda() : this(DefaultServiceProvider.Build()) { }
 
-    public async Task<LambdaResponse> Run(LambdaRequest request)
+    public async Task<LambdaResponse> RunAsync(LambdaRequest request)
     {
         try
         {

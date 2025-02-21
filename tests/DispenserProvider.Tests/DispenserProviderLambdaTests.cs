@@ -21,7 +21,7 @@ public class DispenserProviderLambdaTests
         }
     }
 
-    public class Run
+    public class RunAsync
     {
         [Fact]
         internal async Task WhenRequestHandledSuccessfully_ShouldReturnExpectedResponse()
@@ -42,7 +42,7 @@ public class DispenserProviderLambdaTests
 
             var lambda = new DispenserProviderLambda(serviceProvider);
 
-            var response = await lambda.Run(request);
+            var response = await lambda.RunAsync(request);
 
             response.Should().BeEquivalentTo(new LambdaResponse(handlerResponse));
         }
