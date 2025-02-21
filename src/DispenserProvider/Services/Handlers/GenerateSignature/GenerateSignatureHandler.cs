@@ -10,7 +10,6 @@ public class GenerateSignatureHandler(IDispenserManager dispenserManager, ISigna
 {
     public Task<GenerateSignatureResponse> Handle(GenerateSignatureRequest request, CancellationToken cancellationToken)
     {
-        request.InitializeValidatorRequest(dispenserManager);
         var dispenser = dispenserManager.GetDispenser(request);
         var isRefund = dispenser.RefundDetail != null && dispenser.RefundDetail.ChainId == request.ChainId && dispenser.RefundDetail.PoolId == request.PoolId;
         var validFrom = signatureProcessor.SaveSignature(dispenser, isRefund);

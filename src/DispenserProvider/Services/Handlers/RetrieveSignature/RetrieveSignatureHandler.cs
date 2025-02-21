@@ -8,7 +8,6 @@ public class RetrieveSignatureHandler(IDispenserManager dispenserManager) : IReq
 {
     public Task<RetrieveSignatureResponse> Handle(RetrieveSignatureRequest request, CancellationToken cancellationToken)
     {
-        request.InitializeValidatorRequest(dispenserManager);
         var dispenser = dispenserManager.GetDispenser(request);
         var isRefund = dispenser.RefundDetail != null && dispenser.RefundDetail.ChainId == request.ChainId && dispenser.RefundDetail.PoolId == request.PoolId;
         var transactionDetail = isRefund ? dispenser.RefundDetail! : dispenser.WithdrawalDetail;

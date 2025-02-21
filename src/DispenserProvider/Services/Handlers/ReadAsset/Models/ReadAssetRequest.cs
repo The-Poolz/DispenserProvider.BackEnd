@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using DispenserProvider.Models;
+﻿using MediatR;
+using Newtonsoft.Json;
 
 namespace DispenserProvider.Services.Handlers.ReadAsset.Models;
 
-public class ReadAssetRequest : IHandlerRequest<ReadAssetResponse>
+public class ReadAssetRequest : IRequest<ReadAssetResponse>
 {
     [JsonRequired]
     public AssetContext[] AssetContext { get; set; } = null!;

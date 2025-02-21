@@ -1,33 +1,23 @@
-﻿using Newtonsoft.Json;
-using Net.Web3.EthereumWallet;
-using DispenserProvider.Models;
+﻿using DispenserProvider.Models;
 using DispenserProvider.Services.Database;
-using DispenserProvider.Services.Database.Models;
+using Microsoft.Extensions.DependencyInjection;
 using DispenserProvider.Services.Validators.Signature.Models;
 
 namespace DispenserProvider.Services.Handlers.RetrieveSignature.Models;
 
-public class RetrieveSignatureRequest : IGetDispenserRequest, IHandlerRequest<RetrieveSignatureResponse>
+public class RetrieveSignatureRequest : SignatureRequest, IHandlerRequest<RetrieveSignatureResponse>
 {
-    [JsonRequired]
-    public EthereumAddress UserAddress { get; set; } = null!;
-
-    [JsonRequired]
-    public long PoolId { get; set; }
-
-    [JsonRequired]
-    public long ChainId { get; set; }
-
-    [JsonIgnore]
-    public RetrieveSignatureValidatorRequest ValidatorRequest => _validatorRequest.Value;
-    private Lazy<RetrieveSignatureValidatorRequest> _validatorRequest = null!;
-    public void InitializeValidatorRequest(IDispenserManager dispenserManager)
+    public RetrieveSignatureRequest(SignatureRequest signatureRequest, IServiceProvider serviceProvider)
     {
-        _validatorRequest = new Lazy<RetrieveSignatureValidatorRequest>(() =>
-        {
-            var dispenser = dispenserManager.GetDispenser(this);
-            var isRefund = dispenser.RefundDetail != null && dispenser.RefundDetail.ChainId == ChainId && dispenser.RefundDetail.PoolId == PoolId;
-            return new RetrieveSignatureValidatorRequest(dispenser, isRefund);
-        });
+        ChainId = signatureRequest.ChainId;
+        PoolId = signatureRequest.PoolId;
+        UserAddress = signatureRequest.UserAddress;
+
+        var dispenserManager = serviceProvider.GetRequiredService<IDispenserManager>();
+        var dispenser = dispenserManager.GetDispenser(this);
+        var isRefund = dispenser.RefundDetail != null && dispenser.RefundDetail.ChainId == ChainId && dispenser.RefundDetail.PoolId == PoolId;
+        ValidatorRequest = new RetrieveSignatureValidatorRequest(dispenser, isRefund);
     }
+
+    public RetrieveSignatureValidatorRequest ValidatorRequest { get; }
 }
