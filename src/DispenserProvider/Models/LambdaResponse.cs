@@ -4,7 +4,7 @@ namespace DispenserProvider.Models;
 
 public class LambdaResponse
 {
-    public LambdaResponse(IHandlerResponse handlerResponse)
+    public LambdaResponse(object? handlerResponse)
     {
         HandlerResponse = handlerResponse;
     }
@@ -23,7 +23,7 @@ public class LambdaResponse
         ErrorData = error.CustomState;
     }
 
-    public IHandlerResponse? HandlerResponse { get; }
+    public object? HandlerResponse { get; }
     public string? ErrorMessage { get; }
     public string? ErrorType { get; }
     public object? ErrorData { get; }

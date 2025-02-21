@@ -1,5 +1,4 @@
-﻿using MediatR;
-using Net.Utils.ErrorHandler.Extensions;
+﻿using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.Services.Handlers.ReadAsset.Models;
 using DispenserProvider.Services.Handlers.CreateAsset.Models;
 using DispenserProvider.Services.Handlers.DeleteAsset.Models;
@@ -19,7 +18,7 @@ public class LambdaRequest
     public SignatureRequest? GenerateSignatureRequest { get; set; }
     public SignatureRequest? RetrieveSignatureRequest { get; set; }
 
-    public IRequest<IHandlerResponse> GetRequest(IServiceProvider serviceProvider) => this switch
+    public object GetRequest(IServiceProvider serviceProvider) => this switch
     {
         { CreateAssetRequest: not null } => CreateAssetRequest,
         { DeleteAssetRequest: not null } => DeleteAssetRequest,

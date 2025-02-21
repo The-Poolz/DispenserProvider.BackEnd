@@ -1,11 +1,12 @@
-﻿using DispenserProvider.Models;
+﻿using MediatR;
+using DispenserProvider.Models;
 using DispenserProvider.Services.Database;
 using Microsoft.Extensions.DependencyInjection;
 using DispenserProvider.Services.Validators.Signature.Models;
 
 namespace DispenserProvider.Services.Handlers.RetrieveSignature.Models;
 
-public class RetrieveSignatureRequest : SignatureRequest, IHandlerRequest<RetrieveSignatureResponse>
+public class RetrieveSignatureRequest : SignatureRequest, IRequest<RetrieveSignatureResponse>
 {
     public RetrieveSignatureRequest(SignatureRequest signatureRequest, IServiceProvider serviceProvider)
     {
