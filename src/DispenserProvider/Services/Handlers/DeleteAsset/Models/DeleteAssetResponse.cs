@@ -1,9 +1,8 @@
 ﻿using System.Net;
-using DispenserProvider.Models;
 
 namespace DispenserProvider.Services.Handlers.DeleteAsset.Models;
 
-public class DeleteAssetResponse(HttpStatusCode statusCode) : IHandlerResponse
+public class DeleteAssetResponse(HttpStatusCode statusCode)
 {
     public DeleteAssetResponse() : this(HttpStatusCode.OK) { }
 

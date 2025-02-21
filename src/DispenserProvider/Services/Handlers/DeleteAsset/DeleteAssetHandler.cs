@@ -1,25 +1,19 @@
-﻿using FluentValidation;
+﻿using MediatR;
 using DispenserProvider.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Net.Utils.ErrorHandler.Extensions;
-using DispenserProvider.MessageTemplate.Models.Validators;
 using DispenserProvider.Services.Handlers.DeleteAsset.Models;
 using DispenserProvider.Services.Handlers.DeleteAsset.Models.DatabaseWrappers;
 
 namespace DispenserProvider.Services.Handlers.DeleteAsset;
 
-public class DeleteAssetHandler(IDbContextFactory<DispenserContext> dispenserContextFactory, IValidator<DeleteValidatorSettings> validator) : IRequestHandler<DeleteAssetRequest, DeleteAssetResponse>
+public class DeleteAssetHandler(IDbContextFactory<DispenserContext> dispenserContextFactory) : IRequestHandler<DeleteAssetRequest, DeleteAssetResponse>
 {
-    public DeleteAssetResponse Handle(DeleteAssetRequest request)
+    public Task<DeleteAssetResponse> Handle(DeleteAssetRequest request, CancellationToken cancellationToken)
     {
-        validator.ValidateAndThrow(new DeleteValidatorSettings(
-            new AdminRequestValidatorSettings(request.Signature, request.Message.Eip712Message),
-            request.Message.UsersToValidate
-        ));
-
         MarkAsDeleted(request);
 
-        return new DeleteAssetResponse();
+        return Task.FromResult(new DeleteAssetResponse());
     }
 
     private void MarkAsDeleted(DeleteAssetRequest request)

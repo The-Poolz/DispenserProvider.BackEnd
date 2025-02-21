@@ -1,3 +1,4 @@
+using MediatR;
 using FluentValidation;
 using Amazon.Lambda.Core;
 using DispenserProvider.Models;
@@ -12,14 +13,15 @@ public class DispenserProviderLambda(IServiceProvider serviceProvider)
 {
     public DispenserProviderLambda() : this(DefaultServiceProvider.Build()) { }
 
-    public LambdaResponse Run(LambdaRequest request)
+    public async Task<LambdaResponse> RunAsync(LambdaRequest request)
     {
         try
         {
-            return new LambdaResponse(serviceProvider
-                .GetRequiredService<IHandlerFactory>()
-                .Handle(request)
-            );
+            var response = await serviceProvider
+                .GetRequiredService<IMediator>()
+                .Send(request.GetRequest(serviceProvider));
+            return new LambdaResponse(response);
+
         }
         catch (ValidationException ex)
         {

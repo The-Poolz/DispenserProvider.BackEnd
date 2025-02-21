@@ -1,8 +1,8 @@
 using Moq;
 using Xunit;
+using MediatR;
 using FluentAssertions;
 using DispenserProvider.Models;
-using DispenserProvider.Services;
 using Microsoft.Extensions.DependencyInjection;
 using DispenserProvider.Services.Handlers.CreateAsset.Models;
 
@@ -21,10 +21,10 @@ public class DispenserProviderLambdaTests
         }
     }
 
-    public class Run
+    public class RunAsync
     {
         [Fact]
-        internal void WhenRequestHandledSuccessfully_ShouldReturnExpectedResponse()
+        internal async Task WhenRequestHandledSuccessfully_ShouldReturnExpectedResponse()
         {
             var request = new LambdaRequest
             {
@@ -34,15 +34,15 @@ public class DispenserProviderLambdaTests
 
             var serviceProvider = new ServiceCollection()
                 .AddScoped(_ => {
-                    var handler = new Mock<IHandlerFactory>();
-                    handler.Setup(x => x.Handle(request)).Returns(handlerResponse);
+                    var handler = new Mock<IMediator>();
+                    handler.Setup(x => x.Send(It.IsAny<object>(), CancellationToken.None)).ReturnsAsync(handlerResponse);
                     return handler.Object;
                 })
                 .BuildServiceProvider();
 
             var lambda = new DispenserProviderLambda(serviceProvider);
 
-            var response = lambda.Run(request);
+            var response = await lambda.RunAsync(request);
 
             response.Should().BeEquivalentTo(new LambdaResponse(handlerResponse));
         }

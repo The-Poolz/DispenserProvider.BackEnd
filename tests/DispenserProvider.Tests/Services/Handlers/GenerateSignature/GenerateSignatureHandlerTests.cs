@@ -1,13 +1,10 @@
 ﻿using Moq;
 using Xunit;
-using FluentValidation;
 using FluentAssertions;
-using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Database;
 using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.Services.Handlers.GenerateSignature;
-using DispenserProvider.Services.Validators.Signature.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 using DispenserProvider.Services.Handlers.GenerateSignature.Models;
 
@@ -17,45 +14,20 @@ public class GenerateSignatureHandlerTests
 {
     public class Handle
     {
-        private readonly GenerateSignatureRequest _withdrawnRequest = new()
-        {
-            PoolId = 1,
-            ChainId = 97,
-            UserAddress = "0x0000000000000000000000000000000000000001"
-        };
-
-        private readonly GenerateSignatureRequest _refundRequest = new()
-        {
-            PoolId = 1,
-            ChainId = 56,
-            UserAddress = "0x0000000000000000000000000000000000000001"
-        };
-
-        [Fact]
-        internal void WhenDispenserNotFound_ShouldThrowException()
-        {
-            var handler = new GenerateSignatureHandler(
-                new DispenserManager(new MockDbContextFactory(seed: false)),
-                new Mock<ISignatureProcessor>().Object,
-                new Mock<IValidator<GenerateSignatureValidatorRequest>>().Object
-            );
-
-            var testCode = () => handler.Handle(_withdrawnRequest);
-
-            testCode.Should().Throw<ValidationException>()
-                .WithMessage(ErrorCode.DISPENSER_NOT_FOUND.ToErrorMessage());
-        }
+        private readonly GenerateSignatureRequest _withdrawnRequest = new(97, 1, "0x0000000000000000000000000000000000000001");
+        private readonly GenerateSignatureRequest _refundRequest = new(56, 1, "0x0000000000000000000000000000000000000001");
 
         [Fact]
         internal void WhenDispenserFoundAndIsNotRefund_ShouldReturnExpectedResult()
         {
+            var dispenserContextFactory = new MockDbContextFactory(seed: true);
+            var dispenser = dispenserContextFactory.Current.Dispenser.First();
             var handler = new GenerateSignatureHandler(
-                new DispenserManager(new MockDbContextFactory(seed: true)),
-                new Mock<ISignatureProcessor>().Object,
-                new Mock<IValidator<GenerateSignatureValidatorRequest>>().Object
+                new DispenserManager(dispenserContextFactory),
+                new Mock<ISignatureProcessor>().Object
             );
 
-            var response = handler.Handle(_withdrawnRequest);
+            var response = handler.Handle(_withdrawnRequest, CancellationToken.None);
 
             response.Should().NotBeNull();
         }
@@ -76,11 +48,10 @@ public class GenerateSignatureHandlerTests
 
             var handler = new GenerateSignatureHandler(
                 new DispenserManager(dispenserContextFactory),
-                new Mock<ISignatureProcessor>().Object,
-                new Mock<IValidator<GenerateSignatureValidatorRequest>>().Object
+                new Mock<ISignatureProcessor>().Object
             );
 
-            var response = handler.Handle(_refundRequest);
+            var response = handler.Handle(_refundRequest, CancellationToken.None);
 
             response.Should().NotBeNull();
         }

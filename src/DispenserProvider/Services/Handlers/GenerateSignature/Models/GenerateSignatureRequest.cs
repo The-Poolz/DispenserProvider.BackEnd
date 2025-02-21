@@ -1,18 +1,30 @@
-﻿using Newtonsoft.Json;
+﻿using MediatR;
 using Net.Web3.EthereumWallet;
 using DispenserProvider.Models;
-using DispenserProvider.Services.Database.Models;
+using DispenserProvider.Services.Database;
+using Microsoft.Extensions.DependencyInjection;
+using DispenserProvider.Services.Validators.Signature.Models;
 
 namespace DispenserProvider.Services.Handlers.GenerateSignature.Models;
 
-public class GenerateSignatureRequest : IGetDispenserRequest, IHandlerRequest
+public class GenerateSignatureRequest : SignatureRequest, IRequest<GenerateSignatureResponse>
 {
-    [JsonRequired]
-    public EthereumAddress UserAddress { get; set; } = null!;
+    internal GenerateSignatureRequest(long chainId, long poolId, EthereumAddress userAddress)
+    {
+        ChainId = chainId;
+        PoolId = poolId;
+        UserAddress = userAddress;
+        ValidatorRequest = null!;
+    }
 
-    [JsonRequired]
-    public long PoolId { get; set; }
+    public GenerateSignatureRequest(SignatureRequest request, IServiceProvider serviceProvider)
+        : this(request.ChainId, request.PoolId, request.UserAddress)
+    {
+        var dispenserManager = serviceProvider.GetRequiredService<IDispenserManager>();
+        var dispenser = dispenserManager.GetDispenser(this);
+        var isRefund = dispenser.RefundDetail != null && dispenser.RefundDetail.ChainId == ChainId && dispenser.RefundDetail.PoolId == PoolId;
+        ValidatorRequest = new GenerateSignatureValidatorRequest(dispenser, isRefund);
+    }
 
-    [JsonRequired]
-    public long ChainId { get; set; }
+    public GenerateSignatureValidatorRequest ValidatorRequest { get; }
 }

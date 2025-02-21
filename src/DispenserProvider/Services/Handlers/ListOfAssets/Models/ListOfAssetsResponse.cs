@@ -1,8 +1,6 @@
-﻿using DispenserProvider.Models;
+﻿namespace DispenserProvider.Services.Handlers.ListOfAssets.Models;
 
-namespace DispenserProvider.Services.Handlers.ListOfAssets.Models;
-
-public class ListOfAssetsResponse(IEnumerable<Asset> assets) : IHandlerResponse
+public class ListOfAssetsResponse(IEnumerable<Asset> assets)
 {
     public ListOfAssetsResponse() : this([]) { }
 

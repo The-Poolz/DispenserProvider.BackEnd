@@ -1,13 +1,8 @@
 ﻿using Xunit;
 using System.Net;
-using FluentValidation;
 using FluentAssertions;
-using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.Tests.Mocks.DataBase;
-using DispenserProvider.MessageTemplate.Validators;
 using DispenserProvider.Services.Handlers.DeleteAsset;
-using DispenserProvider.Tests.Mocks.Services.Validators;
-using DispenserProvider.Services.Handlers.DeleteAsset.Models;
 using DispenserProvider.Tests.Mocks.Services.Handlers.DeleteAsset.Models;
 
 namespace DispenserProvider.Tests.Services.Handlers.DeleteAsset;
@@ -16,60 +11,13 @@ public class DeleteAssetHandlerTests
 {
     public class Handle
     {
-        private readonly DeleteValidator _requestValidator = new(new MockAdminValidationService());
-
         [Fact]
-        internal void WhenValidationFailed_ShouldThrowException()
-        {
-            var dbFactory = new MockDbContextFactory(seed: false);
-            var handler = new DeleteAssetHandler(dbFactory, _requestValidator);
-
-            var request = new DeleteAssetRequest
-            {
-                Message = MockDeleteAssetRequest.Message,
-                Signature = MockDeleteAssetRequest.UnauthorizedUserSignature
-            };
-
-            var testCode = () => handler.Handle(request);
-
-            testCode.Should().Throw<ValidationException>()
-                .Which.Errors.Should().ContainSingle()
-                .Which.Should().BeEquivalentTo(new
-                {
-                    ErrorCode = "RECOVERED_ADDRESS_IS_INVALID",
-                    ErrorMessage = "Recovered address is not valid.",
-                    CustomState = new
-                    {
-                        RecoveredAddress = MockUsers.UnauthorizedUser.Address
-                    }
-                });
-        }
-
-        [Fact]
-        internal void WhenRequestMessageIsInvalid_ShouldThrowException()
+        internal async Task WhenMarkedAsDeletedSuccessfully_ShouldContextUpdatedSuccessfully()
         {
             var dbFactory = new MockDbContextFactory(seed: true);
-            var handler = new DeleteAssetHandler(dbFactory, _requestValidator);
+            var handler = new DeleteAssetHandler(dbFactory);
 
-            var request = new DeleteAssetRequest
-            {
-                Message = MockDeleteAssetRequest.InvalidMessage,
-                Signature = MockDeleteAssetRequest.SignatureForInvalidMessage
-            };
-
-            var testCode = () => handler.Handle(request);
-
-            testCode.Should().Throw<ValidationException>()
-                .WithMessage(ErrorCode.USERS_FOR_DELETE_NOT_FOUND.ToErrorMessage());
-        }
-
-        [Fact]
-        internal void WhenMarkedAsDeletedSuccessfully_ShouldContextUpdatedSuccessfully()
-        {
-            var dbFactory = new MockDbContextFactory(seed: true);
-            var handler = new DeleteAssetHandler(dbFactory, _requestValidator);
-
-            var response = handler.Handle(MockDeleteAssetRequest.Request);
+            var response = await handler.Handle(MockDeleteAssetRequest.Request, CancellationToken.None);
 
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 

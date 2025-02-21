@@ -1,4 +1,5 @@
-﻿using DispenserProvider.DataBase;
+﻿using MediatR;
+using DispenserProvider.DataBase;
 using Microsoft.EntityFrameworkCore;
 using DispenserProvider.Services.Database;
 using DispenserProvider.Services.Handlers.ReadAsset.Models;
@@ -7,7 +8,7 @@ namespace DispenserProvider.Services.Handlers.ReadAsset;
 
 public class ReadAssetHandler(IDbContextFactory<DispenserContext> dispenserContextFactory, ITakenTrackManager takenTrackManager) : IRequestHandler<ReadAssetRequest, ReadAssetResponse>
 {
-    public ReadAssetResponse Handle(ReadAssetRequest request)
+    public Task<ReadAssetResponse> Handle(ReadAssetRequest request, CancellationToken cancellationToken)
     {
         var dispenserContext = dispenserContextFactory.CreateDbContext();
         var assets = request.AssetContext.Select(assetContext =>
@@ -17,9 +18,9 @@ public class ReadAssetHandler(IDbContextFactory<DispenserContext> dispenserConte
                     x.ChainId == assetContext.ChainId
                 )
                 .Include(x => x.WithdrawalDispenser)
-                    .ThenInclude(x => x!.TakenTrack)
+                .ThenInclude(x => x!.TakenTrack)
                 .Include(x => x.RefundDispenser)
-                    .ThenInclude(x => x!.TakenTrack)
+                .ThenInclude(x => x!.TakenTrack)
                 .Include(x => x.Builders)
                 .ToArray()
                 .Where(x =>
@@ -36,6 +37,6 @@ public class ReadAssetHandler(IDbContextFactory<DispenserContext> dispenserConte
 
         takenTrackManager.ProcessTakenTracks(assets.SelectMany(a => a.Dispensers.Select(d => d.DTO)));
 
-        return new ReadAssetResponse(assets);
+        return Task.FromResult(new ReadAssetResponse(assets));
     }
 }

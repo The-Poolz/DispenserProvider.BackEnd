@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
-using DispenserProvider.Services.Validators.AdminRequest.Models;
 using DispenserProvider.Services.Web3.Contracts;
+using DispenserProvider.Services.Validators.AdminRequest.Models;
 
 namespace DispenserProvider.Services.Validators.AdminRequest;
 
@@ -13,7 +13,7 @@ public class BuildersValidator : AbstractValidator<BuildersValidatorRequest>
         )
     { }
 
-    public BuildersValidator(IValidator<ChainAddressPair> refundValidator, IValidator<ChainAddressPair> withdrawValidator)
+    private BuildersValidator(IValidator<ChainAddressPair> refundValidator, IValidator<ChainAddressPair> withdrawValidator)
     {
         ClassLevelCascadeMode = CascadeMode.Stop;
 

@@ -6,6 +6,8 @@ namespace DispenserProvider.Services.Web3;
 
 public class SignerManager(SecretManager secretManager) : ISignerManager
 {
+    public SignerManager() : this(new SecretManager()) { }
+
     public EthECKey GetSigner()
     {
         var privateKey = secretManager.GetSecretValue(

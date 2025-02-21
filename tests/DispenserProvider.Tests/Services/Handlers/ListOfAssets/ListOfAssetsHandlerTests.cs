@@ -14,7 +14,7 @@ public class ListOfAssetsHandlerTests
     public class Handle
     {
         [Fact]
-        internal void WhenAssetsFound_ShouldReturnsExpectedAssets()
+        internal async Task WhenAssetsFound_ShouldReturnsExpectedAssets()
         {
             var dbFactory = new MockDbContextFactory(seed: true);
             var dispenser = dbFactory.Current.Dispenser.First();
@@ -22,11 +22,12 @@ public class ListOfAssetsHandlerTests
             var takenTrackManager = new TakenTrackManager(dbFactory, new AssetAvailabilityValidator(dispenserContract));
             var handler = new ListOfAssetsHandler(dbFactory, takenTrackManager);
 
-            var request = new ListOfAssetsRequest {
+            var request = new ListOfAssetsRequest
+            {
                 UserAddress = MockDispenserContext.Dispenser.UserAddress
             };
 
-            var response = handler.Handle(request);
+            var response = await handler.Handle(request, CancellationToken.None);
 
             response.Assets.Should().HaveCount(1)
                 .And.ContainSingle(x =>
@@ -44,7 +45,7 @@ public class ListOfAssetsHandlerTests
         }
 
         [Fact]
-        internal void WhenAssetIsTracked_ShouldReturnsEmptyCollection()
+        internal async Task WhenAssetIsTracked_ShouldReturnsEmptyCollection()
         {
             var dbFactory = new MockDbContextFactory(seed: true);
             var dispenser = dbFactory.Current.Dispenser.First();
@@ -52,11 +53,12 @@ public class ListOfAssetsHandlerTests
             var takenTrackManager = new TakenTrackManager(dbFactory, new AssetAvailabilityValidator(dispenserContract));
             var handler = new ListOfAssetsHandler(dbFactory, takenTrackManager);
 
-            var request = new ListOfAssetsRequest {
+            var request = new ListOfAssetsRequest
+            {
                 UserAddress = MockDispenserContext.Dispenser.UserAddress
             };
 
-            var response = handler.Handle(request);
+            var response = await handler.Handle(request, CancellationToken.None);
 
             response.Assets.Should().HaveCount(0);
             dbFactory.Current.TakenTrack.ToArray().Should().HaveCount(1)
@@ -68,7 +70,7 @@ public class ListOfAssetsHandlerTests
         }
 
         [Fact]
-        internal void WhenAssetNotFound_ShouldReturnsEmptyArray()
+        internal async Task WhenAssetNotFound_ShouldReturnsEmptyArray()
         {
             var dbFactory = new MockDbContextFactory(seed: true);
             var dispenser = dbFactory.Current.Dispenser.First();
@@ -76,11 +78,12 @@ public class ListOfAssetsHandlerTests
             var takenTrackManager = new TakenTrackManager(dbFactory, new AssetAvailabilityValidator(dispenserContract));
             var handler = new ListOfAssetsHandler(dbFactory, takenTrackManager);
 
-            var request = new ListOfAssetsRequest {
+            var request = new ListOfAssetsRequest
+            {
                 UserAddress = "0x0000000000000000000000000000000000000101"
             };
 
-            var response = handler.Handle(request);
+            var response = await handler.Handle(request, CancellationToken.None);
 
             response.Assets.Should().BeEmpty();
             dbFactory.Current.TakenTrack.ToArray().Should().BeEmpty();
