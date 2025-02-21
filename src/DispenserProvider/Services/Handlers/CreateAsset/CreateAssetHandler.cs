@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using FluentValidation;
 using DispenserProvider.DataBase;
 using Microsoft.EntityFrameworkCore;
 using DispenserProvider.Services.Handlers.CreateAsset.Models;
@@ -7,16 +6,11 @@ using DispenserProvider.Services.Handlers.CreateAsset.Models.DatabaseWrappers;
 
 namespace DispenserProvider.Services.Handlers.CreateAsset;
 
-public class CreateAssetHandler(
-    IDbContextFactory<DispenserContext> dispenserContextFactory,
-    IValidator<CreateAssetRequest> requestValidator
-)
+public class CreateAssetHandler(IDbContextFactory<DispenserContext> dispenserContextFactory)
     : IRequestHandler<CreateAssetRequest, CreateAssetResponse>
 {
     public Task<CreateAssetResponse> Handle(CreateAssetRequest request, CancellationToken cancellationToken)
     {
-        requestValidator.ValidateAndThrow(request);
-
         Save(request);
 
         return Task.FromResult(new CreateAssetResponse());

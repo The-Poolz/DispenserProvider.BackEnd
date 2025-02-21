@@ -26,18 +26,7 @@ public class CreateAssetHandlerTests
                 .Build();
 
             var handler = new CreateAssetHandler(
-                new MockDbContextFactory(),
-                new CreateValidator(
-                    new MockAdminValidationService()
-                ),
-                new PoolOwnershipValidator(
-                    new MockSignerManager(MockUsers.Admin.PrivateKey),
-                    lockDealNFT
-                ),
-                new BuildersValidator(
-                    lockDealNFT,
-                    new MockBuilderContract(isConfigured: false)
-                )
+                new MockDbContextFactory()
             );
             var request = new CreateAssetRequest
             {

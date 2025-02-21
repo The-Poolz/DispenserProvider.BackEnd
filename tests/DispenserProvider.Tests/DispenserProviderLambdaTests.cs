@@ -1,8 +1,8 @@
 using Moq;
 using Xunit;
+using MediatR;
 using FluentAssertions;
 using DispenserProvider.Models;
-using DispenserProvider.Services;
 using Microsoft.Extensions.DependencyInjection;
 using DispenserProvider.Services.Handlers.CreateAsset.Models;
 
@@ -34,8 +34,8 @@ public class DispenserProviderLambdaTests
 
             var serviceProvider = new ServiceCollection()
                 .AddScoped(_ => {
-                    var handler = new Mock<IHandlerFactory>();
-                    handler.Setup(x => x.Handle(request)).Returns(handlerResponse);
+                    var handler = new Mock<IMediator>();
+                    handler.Setup(x => x.Send(request.CreateAssetRequest, CancellationToken.None)).ReturnsAsync(handlerResponse);
                     return handler.Object;
                 })
                 .BuildServiceProvider();
