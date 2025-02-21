@@ -14,25 +14,16 @@ public class GenerateSignatureHandlerTests
 {
     public class Handle
     {
-        private readonly GenerateSignatureRequest _withdrawnRequest = new()
-        {
-            PoolId = 1,
-            ChainId = 97,
-            UserAddress = "0x0000000000000000000000000000000000000001"
-        };
-
-        private readonly GenerateSignatureRequest _refundRequest = new()
-        {
-            PoolId = 1,
-            ChainId = 56,
-            UserAddress = "0x0000000000000000000000000000000000000001"
-        };
+        private readonly GenerateSignatureRequest _withdrawnRequest = new(97, 1, "0x0000000000000000000000000000000000000001");
+        private readonly GenerateSignatureRequest _refundRequest = new(56, 1, "0x0000000000000000000000000000000000000001");
 
         [Fact]
         internal void WhenDispenserFoundAndIsNotRefund_ShouldReturnExpectedResult()
         {
+            var dispenserContextFactory = new MockDbContextFactory(seed: true);
+            var dispenser = dispenserContextFactory.Current.Dispenser.First();
             var handler = new GenerateSignatureHandler(
-                new DispenserManager(new MockDbContextFactory(seed: true)),
+                new DispenserManager(dispenserContextFactory),
                 new Mock<ISignatureProcessor>().Object
             );
 
