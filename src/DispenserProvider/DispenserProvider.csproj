@@ -14,7 +14,7 @@
     <PackageReference Include="Amazon.Lambda.Core" Version="2.2.0" />
     <PackageReference Include="Amazon.Lambda.Serialization.Json" Version="2.2.3" />
     <PackageReference Include="AuthDB" Version="1.0.7" />
-    <PackageReference Include="CovalentDB" Version="2.0.20" />
+    <PackageReference Include="CovalentDB" Version="2.0.21" />
     <PackageReference Include="DispenserProvider.DataBase" Version="1.0.12" />
     <PackageReference Include="DispenserProvider.MessageTemplate" Version="1.0.5" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />

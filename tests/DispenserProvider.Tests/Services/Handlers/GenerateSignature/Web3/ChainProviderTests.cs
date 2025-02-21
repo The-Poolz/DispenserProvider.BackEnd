@@ -62,8 +62,8 @@ public class ChainProviderTests
 
             var testCode = () => chainProvider.DispenserProviderContract(chainId);
 
-            testCode.Should().Throw<KeyNotFoundException>()
-                .WithMessage($"The given key '{chainId}' was not present in the dictionary.");
+            testCode.Should().Throw<ValidationException>()
+                .WithMessage(ErrorCode.DISPENSER_PROVIDER_NOT_SUPPORTED.ToErrorMessage());
         }
     }
 }
