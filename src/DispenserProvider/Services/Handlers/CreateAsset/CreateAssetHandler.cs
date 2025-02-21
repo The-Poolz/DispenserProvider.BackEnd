@@ -6,8 +6,7 @@ using DispenserProvider.Services.Handlers.CreateAsset.Models.DatabaseWrappers;
 
 namespace DispenserProvider.Services.Handlers.CreateAsset;
 
-public class CreateAssetHandler(IDbContextFactory<DispenserContext> dispenserContextFactory)
-    : IRequestHandler<CreateAssetRequest, CreateAssetResponse>
+public class CreateAssetHandler(IDbContextFactory<DispenserContext> dispenserContextFactory) : IRequestHandler<CreateAssetRequest, CreateAssetResponse>
 {
     public Task<CreateAssetResponse> Handle(CreateAssetRequest request, CancellationToken cancellationToken)
     {

@@ -14,7 +14,7 @@ public class ReadAssetHandlerTests
     public class Handle
     {
         [Fact]
-        internal void WhenAssetFound_ShouldReturnsExpectedAsset()
+        internal async Task WhenAssetFound_ShouldReturnsExpectedAsset()
         {
             var dbFactory = new MockDbContextFactory(seed: true);
             var dispenser = dbFactory.Current.Dispenser.First();
@@ -22,7 +22,8 @@ public class ReadAssetHandlerTests
             var takenTrackManager = new TakenTrackManager(dbFactory, new AssetAvailabilityValidator(dispenserContract));
             var handler = new ReadAssetHandler(dbFactory, takenTrackManager);
 
-            var request = new ReadAssetRequest {
+            var request = new ReadAssetRequest
+            {
                 AssetContext = [
                     new AssetContext {
                         PoolId = 1,
@@ -31,7 +32,7 @@ public class ReadAssetHandlerTests
                 ]
             };
 
-            var response = handler.Handle(request);
+            var response = await handler.Handle(request, CancellationToken.None);
 
             response.Assets.Should().HaveCount(1)
                 .And.ContainSingle(asset =>
@@ -55,7 +56,7 @@ public class ReadAssetHandlerTests
         }
 
         [Fact]
-        internal void WhenAssetIsTracked_ShouldReturnsEmptyCollection()
+        internal async Task WhenAssetIsTracked_ShouldReturnsEmptyCollection()
         {
             var dbFactory = new MockDbContextFactory(seed: true);
             var dispenser = dbFactory.Current.Dispenser.First();
@@ -63,7 +64,8 @@ public class ReadAssetHandlerTests
             var takenTrackManager = new TakenTrackManager(dbFactory, new AssetAvailabilityValidator(dispenserContract));
             var handler = new ReadAssetHandler(dbFactory, takenTrackManager);
 
-            var request = new ReadAssetRequest {
+            var request = new ReadAssetRequest
+            {
                 AssetContext = [
                     new AssetContext {
                         PoolId = 1,
@@ -72,7 +74,7 @@ public class ReadAssetHandlerTests
                 ]
             };
 
-            var response = handler.Handle(request);
+            var response = await handler.Handle(request, CancellationToken.None);
 
             response.Assets.Should().HaveCount(1)
                 .And.ContainSingle(asset =>
@@ -103,7 +105,7 @@ public class ReadAssetHandlerTests
         }
 
         [Fact]
-        internal void WhenAssetNotFound_ShouldReturnsEmptyArray()
+        internal async Task WhenAssetNotFound_ShouldReturnsEmptyArray()
         {
             var dbFactory = new MockDbContextFactory(seed: true);
             var dispenser = dbFactory.Current.Dispenser.First();
@@ -111,7 +113,8 @@ public class ReadAssetHandlerTests
             var takenTrackManager = new TakenTrackManager(dbFactory, new AssetAvailabilityValidator(dispenserContract));
             var handler = new ReadAssetHandler(dbFactory, takenTrackManager);
 
-            var request = new ReadAssetRequest {
+            var request = new ReadAssetRequest
+            {
                 AssetContext = [
                     new AssetContext {
                         PoolId = 123,
@@ -120,7 +123,7 @@ public class ReadAssetHandlerTests
                 ]
             };
 
-            var response = handler.Handle(request);
+            var response = await handler.Handle(request, CancellationToken.None);
 
             response.Assets.Should().HaveCount(1)
                 .And.ContainSingle(asset =>

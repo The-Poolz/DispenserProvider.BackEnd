@@ -35,7 +35,7 @@ public class DispenserProviderLambdaTests
             var serviceProvider = new ServiceCollection()
                 .AddScoped(_ => {
                     var handler = new Mock<IMediator>();
-                    handler.Setup(x => x.Send(request.CreateAssetRequest, CancellationToken.None)).ReturnsAsync(handlerResponse);
+                    handler.Setup(x => x.Send(It.IsAny<object>(), CancellationToken.None)).ReturnsAsync(handlerResponse);
                     return handler.Object;
                 })
                 .BuildServiceProvider();
