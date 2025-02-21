@@ -17,8 +17,11 @@ public class DispenserProviderLambda(IServiceProvider serviceProvider)
     {
         try
         {
-            var mediator = serviceProvider.GetRequiredService<IMediator>();
-            var response = mediator.Send(request.Request).GetAwaiter().GetResult();
+            var response = serviceProvider
+                .GetRequiredService<IMediator>()
+                .Send(request.Request)
+                .GetAwaiter()
+                .GetResult();
             return new LambdaResponse(response);
 
         }
