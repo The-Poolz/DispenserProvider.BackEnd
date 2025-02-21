@@ -13,15 +13,13 @@ public class DispenserProviderLambda(IServiceProvider serviceProvider)
 {
     public DispenserProviderLambda() : this(DefaultServiceProvider.Build()) { }
 
-    public LambdaResponse Run(LambdaRequest request)
+    public async Task<LambdaResponse> Run(LambdaRequest request)
     {
         try
         {
-            var response = serviceProvider
+            var response = await serviceProvider
                 .GetRequiredService<IMediator>()
-                .Send(request.Request)
-                .GetAwaiter()
-                .GetResult();
+                .Send(request.Request);
             return new LambdaResponse(response);
 
         }

@@ -18,7 +18,7 @@ public class LambdaRequest
     public GenerateSignatureRequest? GenerateSignatureRequest { get; set; }
     public RetrieveSignatureRequest? RetrieveSignatureRequest { get; set; }
 
-    public object Request => this switch
+    public IHandlerRequest<IHandlerResponse> Request => this switch
     {
         { CreateAssetRequest: not null } => CreateAssetRequest,
         { DeleteAssetRequest: not null } => DeleteAssetRequest,

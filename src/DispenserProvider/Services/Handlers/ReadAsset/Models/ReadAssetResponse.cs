@@ -1,6 +1,8 @@
-﻿namespace DispenserProvider.Services.Handlers.ReadAsset.Models;
+﻿using DispenserProvider.Models;
 
-public class ReadAssetResponse(IEnumerable<Asset> assets)
+namespace DispenserProvider.Services.Handlers.ReadAsset.Models;
+
+public class ReadAssetResponse(IEnumerable<Asset> assets) : IHandlerResponse
 {
     public ReadAssetResponse() : this([]) { }
 
