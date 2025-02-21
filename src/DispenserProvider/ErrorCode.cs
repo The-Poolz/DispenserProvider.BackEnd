@@ -16,6 +16,8 @@ public enum ErrorCode
     CHAIN_NOT_SUPPORTED,
     [Error("LockDealNFT contract in the selected chain not supported.")]
     LOCK_DEAL_NFT_NOT_SUPPORTED,
+    [Error("DispenserProvider contract in the selected chain not supported.")]
+    DISPENSER_PROVIDER_NOT_SUPPORTED,
     [Error("Cannot generate signature, because asset already withdrawn.")]
     ASSET_ALREADY_WITHDRAWN,
     [Error("Cannot generate signature, because asset already refunded.")]

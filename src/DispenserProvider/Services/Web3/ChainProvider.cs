@@ -8,11 +8,6 @@ namespace DispenserProvider.Services.Web3;
 
 public class ChainProvider(CovalentContext context) : IChainProvider
 {
-    private readonly Dictionary<long, EthereumAddress> _contractsAddresses = new()
-    {
-        { 97, "0xa9c68640C1AA52E91A75F4c5e2786F68049541Ad" }
-    };
-
     public IWeb3 Web3(long chainId)
     {
         var chain = context.Chains.FirstOrDefault(x => x.ChainId == chainId)
@@ -23,18 +18,17 @@ public class ChainProvider(CovalentContext context) : IChainProvider
         return new Nethereum.Web3.Web3(chain.RpcConnection);
     }
 
-    public EthereumAddress DispenserProviderContract(long chainId)
-    {
-        return _contractsAddresses[chainId];
-    }
+    public EthereumAddress DispenserProviderContract(long chainId) => GetContract(chainId, ResponseType.DispenserTokensDispensed, ErrorCode.DISPENSER_PROVIDER_NOT_SUPPORTED);
 
-    public EthereumAddress LockDealNFTContract(long chainId)
+    public EthereumAddress LockDealNFTContract(long chainId) => GetContract(chainId, ResponseType.LDNFTContractApproved, ErrorCode.LOCK_DEAL_NFT_NOT_SUPPORTED);
+
+    private EthereumAddress GetContract(long chainId, ResponseType responseType, ErrorCode error)
     {
-        var lockDealNFT = context.DownloaderSettings.FirstOrDefault(x => x.ChainId == chainId && x.ResponseType == ResponseType.LDNFTContractApproved)
-           ?? throw ErrorCode.LOCK_DEAL_NFT_NOT_SUPPORTED.ToException(new 
-           {
-               ChainId = chainId
-           });
-        return lockDealNFT.ContractAddress;
+        var contractAddress = context.DownloaderSettings.FirstOrDefault(x => x.ChainId == chainId && x.ResponseType == responseType)
+            ?? throw error.ToException(new
+            {
+                ChainId = chainId
+            });
+        return contractAddress.ContractAddress;
     }
 }
