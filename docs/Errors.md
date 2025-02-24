@@ -8,7 +8,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 ### Internal errors
 
 #### **Error Code**: INVALID_STAGE
-- **Endpoint**: Any endpoint.
+- **Endpoint(s)**: Any endpoint.
 - **Error Message**: No one valid stage in 'PRODUCTION_MODE' environment variable found.
 - **JSON Example**:
 
@@ -38,7 +38,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 ---
 
 #### **Error Code**: INVALID_HANDLER_REQUEST
-- **Endpoint**: Any endpoint.
+- **Endpoint(s)**: Any endpoint.
 - **Error Message**: No one implemented request found.
 - **JSON Example**:
 
@@ -67,9 +67,8 @@ It provides details on the endpoint, handler file, error code, error message, an
 
 ---
 
-### `CreateAsset` errors. `adminCreateAsset` endpoint.
-
 #### **Error Code**: RECOVERED_ADDRESS_IS_INVALID
+- **Endpoint(s)**: `adminCreateAsset`, `adminDeleteAsset`
 - **Error Message**: Recovered address is not valid.
 - **Optional ErrorInfo**: 
 ```json
@@ -107,6 +106,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 ---
 
 #### **Error Code**: USERS_COLLECTION_IS_EMPTY
+- **Endpoint(s)**: `adminCreateAsset`, `adminDeleteAsset`
 - **Error Message**: Collection of users must contain 1 or more elements.
 - **JSON Example**:
 
@@ -136,6 +136,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 ---
 
 #### **Error Code**: USERS_COLLECTION_CONTAIN_DUPLICATES
+- **Endpoint(s)**: `adminCreateAsset`, `adminDeleteAsset`
 - **Error Message**: Collection of users contain duplicates.
 - **JSON Example**:
 
@@ -165,6 +166,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 ---
 
 #### **Error Code**: USERS_COLLECTION_MUST_BE_SORTED
+- **Endpoint(s)**: `adminCreateAsset`, `adminDeleteAsset`
 - **Error Message**: Collection of users must be sorted by ascending.
 - **JSON Example**:
 
@@ -194,6 +196,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 ---
 
 #### **Error Code**: SCHEDULE_IS_EMPTY
+- **Endpoint(s)**: `adminCreateAsset`
 - **Error Message**: Schedule must contain 1 or more elements.
 - **JSON Example**:
 
@@ -223,6 +226,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 ---
 
 #### **Error Code**: SCHEDULE_MUST_BE_SORTED
+- **Endpoint(s)**: `adminCreateAsset`
 - **Error Message**: Schedule must be sorted in ascending order by 'StartDate'.
 - **JSON Example**:
 
@@ -252,6 +256,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 ---
 
 #### **Error Code**: SUM_OF_RATIOS_MUST_BE_ONE
+- **Endpoint(s)**: `adminCreateAsset`
 - **Error Message**: The sum of the ratios must be 1.
 - **JSON Example**:
 
@@ -281,6 +286,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 ---
 
 #### **Error Code**: FIRST_ELEMENT_MUST_BE_TGE
+- **Endpoint(s)**: `adminCreateAsset`
 - **Error Message**: The first element must be the TGE (Token Generation Event).
 - **JSON Example**:
 
@@ -310,6 +316,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 ---
 
 #### **Error Code**: MINIMUM_RATIO_1E_MINUS_18
+- **Endpoint(s)**: `adminCreateAsset`
 - **Error Message**: Ratio must be greater than or equal to 1e-18.
 - **JSON Example**:
 
@@ -339,6 +346,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 ---
 
 #### **Error Code**: END_TIME_MUST_BE_GREATER_THAN_START_TIME
+- **Endpoint(s)**: `adminCreateAsset`
 - **Error Message**: End time must be greater than start time.
 - **JSON Example**:
 
@@ -368,6 +376,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 ---
 
 #### **Error Code**: INVALID_TOKEN_OWNER
+- **Endpoint(s)**: `adminCreateAsset`
 - **Error Message**: Owner of provided PoolId in the provided ChainId is invalid.
 - **Optional ErrorInfo**: 
 ```json
@@ -407,6 +416,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 ---
 
 #### **Error Code**: BUILDER_MUST_BE_APPROVED_IN_LOCK_DEAL_NFT
+- **Endpoint(s)**: `adminCreateAsset`
 - **Error Message**: Provided builder address not approved in the LockDealNFT contract.
 - **Optional ErrorInfo**: 
 ```json
@@ -446,6 +456,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 ---
 
 #### **Error Code**: BUILDER_MUST_BE_SIMPLE_PROVIDER
+- **Endpoint(s)**: `adminCreateAsset`
 - **Error Message**: Provided builder address is not a simple provider.
 - **Optional ErrorInfo**: 
 ```json
@@ -484,135 +495,8 @@ It provides details on the endpoint, handler file, error code, error message, an
 
 ---
 
-### `DeleteAsset` errors. `adminDeleteAsset` endpoint.
-
-#### **Error Code**: RECOVERED_ADDRESS_IS_INVALID
-- **Error Message**: Recovered address is not valid.
-- **Optional ErrorInfo**: 
-```json
-{
-    "RecoveredAddress": "0x.."
-}
-```
-- **JSON Example**:
-
-<details>
-  <summary>Show JSON Example</summary>
-
-  ```json
-  {
-      "data": null,
-      "errors": [
-          {
-              "path": [
-                  "adminDeleteAsset"
-              ],
-              "data": null,
-              "errorType": "RECOVERED_ADDRESS_IS_INVALID",
-              "errorInfo": {
-                  "RecoveredAddress": "0x.."
-              },
-              "locations": [ ],
-              "message": "Recovered address is not valid."
-          }
-      ]
-  }
-  ```
-
-</details>
-
----
-
-#### **Error Code**: USERS_COLLECTION_IS_EMPTY
-- **Error Message**: Collection of users must contain 1 or more elements.
-- **JSON Example**:
-
-<details>
-  <summary>Show JSON Example</summary>
-
-  ```json
-  {
-      "data": null,
-      "errors": [
-          {
-              "path": [
-                  "adminDeleteAsset"
-              ],
-              "data": null,
-              "errorType": "USERS_COLLECTION_IS_EMPTY",
-              "errorInfo": null,
-              "locations": [ ],
-              "message": "Collection of users must contain 1 or more elements."
-          }
-      ]
-  }
-  ```
-
-</details>
-
----
-
-#### **Error Code**: USERS_COLLECTION_CONTAIN_DUPLICATES
-- **Error Message**: Collection of users contain duplicates.
-- **JSON Example**:
-
-<details>
-  <summary>Show JSON Example</summary>
-
-  ```json
-  {
-      "data": null,
-      "errors": [
-          {
-              "path": [
-                  "adminDeleteAsset"
-              ],
-              "data": null,
-              "errorType": "USERS_COLLECTION_CONTAIN_DUPLICATES",
-              "errorInfo": null,
-              "locations": [ ],
-              "message": "Collection of users contain duplicates."
-          }
-      ]
-  }
-  ```
-
-</details>
-
----
-
-#### **Error Code**: USERS_COLLECTION_MUST_BE_SORTED
-- **Error Message**: Collection of users must be sorted by ascending.
-- **JSON Example**:
-
-<details>
-  <summary>Show JSON Example</summary>
-
-  ```json
-  {
-      "data": null,
-      "errors": [
-          {
-              "path": [
-                  "adminDeleteAsset"
-              ],
-              "data": null,
-              "errorType": "USERS_COLLECTION_MUST_BE_SORTED",
-              "errorInfo": null,
-              "locations": [ ],
-              "message": "Collection of users must be sorted by ascending."
-          }
-      ]
-  }
-  ```
-
-</details>
-
----
-
-### `GenerateSignature` errors. `generateSignature` endpoint.
-
 #### **Error Code**: SIGNATURE_IS_STILL_VALID
+- **Endpoint(s)**: `generateSignature`
 - **Error Message**: Cannot generate signature, because it is still valid until.
 - **Optional ErrorInfo**: 
 ```json
@@ -654,6 +538,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 ---
 
 #### **Error Code**: SIGNATURE_GENERATION_VALID_TIME_NOT_ARRIVED
+- **Endpoint(s)**: `generateSignature`
 - **Error Message**: Cannot generate signature, because the next valid time for generation has not yet arrived.
 - **Optional ErrorInfo**: 
 ```json
@@ -693,6 +578,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 ---
 
 #### **Error Code**: REFUND_TIME_IS_EXPIRED
+- **Endpoint(s)**: `generateSignature`
 - **Error Message**: Cannot generate signature for refund, because refund time has expired.
 - **Optional ErrorInfo**: 
 ```json
@@ -732,6 +618,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 ---
 
 #### **Error Code**: ASSET_ALREADY_WITHDRAWN
+- **Endpoint(s)**: `generateSignature`, `retriveSignature`
 - **Error Message**: Cannot generate signature, because asset already withdrawn.
 - **JSON Example**:
 
@@ -761,6 +648,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 ---
 
 #### **Error Code**: ASSET_ALREADY_REFUNDED
+- **Endpoint(s)**: `generateSignature`, `retriveSignature`
 - **Error Message**: Cannot generate signature, because asset already refunded.
 - **JSON Example**:
 
@@ -790,6 +678,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 ---
 
 #### **Error Code**: DISPENSER_NOT_FOUND
+- **Endpoint(s)**: `generateSignature`, `retriveSignature`
 - **Error Message**: Asset by provided PoolId and ChainId for user, not found.
 - **JSON Example**:
 
@@ -818,10 +707,8 @@ It provides details on the endpoint, handler file, error code, error message, an
 
 ---
 
-### `RetrieveSignature` errors. `retrieveSignature` endpoint.
-
-
 #### **Error Code**: SIGNATURE_NOT_FOUND
+- **Endpoint(s)**: `retriveSignature`
 - **Error Message**: Signature for user, not found.
 - **JSON Example**:
 
@@ -851,6 +738,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 ---
 
 #### **Error Code**: SIGNATURE_VALID_TIME_NOT_ARRIVED
+- **Endpoint(s)**: `retriveSignature`
 - **Error Message**: Cannot retrieve signature, because the valid time for retrieving has not yet arrived.
 - **Optional ErrorInfo**: 
 ```json
@@ -890,6 +778,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 ---
 
 #### **Error Code**: SIGNATURE_VALID_TIME_IS_EXPIRED
+- **Endpoint(s)**: `retriveSignature`
 - **Error Message**: Cannot retrieve signature, because the valid time for using signature is expired.
 - **Optional ErrorInfo**: 
 ```json
@@ -929,6 +818,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 ---
 
 #### **Error Code**: SIGNATURE_TYPE_IS_INVALID
+- **Endpoint(s)**: `retriveSignature`
 - **Error Message**: Cannot retrieve signature, because it was generated for a other operation.
 - **Optional ErrorInfo**: 
 ```json
@@ -958,93 +848,6 @@ It provides details on the endpoint, handler file, error code, error message, an
               },
               "locations": [ ],
               "message": "Cannot retrieve signature, because it was generated for a other operation."
-          }
-      ]
-  }
-  ```
-
-</details>
-
----
-
-#### **Error Code**: ASSET_ALREADY_WITHDRAWN
-- **Error Message**: Cannot generate signature, because asset already withdrawn.
-- **JSON Example**:
-
-<details>
-  <summary>Show JSON Example</summary>
-
-  ```json
-  {
-      "data": null,
-      "errors": [
-          {
-              "path": [
-                  "retrieveSignature"
-              ],
-              "data": null,
-              "errorType": "ASSET_ALREADY_WITHDRAWN",
-              "errorInfo": null,
-              "locations": [ ],
-              "message": "Cannot generate signature, because asset already withdrawn."
-          }
-      ]
-  }
-  ```
-
-</details>
-
----
-
-#### **Error Code**: ASSET_ALREADY_REFUNDED
-- **Error Message**: Cannot generate signature, because asset already refunded.
-- **JSON Example**:
-
-<details>
-  <summary>Show JSON Example</summary>
-
-  ```json
-  {
-      "data": null,
-      "errors": [
-          {
-              "path": [
-                  "retrieveSignature"
-              ],
-              "data": null,
-              "errorType": "ASSET_ALREADY_REFUNDED",
-              "errorInfo": null,
-              "locations": [ ],
-              "message": "Cannot generate signature, because asset already refunded."
-          }
-      ]
-  }
-  ```
-
-</details>
-
----
-
-#### **Error Code**: DISPENSER_NOT_FOUND
-- **Error Message**: Asset by provided PoolId and ChainId for user, not found.
-- **JSON Example**:
-
-<details>
-  <summary>Show JSON Example</summary>
-
-  ```json
-  {
-      "data": null,
-      "errors": [
-          {
-              "path": [
-                  "retrieveSignature"
-              ],
-              "data": null,
-              "errorType": "DISPENSER_NOT_FOUND",
-              "errorInfo": null,
-              "locations": [ ],
-              "message": "Asset by provided PoolId and ChainId for user, not found."
           }
       ]
   }
