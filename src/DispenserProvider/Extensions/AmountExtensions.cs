@@ -1,11 +1,9 @@
-﻿using Nethereum.Util;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace DispenserProvider.Extensions;
 
 public static class AmountExtensions
 {
-    public static string MultiplyWeiByRatio(this string weiAmount, decimal ratio, int precision = 18) =>
-        (BigInteger.Parse(weiAmount) * ConvertToWei(ratio, precision) / BigInteger.Pow(10, precision)).ToString();
-    private static BigInteger ConvertToWei(decimal ratio, int precision) => new UnitConversion().ToWei(ratio, precision);
+    public static string MultiplyWeiByRatio(this string weiAmount, string ratio, int precision = 18) =>
+        (BigInteger.Parse(weiAmount) * BigInteger.Parse(ratio) / BigInteger.Pow(10, precision)).ToString();
 }

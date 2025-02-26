@@ -1,4 +1,5 @@
-﻿using Net.Web3.EthereumWallet;
+﻿using System.Numerics;
+using Net.Web3.EthereumWallet;
 using DispenserProvider.MessageTemplate.Models.Create;
 using DispenserProvider.MessageTemplate.Models.Eip712;
 using DispenserProvider.Services.Validators.AdminRequest.Models;
@@ -14,19 +15,19 @@ internal class MockValidatedMessage : IValidatedMessage
         [
             new Schedule(
                 providerAddress: "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-                ratio: "500000000000000000",
+                weiRatio: 500000000000000000,
                 startDate: 0,
                 finishDate: 0
             ),
             new Schedule(
                 providerAddress: "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-                ratio: "300000000000000000",
+                weiRatio: 300000000000000000,
                 startDate: 0,
                 finishDate: 0
             ),
             new Schedule(
                 providerAddress: "0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF",
-                ratio: "200000000000000000",
+                weiRatio: 200000000000000000,
                 startDate: 0,
                 finishDate: 1763758800
             )
@@ -35,11 +36,11 @@ internal class MockValidatedMessage : IValidatedMessage
         [
             new User(
                 userAddress: "0x0000000000000000000000000000000000000001",
-                weiAmount: "50000000000000000000"
+                weiAmount: BigInteger.Parse("50000000000000000000")
             ),
             new User(
                 userAddress: "0x0000000000000000000000000000000000000002",
-                weiAmount: "25000000000000000000"
+                weiAmount: BigInteger.Parse("25000000000000000000")
             )
         ],
         refund: new Refund(

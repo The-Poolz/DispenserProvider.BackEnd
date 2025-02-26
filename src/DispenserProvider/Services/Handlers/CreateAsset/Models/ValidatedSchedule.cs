@@ -1,12 +1,12 @@
 ﻿using Nethereum.Util;
-using DispenserProvider.Extensions;
+using System.Numerics;
 using TokenSchedule.FluentValidation.Models;
 
 namespace DispenserProvider.Services.Handlers.CreateAsset.Models;
 
 public class ValidatedSchedule(Schedule schedule) : IValidatedScheduleItem
 {
-    public decimal Ratio { get; } = schedule.WeiRatio.StringRatioToDecimal();
+    public BigInteger Ratio { get; } = BigInteger.Parse(schedule.WeiRatio);
     public DateTime StartDate { get; } = schedule.StartDate;
     public DateTime? FinishDate { get; } = schedule.FinishDate.ToUnixTimestamp() == 0 ? null : schedule.FinishDate;
 }
