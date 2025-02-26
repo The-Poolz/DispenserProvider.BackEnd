@@ -315,9 +315,9 @@ It provides details on the endpoint, handler file, error code, error message, an
 
 ---
 
-#### **Error Code**: MINIMUM_RATIO_1E_MINUS_18
+#### **Error Code**: RATIO_MUST_BE_POSITIVE
 - **Endpoint(s)**: `adminCreateAsset`
-- **Error Message**: Ratio must be greater than or equal to 1e-18.
+- **Error Message**: Ratio must be a positive number.
 - **JSON Example**:
 
 <details>
@@ -332,10 +332,10 @@ It provides details on the endpoint, handler file, error code, error message, an
                   "adminCreateAsset"
               ],
               "data": null,
-              "errorType": "MINIMUM_RATIO_1E_MINUS_18",
+              "errorType": "RATIO_MUST_BE_POSITIVE",
               "errorInfo": null,
               "locations": [ ],
-              "message": "Ratio must be greater than or equal to 1e-18."
+              "message": "Ratio must be a positive number."
           }
       ]
   }
