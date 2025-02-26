@@ -41,5 +41,7 @@ public enum ErrorCode
     [Error("Provided builder address not approved in the LockDealNFT contract.")]
     BUILDER_MUST_BE_APPROVED_IN_LOCK_DEAL_NFT,
     [Error("Provided builder address is not a simple provider.")]
-    BUILDER_MUST_BE_SIMPLE_PROVIDER
+    BUILDER_MUST_BE_SIMPLE_PROVIDER,
+    [Error("PoolId in the specified ChainId is duplicated for Schedule and Refund.")]
+    POOL_ID_DUPLICATION
 }

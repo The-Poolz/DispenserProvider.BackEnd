@@ -495,6 +495,36 @@ It provides details on the endpoint, handler file, error code, error message, an
 
 ---
 
+#### **Error Code**: POOL_ID_DUPLICATION
+- **Endpoint(s)**: `adminCreateAsset`
+- **Error Message**: PoolId in the specified ChainId is duplicated for Schedule and Refund.
+- **JSON Example**:
+
+<details>
+  <summary>Show JSON Example</summary>
+
+  ```json
+  {
+      "data": null,
+      "errors": [
+          {
+              "path": [
+                  "adminCreateAsset"
+              ],
+              "data": null,
+              "errorType": "POOL_ID_DUPLICATION",
+              "errorInfo": null,
+              "locations": [ ],
+              "message": "PoolId in the specified ChainId is duplicated for Schedule and Refund."
+          }
+      ]
+  }
+  ```
+
+</details>
+
+---
+
 #### **Error Code**: SIGNATURE_IS_STILL_VALID
 - **Endpoint(s)**: `generateSignature`
 - **Error Message**: Cannot generate signature, because it is still valid until.

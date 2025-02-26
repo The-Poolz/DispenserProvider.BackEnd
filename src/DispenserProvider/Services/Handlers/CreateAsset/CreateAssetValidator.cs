@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.MessageTemplate.Models.Validators;
 using DispenserProvider.Services.Handlers.CreateAsset.Models;
 using DispenserProvider.Services.Validators.AdminRequest.Models;
@@ -14,6 +15,11 @@ public class CreateAssetValidator : AbstractValidator<CreateAssetRequest>
     )
     {
         ClassLevelCascadeMode = CascadeMode.Stop;
+
+        RuleFor(x => x.Message)
+            .Must(x => x.ChainId != x.Refund!.ChainId || x.PoolId != x.Refund!.PoolId)
+            .When(x => x.Message.Refund != null)
+            .WithError(ErrorCode.POOL_ID_DUPLICATION);
 
         RuleFor(x => new CreateValidatorSettings(
             new AdminRequestValidatorSettings(x.Signature, x.Message.Eip712Message),
