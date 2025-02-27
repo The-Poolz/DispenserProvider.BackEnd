@@ -49,3 +49,27 @@ If already installed check if new version is available.
 ```bash
 dotnet tool update -g Amazon.Lambda.TestTool-8.0
 ```
+
+## Settings to runnig locally
+
+1. **Ensure you have the `aws-lambda-tools-defaults.json` file, and that it is configured.**
+
+2. **Ensure all required environment variables are set.**  
+   They can be configured in the `aws-lambda-tools-defaults.json` file.
+   You can review the project's environment variables in the [Env.cs](https://github.com/The-Poolz/DispenserProvider.BackEnd/blob/master/src/DispenserProvider/Env.cs) file.
+
+3. **In the `PRODUCTION_MODE` environment variable, set the value to `Stage`.**
+
+4. **Ensure you have an `appsettings.json` file with the connection strings, and that it is configured correctly.**
+   Below is an example of the contents of the `appsettings.json` file:
+
+   ```json
+   {
+     "ConnectionStrings": {
+       "DispenserStage": "Data Source=SOURCE_HERE;User id=USER_HERE;Password=PASSWORD_HERE;Initial Catalog=CATALOG_HERE;TrustServerCertificate=true;",
+       "AuthStage": "Data Source=SOURCE_HERE;User id=USER_HERE;Password=PASSWORD_HERE;Initial Catalog=CATALOG_HERE;TrustServerCertificate=true;",
+       "DownloaderStage": "Data Source=SOURCE_HERE;User id=USER_HERE;Password=PASSWORD_HERE;Initial Catalog=CATALOG_HERE;TrustServerCertificate=true;"
+     }
+   }
+   ```
+   Fill in the placeholders `SOURCE_HERE`, `USER_HERE`, `PASSWORD_HERE`, `CATALOG_HERE` with the necessary values ​​to work with local or stage databases.
