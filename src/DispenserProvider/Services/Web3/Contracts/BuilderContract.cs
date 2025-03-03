@@ -1,5 +1,5 @@
-﻿using Nethereum.ABI.Decoders;
-using Net.Web3.EthereumWallet;
+﻿using Net.Web3.EthereumWallet;
+using DispenserProvider.Services.Web3.Contracts.TypeDecoders;
 
 namespace DispenserProvider.Services.Web3.Contracts;
 
@@ -7,6 +7,6 @@ public class BuilderContract(IChainProvider chainProvider) : Web3Contract(chainP
 {
     public string Name(long chainId, EthereumAddress address)
     {
-        return CallFunction<StringTypeDecoder, string>(chainId, address, MethodsSignatures.BaseProvider.Name);
+        return CallFunction<StringBytes32TypeDecoder, string>(chainId, address, MethodsSignatures.BaseProvider.Name);
     }
 }

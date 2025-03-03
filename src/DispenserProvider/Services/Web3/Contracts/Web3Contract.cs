@@ -2,6 +2,7 @@
 using Nethereum.RPC.Eth.DTOs;
 using Net.Web3.EthereumWallet;
 using Nethereum.ABI.FunctionEncoding;
+using Nethereum.Hex.HexConvertors.Extensions;
 
 namespace DispenserProvider.Services.Web3.Contracts;
 
@@ -32,6 +33,6 @@ public class Web3Contract(IChainProvider chainProvider)
     {
         var web3 = ChainProvider.Web3(chainId);
         var rpcResponse = web3.Eth.Transactions.Call.SendRequestAsync(callInput).GetAwaiter().GetResult();
-        return new TDecoder().Decode<TResponse>(rpcResponse);
+        return new TDecoder().Decode<TResponse>(rpcResponse.HexToByteArray());
     }
 }
