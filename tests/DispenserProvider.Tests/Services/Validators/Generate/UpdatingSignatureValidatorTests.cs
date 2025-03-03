@@ -12,10 +12,14 @@ public class UpdatingSignatureValidatorTests
 {
     public class ValidateAndThrow
     {
+        public ValidateAndThrow()
+        {
+            Environment.SetEnvironmentVariable("COOLDOWN_OFFSET_IN_SECONDS", "300");
+        }
+
         [Fact]
         internal void WhenSignatureStillValid_ShouldThrowException()
         {
-            Environment.SetEnvironmentVariable("COOLDOWN_OFFSET_IN_SECONDS", "300");
             var signature = new SignatureDTO {
                 ValidFrom = DateTime.UtcNow.AddDays(-1),
                 ValidUntil = DateTime.UtcNow.AddDays(1),
@@ -47,7 +51,6 @@ public class UpdatingSignatureValidatorTests
         [Fact]
         internal void WhenGenerationOnCooldown_ShouldThrowException()
         {
-            Environment.SetEnvironmentVariable("COOLDOWN_OFFSET_IN_SECONDS", "300");
             var signature = new SignatureDTO{
                 ValidFrom = DateTime.UtcNow.AddDays(-1),
                 ValidUntil = DateTime.UtcNow,
@@ -78,9 +81,6 @@ public class UpdatingSignatureValidatorTests
         [Fact]
         internal void WhenCooldownCheckSkipped_ShouldThrowException()
         {
-            // (double check) If cooldown check not will be skipped will receive error cause required env variable not set.
-            Environment.SetEnvironmentVariable("COOLDOWN_OFFSET_IN_SECONDS", "");
-
             var signature = new SignatureDTO
             {
                 ValidFrom = DateTime.UtcNow.AddDays(-1),
@@ -103,7 +103,6 @@ public class UpdatingSignatureValidatorTests
         [Fact]
         internal void WhenRequestIsValid_ShouldNotThrowException()
         {
-            Environment.SetEnvironmentVariable("COOLDOWN_OFFSET_IN_SECONDS", "300");
             var signature = new SignatureDTO {
                 ValidFrom = DateTime.UtcNow.AddDays(-2),
                 ValidUntil = DateTime.UtcNow.AddDays(-1),
