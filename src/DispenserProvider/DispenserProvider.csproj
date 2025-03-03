@@ -24,6 +24,7 @@
     <PackageReference Include="Nethereum.ABI" Version="4.28.0" />
     <PackageReference Include="FluentValidation" Version="11.11.0" />
     <PackageReference Include="Nethereum.Web3" Version="4.28.0" />
+    <PackageReference Include="poolz.finance.csharp.contracts" Version="1.0.4" />
     <PackageReference Include="SecretsManager" Version="1.0.0" />
   </ItemGroup>
   <ItemGroup>
