@@ -50,6 +50,7 @@ public static class DefaultServiceProvider
         .AddScoped<IChainProvider, ChainProvider>()
         .AddScoped<ILockDealNFTContract, LockDealNFTContract>()
         .AddScoped<IDispenserProviderContract, DispenserProviderContract>()
+        .AddScoped<IBuilderContract, BuilderContract>()
         .AddScoped<ITakenTrackManager, TakenTrackManager>();
 
     private static IServiceCollection Prod => new ServiceCollection()

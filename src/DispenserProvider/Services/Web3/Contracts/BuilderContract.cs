@@ -3,7 +3,7 @@ using poolz.finance.csharp.contracts.LockDealNFT;
 
 namespace DispenserProvider.Services.Web3.Contracts;
 
-public class BaseProviderContract(IChainProvider chainProvider) : Web3Contract(chainProvider), IBuilderContract
+public class BuilderContract(IChainProvider chainProvider) : Web3Contract(chainProvider), IBuilderContract
 {
     public string Name(long chainId, EthereumAddress address)
     {
