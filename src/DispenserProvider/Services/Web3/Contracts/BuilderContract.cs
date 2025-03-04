@@ -1,12 +1,14 @@
 ﻿using Net.Web3.EthereumWallet;
-using DispenserProvider.Services.Web3.Contracts.TypeDecoders;
+using poolz.finance.csharp.contracts.LockDealNFT;
 
 namespace DispenserProvider.Services.Web3.Contracts;
 
-public class BuilderContract(IChainProvider chainProvider) : Web3Contract(chainProvider), IBuilderContract
+public class BuilderContract(IChainProvider chainProvider) : IBuilderContract
 {
     public string Name(long chainId, EthereumAddress address)
     {
-        return CallFunction<StringBytes32TypeDecoder, string>(chainId, address, MethodsSignatures.BaseProvider.Name);
+        var web3 = chainProvider.Web3(chainId);
+        var contract = new LockDealNFTService(web3, address);
+        return contract.NameQueryAsync().GetAwaiter().GetResult();
     }
 }
