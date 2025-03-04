@@ -13,7 +13,7 @@ public class BuildersValidator : AbstractValidator<BuildersValidatorRequest>
         )
     { }
 
-    private BuildersValidator(IValidator<ChainAddressPair> refundValidator, IValidator<ChainAddressPair> withdrawValidator)
+    private BuildersValidator(IValidator<ChainAddressPair> withdrawValidator, IValidator<ChainAddressPair> refundValidator)
     {
         ClassLevelCascadeMode = CascadeMode.Stop;
 
