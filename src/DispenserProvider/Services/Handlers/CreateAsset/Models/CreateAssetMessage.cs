@@ -43,7 +43,7 @@ public class CreateAssetMessage : IValidatedMessage
             refund: new ValidationRefund(
                 chainId: Refund.ChainId,
                 poolId: Refund.PoolId,
-                ratio: Refund.WeiRatio,
+                weiRatio: BigInteger.Parse(Refund.WeiRatio),
                 dealProvider: Refund.DealProvider,
                 finishTime: Refund.FinishTime
             )
