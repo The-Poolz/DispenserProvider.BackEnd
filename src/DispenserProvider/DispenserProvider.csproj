@@ -16,7 +16,7 @@
     <PackageReference Include="AuthDB" Version="1.0.7" />
     <PackageReference Include="CovalentDB" Version="2.0.21" />
     <PackageReference Include="DispenserProvider.DataBase" Version="1.0.12" />
-    <PackageReference Include="DispenserProvider.MessageTemplate" Version="1.0.6" />
+    <PackageReference Include="DispenserProvider.MessageTemplate" Version="1.0.8" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
     <PackageReference Include="MediatR" Version="12.4.1" />
     <PackageReference Include="MediatR.Extensions.FluentValidation.AspNetCore" Version="5.1.0" />
