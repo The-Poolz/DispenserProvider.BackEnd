@@ -20,15 +20,20 @@ public class DeleteAssetHandler(IDbContextFactory<DispenserContext> dispenserCon
     {
         var dispenserContext = dispenserContextFactory.CreateDbContext();
         var dispensers = dispenserContext.Dispenser
-            .Where(d => d.DeletionLogSignature == null && request.Message.ToDelete.Select(x => x.Value).Contains(d.Id))
+            .Where(x =>
+                x.DeletionLogSignature == null &&
+                request.Message.Users.Select(u => u.Address).Contains(x.UserAddress) &&
+                ((x.WithdrawalDetail.ChainId == request.Message.ChainId && x.WithdrawalDetail.PoolId == request.Message.PoolId) ||
+                 (x.RefundDetail != null && x.RefundDetail.ChainId == request.Message.ChainId && x.RefundDetail.PoolId == request.Message.PoolId))
+            )
             .ToList();
 
-        if (request.Message.ToDelete.Count != dispensers.Count)
+        if (request.Message.Users.Length != dispensers.Count)
         {
             throw ErrorCode.USERS_FOR_DELETE_NOT_FOUND.ToException(customState: new
             {
-                Users = request.Message.ToDelete
-                    .Select(x => x.Key.Address)
+                Users = request.Message.Users
+                    .Select(x => x.Address)
                     .Except(dispensers.Select(x => x.UserAddress))
                     .ToArray()
             });

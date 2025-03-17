@@ -1,6 +1,5 @@
 ﻿using Newtonsoft.Json;
 using Net.Web3.EthereumWallet;
-using DispenserProvider.DataBase.Models;
 using DispenserProvider.MessageTemplate.Models.Delete;
 using DispenserProvider.MessageTemplate.Models.Eip712;
 using DispenserProvider.Services.Validators.AdminRequest.Models;
@@ -17,12 +16,6 @@ public class DeleteAssetMessage : IValidatedMessage
 
     [JsonRequired]
     public EthereumAddress[] Users { get; set; } = null!;
-
-    [JsonIgnore]
-    internal IDictionary<EthereumAddress, string> ToDelete => Users.ToDictionary(
-        key => key,
-        value => DispenserDTO.GenerateId(value.Address, ChainId, PoolId)
-    );
 
     [JsonIgnore]
     public AbstractMessage Eip712Message => new DeleteMessage(ChainId, PoolId, Users);

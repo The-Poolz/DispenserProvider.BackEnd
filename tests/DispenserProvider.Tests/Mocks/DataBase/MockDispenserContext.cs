@@ -22,7 +22,7 @@ internal static class MockDispenserContext
 
     internal static DispenserDTO Dispenser => new()
     {
-        Id = "2b135a9b949f674986c1bcbbc36775efdad16bf6348e8c9d850fcb4d4f9aaa3b",
+        Id = "e166ee5c678d5c23b2e8889a9f143e4e0acaa3cf7f4cfea4cfa87f2e8c10d35a",
         UserAddress = "0x0000000000000000000000000000000000000001",
         RefundFinishTime = DateTimeOffset.FromUnixTimeSeconds(1763544530).DateTime,
         CreationLogSignature = MockCreateAssetRequest.Signature
