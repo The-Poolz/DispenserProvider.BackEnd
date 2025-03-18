@@ -5,7 +5,7 @@ namespace DispenserProvider.Services.Handlers.CreateAsset.Models.DatabaseWrapper
 public sealed class DispenserWrapper : DispenserDTO
 {
     public DispenserWrapper(CreateAssetRequest request, User user, TransactionDetailDTO withdrawalDetails, TransactionDetailDTO? refundDetails)
-        : base(user.UserAddress, withdrawalDetails.ChainId, withdrawalDetails.PoolId)
+        : base(user.UserAddress, withdrawalDetails, refundDetails)
     {
         CreationLogSignature = request.Signature;
         RefundFinishTime = request.Message.Refund?.FinishTime;
