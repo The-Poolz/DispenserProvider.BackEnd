@@ -43,5 +43,7 @@ public enum ErrorCode
     [Error("Provided builder address is not a simple provider.")]
     BUILDER_MUST_BE_SIMPLE_PROVIDER,
     [Error("PoolId in the specified ChainId is duplicated for Schedule and Refund.")]
-    POOL_ID_DUPLICATION
+    POOL_ID_DUPLICATION,
+    [Error("PoolId and ChainId already used for user.")]
+    ASSET_MUST_BE_UNIQUE
 }

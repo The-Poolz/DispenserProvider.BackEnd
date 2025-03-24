@@ -11,7 +11,8 @@ public class CreateAssetValidator : AbstractValidator<CreateAssetRequest>
     public CreateAssetValidator(
         IValidator<CreateValidatorSettings> requestValidator,
         IValidator<PoolOwnershipValidatorRequest> poolOwnershipValidator,
-        IValidator<BuildersValidatorRequest> buildersValidator
+        IValidator<BuildersValidatorRequest> buildersValidator,
+        IValidator<UniqueAssetValidatorRequest> uniqueAssetValidator
     )
     {
         ClassLevelCascadeMode = CascadeMode.Stop;
@@ -36,5 +37,12 @@ public class CreateAssetValidator : AbstractValidator<CreateAssetRequest>
             x.Message.Schedules.Select(s => new ChainAddressPair(x.Message.ChainId, s.ProviderAddress)),
             x.Message.Refund != null ? new ChainAddressPair(x.Message.Refund.ChainId, x.Message.Refund.DealProvider) : null
         )).SetValidator(buildersValidator);
+
+        RuleForEach(x => x.Message.Users.Select(u => new UniqueAssetValidatorRequest(u.UserAddress, x.Message.ChainId, x.Message.PoolId)))
+            .SetValidator(uniqueAssetValidator);
+
+        RuleForEach(x => x.Message.Users.Select(u => new UniqueAssetValidatorRequest(u.UserAddress, x.Message.Refund!.ChainId, x.Message.Refund!.PoolId)))
+            .SetValidator(uniqueAssetValidator)
+            .When(x => x.Message.Refund != null);
     }
 }

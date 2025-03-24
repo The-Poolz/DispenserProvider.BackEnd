@@ -16,7 +16,8 @@ public class CreateAssetValidatorTests
         private readonly CreateAssetValidator _validator = new(
             new Mock<IValidator<CreateValidatorSettings>>().Object,
             new Mock<IValidator<PoolOwnershipValidatorRequest>>().Object,
-            new Mock<IValidator<BuildersValidatorRequest>>().Object
+            new Mock<IValidator<BuildersValidatorRequest>>().Object,
+            new Mock<IValidator<UniqueAssetValidatorRequest>>().Object
         );
 
         [Fact]
