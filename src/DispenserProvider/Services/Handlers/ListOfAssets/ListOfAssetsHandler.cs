@@ -30,6 +30,7 @@ public class ListOfAssetsHandler(IDbContextFactory<DispenserContext> dispenserCo
         return Task.FromResult(new ListOfAssetsResponse(dispensers
             .ExceptBy(processed.Select(x => x.Id), x => x.Id)
             .Select(x => new Asset(x))
+            .ToArray()
         ));
     }
 }

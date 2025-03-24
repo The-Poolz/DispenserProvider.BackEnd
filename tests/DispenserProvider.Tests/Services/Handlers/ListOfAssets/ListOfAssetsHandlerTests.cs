@@ -29,6 +29,7 @@ public class ListOfAssetsHandlerTests
 
             var response = await handler.Handle(request, CancellationToken.None);
 
+            response.Count.Should().Be(1);
             response.Assets.Should().HaveCount(1)
                 .And.ContainSingle(x =>
                     x.UserAddress == MockDispenserContext.Dispenser.UserAddress &&
@@ -60,6 +61,7 @@ public class ListOfAssetsHandlerTests
 
             var response = await handler.Handle(request, CancellationToken.None);
 
+            response.Count.Should().Be(0);
             response.Assets.Should().HaveCount(0);
             dbFactory.Current.TakenTrack.ToArray().Should().HaveCount(1)
                 .And.ContainSingle(x =>
@@ -85,6 +87,7 @@ public class ListOfAssetsHandlerTests
 
             var response = await handler.Handle(request, CancellationToken.None);
 
+            response.Count.Should().Be(0);
             response.Assets.Should().BeEmpty();
             dbFactory.Current.TakenTrack.ToArray().Should().BeEmpty();
         }
