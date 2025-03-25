@@ -1,4 +1,5 @@
-﻿using DispenserProvider.DataBase;
+﻿using Net.Web3.EthereumWallet;
+using DispenserProvider.DataBase;
 using Microsoft.EntityFrameworkCore;
 using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.DataBase.Models;
@@ -23,5 +24,17 @@ public class DispenserManager(IDbContextFactory<DispenserContext> dispenserConte
                 ((x.WithdrawalDetail.ChainId == request.ChainId && x.WithdrawalDetail.PoolId == request.PoolId) ||
                  (x.RefundDetail != null && x.RefundDetail.ChainId == request.ChainId && x.RefundDetail.PoolId == request.PoolId))
             ) ?? throw ErrorCode.DISPENSER_NOT_FOUND.ToException();
+    }
+
+    public IEnumerable<DispenserDTO> GetDispensers(EthereumAddress[] users, long chainId, long poolId)
+    {
+        using var dispenserContext = dispenserContextFactory.CreateDbContext();
+        return dispenserContext.Dispenser
+            .Where(x =>
+                users.Select(u => u.Address).Contains(x.UserAddress) &&
+                ((x.WithdrawalDetail.ChainId == chainId && x.WithdrawalDetail.PoolId == poolId) ||
+                 (x.RefundDetail != null && x.RefundDetail.ChainId == chainId && x.RefundDetail.PoolId == poolId))
+            )
+            .ToArray();
     }
 }

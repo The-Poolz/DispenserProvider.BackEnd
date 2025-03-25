@@ -2,9 +2,9 @@
 
 namespace DispenserProvider.Services.Validators.AdminRequest.Models;
 
-public class UniqueAssetValidatorRequest(EthereumAddress address, long chainId, long poolId)
+public class UniqueAssetValidatorRequest(EthereumAddress[] users, long chainId, long poolId)
 {
-    public string Address { get; } = address;
+    public EthereumAddress[] Users { get; } = users;
     public long ChainId { get; } = chainId;
     public long PoolId { get; } = poolId;
 }
