@@ -1,5 +1,6 @@
 ﻿using Xunit;
 using FluentAssertions;
+using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Database;
 using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.Tests.Mocks.Services.Web3;
@@ -17,6 +18,21 @@ public class ListOfAssetsHandlerTests
         internal async Task WhenAssetsFound_ShouldReturnsExpectedAssets()
         {
             var dbFactory = new MockDbContextFactory(seed: true);
+            var secondDispenser = new DispenserDTO(MockDispenserContext.Dispenser.UserAddress, withdrawChainId: 1, withdrawPoolId: 1, null, null)
+            {
+                CreationLog = new LogDTO {
+                    Signature = "0x"
+                },
+                UserAddress = MockDispenserContext.Dispenser.UserAddress,
+                WithdrawalDetail = new TransactionDetailDTO {
+                    Id = 2,
+                    ChainId = 1,
+                    PoolId = 1
+                }
+            };
+            dbFactory.Current.Dispenser.Add(secondDispenser);
+            await dbFactory.Current.SaveChangesAsync();
+
             var dispenser = dbFactory.Current.Dispenser.First();
             var dispenserContract = MockDispenserProviderContract.Create(dispenser, isWithdrawn: false, isRefunded: false);
             var takenTrackManager = new TakenTrackManager(dbFactory, new AssetAvailabilityValidator(dispenserContract));
@@ -24,11 +40,14 @@ public class ListOfAssetsHandlerTests
 
             var request = new ListOfAssetsRequest
             {
-                UserAddress = MockDispenserContext.Dispenser.UserAddress
+                UserAddress = MockDispenserContext.Dispenser.UserAddress,
+                Limit = 1,
+                Page = 1
             };
 
             var response = await handler.Handle(request, CancellationToken.None);
 
+            response.TotalAssets.Should().Be(2);
             response.Assets.Should().HaveCount(1)
                 .And.ContainSingle(x =>
                     x.UserAddress == MockDispenserContext.Dispenser.UserAddress &&
@@ -60,6 +79,7 @@ public class ListOfAssetsHandlerTests
 
             var response = await handler.Handle(request, CancellationToken.None);
 
+            response.TotalAssets.Should().Be(0);
             response.Assets.Should().HaveCount(0);
             dbFactory.Current.TakenTrack.ToArray().Should().HaveCount(1)
                 .And.ContainSingle(x =>
@@ -85,6 +105,7 @@ public class ListOfAssetsHandlerTests
 
             var response = await handler.Handle(request, CancellationToken.None);
 
+            response.TotalAssets.Should().Be(0);
             response.Assets.Should().BeEmpty();
             dbFactory.Current.TakenTrack.ToArray().Should().BeEmpty();
         }
