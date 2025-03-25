@@ -18,6 +18,7 @@ public class ListOfAssetsHandler(IDbContextFactory<DispenserContext> dispenserCo
                 x.DeletionLogSignature == null &&
                 x.TakenTrack == null
             )
+            .Include(x => x.CreationLog)
             .Include(x => x.WithdrawalDetail)
             .ThenInclude(x => x.Builders)
             .Include(x => x.RefundDetail)
