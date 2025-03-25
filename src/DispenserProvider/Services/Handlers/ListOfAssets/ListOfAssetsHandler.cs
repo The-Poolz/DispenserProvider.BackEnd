@@ -12,7 +12,7 @@ public class ListOfAssetsHandler(IDbContextFactory<DispenserContext> dispenserCo
     public Task<ListOfAssetsResponse> Handle(ListOfAssetsRequest request, CancellationToken cancellationToken)
     {
         var dispenserContext = dispenserContextFactory.CreateDbContext();
-        var dispensers = dispenserContext.Dispenser
+        var allDispensers = dispenserContext.Dispenser
             .Where(x =>
                 x.UserAddress == request.UserAddress.Address &&
                 x.DeletionLogSignature == null &&
@@ -22,14 +22,20 @@ public class ListOfAssetsHandler(IDbContextFactory<DispenserContext> dispenserCo
             .ThenInclude(x => x.Builders)
             .Include(x => x.RefundDetail)
             .ThenInclude(x => x!.Builders)
-            .Paginate(request, x => x.OrderByDescending(d => d.CreationLog.CreationTime))
             .ToArray();
 
-        var processed = takenTrackManager.ProcessTakenTracks(dispensers);
+        var processed = takenTrackManager
+            .ProcessTakenTracks(allDispensers)
+            .ToArray();
 
-        return Task.FromResult(new ListOfAssetsResponse(dispensers
+        var exceptDispensers = allDispensers
             .ExceptBy(processed.Select(x => x.Id), x => x.Id)
-            .Select(x => new Asset(x))
-        ));
+            .ToArray();
+
+        var assets = exceptDispensers
+            .Paginate(request, x => x.OrderByDescending(d => d.CreationLog.CreationTime))
+            .Select(x => new Asset(x));
+
+        return Task.FromResult(new ListOfAssetsResponse(exceptDispensers.Length, assets));
     }
 }
