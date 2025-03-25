@@ -10,7 +10,7 @@ public class UniqueAssetValidator : AbstractValidator<UniqueAssetValidatorReques
     public UniqueAssetValidator(IDispenserManager dispenserManager)
     {
         RuleFor(x => x)
-            .Must(x => dispenserManager.GetDispensers(x.Users, x.ChainId, x.PoolId).ToArray().Length == 0)
+            .Must(x => !dispenserManager.GetDispensers(x.Users, x.ChainId, x.PoolId).Any())
             .WithError(ErrorCode.ASSET_MUST_BE_UNIQUE, x => dispenserManager.GetDispensers(x.Users, x.ChainId, x.PoolId));
     }
 }

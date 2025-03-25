@@ -26,7 +26,7 @@ public class DispenserManager(IDbContextFactory<DispenserContext> dispenserConte
             ) ?? throw ErrorCode.DISPENSER_NOT_FOUND.ToException();
     }
 
-    public IEnumerable<DispenserDTO> GetDispensers(EthereumAddress[] users, long chainId, long poolId)
+    public IEnumerable<DispenserDTO> GetDispensers(IEnumerable<EthereumAddress> users, long chainId, long poolId)
     {
         using var dispenserContext = dispenserContextFactory.CreateDbContext();
         return dispenserContext.Dispenser
