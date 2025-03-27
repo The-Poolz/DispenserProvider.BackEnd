@@ -12,26 +12,22 @@ public class ReadAssetHandler(IDbContextFactory<DispenserContext> dispenserConte
     {
         var dispenserContext = dispenserContextFactory.CreateDbContext();
         var assets = request.AssetContext.Select(assetContext =>
-            new Asset(assetContext, dispenserContext.TransactionDetails
+            new Asset(assetContext, dispenserContext.Dispenser
+                .Include(x => x.TakenTrack)
+                .Include(x => x.WithdrawalDetail)
+                .ThenInclude(x => x.Builders)
+                .Include(x => x.RefundDetail)
+                .ThenInclude(x => x!.Builders)
                 .Where(x =>
-                    x.PoolId == assetContext.PoolId &&
-                    x.ChainId == assetContext.ChainId
+                    x.DeletionLogSignature == null &&
+                    ((x.WithdrawalDetail.ChainId == assetContext.ChainId && x.WithdrawalDetail.PoolId == assetContext.PoolId) ||
+                     (x.RefundDetail != null && x.RefundDetail.ChainId == assetContext.ChainId && x.RefundDetail.PoolId == assetContext.PoolId))
                 )
-                .Include(x => x.WithdrawalDispenser)
-                .ThenInclude(x => x!.TakenTrack)
-                .Include(x => x.RefundDispenser)
-                .ThenInclude(x => x!.TakenTrack)
-                .Include(x => x.Builders)
                 .ToArray()
-                .Where(x =>
-                    x.WithdrawalDispenser?.DeletionLogSignature == null &&
-                    x.RefundDispenser?.DeletionLogSignature == null
-                )
                 .Select(x => new Dispenser(
-                    x.RefundDispenser != null ? x.RefundDispenser! : x.WithdrawalDispenser!,
-                    x.Builders
+                    x,
+                    x.RefundDetail != null && x.RefundDetail.ChainId == assetContext.ChainId && x.RefundDetail.PoolId == assetContext.PoolId
                 ))
-                .ToArray()
             )
         ).ToList();
 
