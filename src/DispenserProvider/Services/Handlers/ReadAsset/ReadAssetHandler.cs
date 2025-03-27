@@ -12,26 +12,22 @@ public class ReadAssetHandler(IDbContextFactory<DispenserContext> dispenserConte
     {
         var dispenserContext = dispenserContextFactory.CreateDbContext();
         var assets = request.AssetContext.Select(assetContext =>
-            new Asset(assetContext, dispenserContext.TransactionDetails
-                .Where(x =>
-                    x.PoolId == assetContext.PoolId &&
-                    x.ChainId == assetContext.ChainId
+            new Asset(assetContext, dispenserContext.Dispenser
+                .Include(dispenser => dispenser.TakenTrack)
+                .Include(dispenser => dispenser.WithdrawalDetail)
+                .ThenInclude(transactionDetail => transactionDetail.Builders)
+                .Include(dispenser => dispenser.RefundDetail)
+                .ThenInclude(transactionDetail => transactionDetail!.Builders)
+                .Where(dispenser =>
+                    dispenser.DeletionLogSignature == null &&
+                    ((dispenser.WithdrawalDetail.ChainId == assetContext.ChainId && dispenser.WithdrawalDetail.PoolId == assetContext.PoolId) ||
+                     (dispenser.RefundDetail != null && dispenser.RefundDetail.ChainId == assetContext.ChainId && dispenser.RefundDetail.PoolId == assetContext.PoolId))
                 )
-                .Include(x => x.WithdrawalDispenser)
-                .ThenInclude(x => x!.TakenTrack)
-                .Include(x => x.RefundDispenser)
-                .ThenInclude(x => x!.TakenTrack)
-                .Include(x => x.Builders)
                 .ToArray()
-                .Where(x =>
-                    x.WithdrawalDispenser?.DeletionLogSignature == null &&
-                    x.RefundDispenser?.DeletionLogSignature == null
-                )
-                .Select(x => new Dispenser(
-                    x.RefundDispenser != null ? x.RefundDispenser! : x.WithdrawalDispenser!,
-                    x.Builders
+                .Select(dispenser => new Dispenser(
+                    dispenser,
+                    dispenser.RefundDetail != null && dispenser.RefundDetail.ChainId == assetContext.ChainId && dispenser.RefundDetail.PoolId == assetContext.PoolId
                 ))
-                .ToArray()
             )
         ).ToList();
 

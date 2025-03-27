@@ -23,8 +23,8 @@ public class GenerateSignatureValidatorTests
         {
             var dispenser = new DispenserDTO {
                 RefundFinishTime = DateTime.UtcNow.AddDays(1),
-                UserAddress = "0x0000000000000000000000000000000000000001",
                 WithdrawalDetail = new TransactionDetailDTO {
+                    UserAddress = "0x0000000000000000000000000000000000000001",
                     ChainId = 1,
                     PoolId = 1
                 }
@@ -51,12 +51,13 @@ public class GenerateSignatureValidatorTests
         {
             var dispenser = new DispenserDTO {
                 RefundFinishTime = DateTime.UtcNow.AddDays(1),
-                UserAddress = "0x0000000000000000000000000000000000000001",
                 WithdrawalDetail = new TransactionDetailDTO {
+                    UserAddress = "0x0000000000000000000000000000000000000001",
                     ChainId = 1,
                     PoolId = 1
                 },
                 RefundDetail = new TransactionDetailDTO {
+                    UserAddress = "0x0000000000000000000000000000000000000001",
                     ChainId = 56,
                     PoolId = 1
                 }
@@ -83,12 +84,13 @@ public class GenerateSignatureValidatorTests
         {
             var dispenser = new DispenserDTO {
                 RefundFinishTime = DateTime.UtcNow.AddDays(-1),
-                UserAddress = "0x0000000000000000000000000000000000000001",
                 WithdrawalDetail = new TransactionDetailDTO {
+                    UserAddress = "0x0000000000000000000000000000000000000001",
                     ChainId = 1,
                     PoolId = 1
                 },
                 RefundDetail = new TransactionDetailDTO {
+                    UserAddress = "0x0000000000000000000000000000000000000001",
                     ChainId = 56,
                     PoolId = 1
                 }
@@ -119,12 +121,13 @@ public class GenerateSignatureValidatorTests
             };
             var dispenser = new DispenserDTO {
                 RefundFinishTime = DateTime.UtcNow.AddDays(-1),
-                UserAddress = "0x0000000000000000000000000000000000000001",
                 WithdrawalDetail = new TransactionDetailDTO {
+                    UserAddress = "0x0000000000000000000000000000000000000001",
                     ChainId = 1,
                     PoolId = 1
                 },
                 RefundDetail = new TransactionDetailDTO {
+                    UserAddress = "0x0000000000000000000000000000000000000001",
                     ChainId = 56,
                     PoolId = 1
                 },
@@ -156,12 +159,13 @@ public class GenerateSignatureValidatorTests
             };
             var dispenser = new DispenserDTO {
                 RefundFinishTime = DateTime.UtcNow.AddDays(-1),
-                UserAddress = "0x0000000000000000000000000000000000000001",
                 WithdrawalDetail = new TransactionDetailDTO {
+                    UserAddress = "0x0000000000000000000000000000000000000001",
                     ChainId = 1,
                     PoolId = 1
                 },
                 RefundDetail = new TransactionDetailDTO {
+                    UserAddress = "0x0000000000000000000000000000000000000001",
                     ChainId = 56,
                     PoolId = 1
                 },
@@ -193,12 +197,13 @@ public class GenerateSignatureValidatorTests
             };
             var dispenser = new DispenserDTO {
                 RefundFinishTime = DateTime.UtcNow.AddDays(7),
-                UserAddress = "0x0000000000000000000000000000000000000001",
                 WithdrawalDetail = new TransactionDetailDTO {
+                    UserAddress = "0x0000000000000000000000000000000000000001",
                     ChainId = 1,
                     PoolId = 1
                 },
                 RefundDetail = new TransactionDetailDTO {
+                    UserAddress = "0x0000000000000000000000000000000000000001",
                     ChainId = 56,
                     PoolId = 1
                 },

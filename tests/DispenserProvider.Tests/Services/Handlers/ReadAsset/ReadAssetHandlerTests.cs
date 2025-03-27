@@ -42,7 +42,7 @@ public class ReadAssetHandlerTests
 
             response.Assets.First().Dispensers.Should().HaveCount(1)
                 .And.ContainSingle(d =>
-                    d.UserAddress == MockDispenserContext.Dispenser.UserAddress &&
+                    d.UserAddress == MockDispenserContext.TransactionDetail.UserAddress &&
                     d.RefundFinishTime == MockDispenserContext.Dispenser.RefundFinishTime
                 );
 
@@ -84,7 +84,7 @@ public class ReadAssetHandlerTests
 
             response.Assets.First().Dispensers.Should().HaveCount(1)
                 .And.ContainSingle(d =>
-                    d.UserAddress == MockDispenserContext.Dispenser.UserAddress &&
+                    d.UserAddress == MockDispenserContext.TransactionDetail.UserAddress &&
                     d.RefundFinishTime == MockDispenserContext.Dispenser.RefundFinishTime
                 );
 

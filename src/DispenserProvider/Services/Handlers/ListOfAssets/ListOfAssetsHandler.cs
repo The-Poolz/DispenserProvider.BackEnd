@@ -14,7 +14,7 @@ public class ListOfAssetsHandler(IDbContextFactory<DispenserContext> dispenserCo
         var dispenserContext = dispenserContextFactory.CreateDbContext();
         var allDispensers = dispenserContext.Dispenser
             .Where(x =>
-                x.UserAddress == request.UserAddress.Address &&
+                x.WithdrawalDetail.UserAddress == request.UserAddress.Address &&
                 x.DeletionLogSignature == null &&
                 x.TakenTrack == null
             )

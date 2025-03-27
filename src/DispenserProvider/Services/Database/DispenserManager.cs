@@ -19,7 +19,7 @@ public class DispenserManager(IDbContextFactory<DispenserContext> dispenserConte
             .ThenInclude(x => x!.Builders)
             .FirstOrDefault(x =>
                 x.DeletionLogSignature == null &&
-                x.UserAddress == request.UserAddress.Address &&
+                x.WithdrawalDetail.UserAddress == request.UserAddress.Address &&
                 ((x.WithdrawalDetail.ChainId == request.ChainId && x.WithdrawalDetail.PoolId == request.PoolId) ||
                  (x.RefundDetail != null && x.RefundDetail.ChainId == request.ChainId && x.RefundDetail.PoolId == request.PoolId))
             ) ?? throw ErrorCode.DISPENSER_NOT_FOUND.ToException();

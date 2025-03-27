@@ -27,7 +27,6 @@ public class DeleteAssetHandlerTests
             );
             dbFactory.Current.Dispenser.ToArray().Should().ContainSingle(x =>
                 x.Id == MockDispenserContext.Dispenser.Id &&
-                x.UserAddress == MockDispenserContext.Dispenser.UserAddress &&
                 x.RefundFinishTime == MockDispenserContext.Dispenser.RefundFinishTime &&
                 x.DeletionLogSignature == MockDeleteAssetRequest.Request.Signature
             );

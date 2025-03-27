@@ -16,8 +16,8 @@ public class AssetAvailabilityValidatorTests
         internal void WhenAssetAlreadyWithdrawn_ShouldThrowException()
         {
             var dispenser = new DispenserDTO {
-                UserAddress = "0x0000000000000000000000000000000000000001",
                 WithdrawalDetail = new TransactionDetailDTO {
+                    UserAddress = "0x0000000000000000000000000000000000000001",
                     ChainId = 1,
                     PoolId = 1
                 }
@@ -37,12 +37,13 @@ public class AssetAvailabilityValidatorTests
         internal void WhenAssetAlreadyRefunded_ShouldThrowException()
         {
             var dispenser = new DispenserDTO {
-                UserAddress = "0x0000000000000000000000000000000000000001",
                 WithdrawalDetail = new TransactionDetailDTO {
+                    UserAddress = "0x0000000000000000000000000000000000000001",
                     ChainId = 1,
                     PoolId = 1
                 },
                 RefundDetail = new TransactionDetailDTO {
+                    UserAddress = "0x0000000000000000000000000000000000000001",
                     ChainId = 56,
                     PoolId = 1
                 }
@@ -62,12 +63,13 @@ public class AssetAvailabilityValidatorTests
         internal void WhenAssetNotTaken_ShouldNotThrowException()
         {
             var dispenser = new DispenserDTO {
-                UserAddress = "0x0000000000000000000000000000000000000001",
                 WithdrawalDetail = new TransactionDetailDTO {
+                    UserAddress = "0x0000000000000000000000000000000000000001",
                     ChainId = 1,
                     PoolId = 1
                 },
                 RefundDetail = new TransactionDetailDTO {
+                    UserAddress = "0x0000000000000000000000000000000000000001",
                     ChainId = 56,
                     PoolId = 1
                 }

@@ -21,7 +21,6 @@ public class GenerateSignatureHandlerTests
         internal void WhenDispenserFoundAndIsNotRefund_ShouldReturnExpectedResult()
         {
             var dispenserContextFactory = new MockDbContextFactory(seed: true);
-            var dispenser = dispenserContextFactory.Current.Dispenser.First();
             var handler = new GenerateSignatureHandler(
                 new DispenserManager(dispenserContextFactory),
                 new Mock<ISignatureProcessor>().Object
@@ -39,6 +38,7 @@ public class GenerateSignatureHandlerTests
             var refundDetail = new TransactionDetailDTO
             {
                 Id = 2,
+                UserAddress = _refundRequest.UserAddress,
                 ChainId = _refundRequest.ChainId,
                 PoolId = _refundRequest.PoolId,
                 RefundDispenser = dispenserContextFactory.Current.Dispenser.First()
