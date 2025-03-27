@@ -26,11 +26,11 @@ public class CreateAssetHandlerTests
             );
             dbFactory.Current.Dispenser.ToArray().Should().ContainSingle(x =>
                 x.Id == MockDispenserContext.Dispenser.Id &&
-                x.UserAddress == MockDispenserContext.Dispenser.UserAddress &&
                 x.RefundFinishTime == MockDispenserContext.Dispenser.RefundFinishTime
             );
             dbFactory.Current.TransactionDetails.ToArray().Should().ContainSingle(x =>
                 x.Id == MockDispenserContext.TransactionDetail.Id &&
+                x.UserAddress == MockDispenserContext.TransactionDetail.UserAddress &&
                 x.PoolId == MockDispenserContext.TransactionDetail.PoolId &&
                 x.ChainId == MockDispenserContext.TransactionDetail.ChainId
             );

@@ -15,8 +15,8 @@ public class SignatureStruct(long poolId, EthereumAddress receiver, DateTime val
 
     public SignatureStruct(TransactionDetailDTO transactionDetail, DateTime validUntil)
         : this(
-            transactionDetail.PoolId, 
-            (transactionDetail.RefundDispenser ?? transactionDetail.WithdrawalDispenser)!.UserAddress,
+            transactionDetail.PoolId,
+            transactionDetail.UserAddress,
             validUntil,
             transactionDetail.Builders.Select(x =>
             {

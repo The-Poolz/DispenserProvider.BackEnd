@@ -22,7 +22,7 @@ public class DeleteAssetHandler(IDbContextFactory<DispenserContext> dispenserCon
         var dispensers = dispenserContext.Dispenser
             .Where(x =>
                 x.DeletionLogSignature == null &&
-                request.Message.Users.Select(u => u.Address).Contains(x.UserAddress) &&
+                request.Message.Users.Select(u => u.Address).Contains(x.WithdrawalDetail.UserAddress) &&
                 ((x.WithdrawalDetail.ChainId == request.Message.ChainId && x.WithdrawalDetail.PoolId == request.Message.PoolId) ||
                  (x.RefundDetail != null && x.RefundDetail.ChainId == request.Message.ChainId && x.RefundDetail.PoolId == request.Message.PoolId))
             )
@@ -33,7 +33,6 @@ public class DeleteAssetHandler(IDbContextFactory<DispenserContext> dispenserCon
             throw ErrorCode.USERS_FOR_DELETE_NOT_FOUND.ToException(customState: new
             {
                 Users = request.Message.Users
-                    .Select(x => x.Address)
                     .Except(dispensers.Select(x => x.UserAddress))
                     .ToArray()
             });

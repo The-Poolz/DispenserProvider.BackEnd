@@ -8,7 +8,7 @@ public class Dispenser(DispenserDTO dispenser, IEnumerable<BuilderDTO> builders)
 {
     public bool IsTaken { get; } = dispenser.TakenTrack != null;
 
-    public string UserAddress { get; } = dispenser.UserAddress;
+    public string UserAddress { get; } = dispenser.WithdrawalDetail.UserAddress;
 
     [JsonConverter(typeof(UnixDateTimeConverter))]
     public DateTime? RefundFinishTime { get; } = dispenser.RefundFinishTime;

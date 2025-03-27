@@ -18,14 +18,14 @@ public class ListOfAssetsHandlerTests
         internal async Task WhenAssetsFound_ShouldReturnsExpectedAssets()
         {
             var dbFactory = new MockDbContextFactory(seed: true);
-            var secondDispenser = new DispenserDTO(MockDispenserContext.Dispenser.UserAddress, withdrawChainId: 1, withdrawPoolId: 1, null, null)
+            var secondDispenser = new DispenserDTO(MockDispenserContext.TransactionDetail.UserAddress, withdrawChainId: 1, withdrawPoolId: 1)
             {
                 CreationLog = new LogDTO {
                     Signature = "0x"
                 },
-                UserAddress = MockDispenserContext.Dispenser.UserAddress,
                 WithdrawalDetail = new TransactionDetailDTO {
                     Id = 2,
+                    UserAddress = MockDispenserContext.TransactionDetail.UserAddress,
                     ChainId = 1,
                     PoolId = 1
                 }
@@ -40,7 +40,7 @@ public class ListOfAssetsHandlerTests
 
             var request = new ListOfAssetsRequest
             {
-                UserAddress = MockDispenserContext.Dispenser.UserAddress,
+                UserAddress = MockDispenserContext.TransactionDetail.UserAddress,
                 Limit = 1,
                 Page = 1
             };
@@ -50,7 +50,7 @@ public class ListOfAssetsHandlerTests
             response.TotalAssets.Should().Be(2);
             response.Assets.Should().HaveCount(1)
                 .And.ContainSingle(x =>
-                    x.UserAddress == MockDispenserContext.Dispenser.UserAddress &&
+                    x.UserAddress == MockDispenserContext.TransactionDetail.UserAddress &&
                     x.RefundFinishTime == MockDispenserContext.Dispenser.RefundFinishTime &&
                     x.WithdrawalDetail.PoolId == MockDispenserContext.TransactionDetail.PoolId &&
                     x.WithdrawalDetail.ChainId == MockDispenserContext.TransactionDetail.ChainId &&
@@ -74,7 +74,7 @@ public class ListOfAssetsHandlerTests
 
             var request = new ListOfAssetsRequest
             {
-                UserAddress = MockDispenserContext.Dispenser.UserAddress
+                UserAddress = MockDispenserContext.TransactionDetail.UserAddress
             };
 
             var response = await handler.Handle(request, CancellationToken.None);

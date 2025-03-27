@@ -25,7 +25,7 @@ public class CreateAssetHandler(IDbContextFactory<DispenserContext> dispenserCon
             var withdrawalDetails = ProcessTransactionDetail(dispenserContext, user, request.Message);
             var refundDetails = request.Message.Refund != null ? ProcessTransactionDetail(dispenserContext, user, request.Message.Refund) : null;
 
-            dispenserContext.Dispenser.Add(new DispenserWrapper(request, user, withdrawalDetails, refundDetails));
+            dispenserContext.Dispenser.Add(new DispenserWrapper(request, withdrawalDetails, refundDetails));
         }
 
         dispenserContext.SaveChanges();
@@ -33,14 +33,14 @@ public class CreateAssetHandler(IDbContextFactory<DispenserContext> dispenserCon
 
     private TransactionDetailWrapper ProcessTransactionDetail(DispenserContext dispenserContext, User user, CreateAssetMessage message)
     {
-        var transactionDetail = new TransactionDetailWrapper(message);
+        var transactionDetail = new TransactionDetailWrapper(message, user);
         var builders = message.Schedules.Select(x => new BuilderWrapper(user, transactionDetail, x)).ToArray();
         return ProcessTransactionDetail(dispenserContext, transactionDetail, builders);
     }
 
     private TransactionDetailWrapper ProcessTransactionDetail(DispenserContext dispenserContext, User user, Refund refund)
     {
-        var transactionDetail = new TransactionDetailWrapper(refund);
+        var transactionDetail = new TransactionDetailWrapper(refund, user);
         var builders = new[] { new BuilderWrapper(user, transactionDetail, refund) };
         return ProcessTransactionDetail(dispenserContext, transactionDetail, builders);
     }
