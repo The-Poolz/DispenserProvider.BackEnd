@@ -5,12 +5,14 @@ on:
     types: [published]
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: production
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
+
       - name: Build project
         run: dotnet build --configuration Release
 
@@ -23,19 +25,20 @@ jobs:
           name: lambda-deployment
           path: deployment.zip
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: production
-    steps:
       - name: Download deployment artifact
         uses: actions/download-artifact@v2
         with:
           name: lambda-deployment
-      
-      - name: Deploy to AWS Lambda
+
+      - name: Deploy Lambda Code
         env:
           LAMBDA_NAME: ${{ secrets.LAMBDA_NAME }}
         run: |
           aws lambda update-function-code --function-name "$LAMBDA_NAME" --zip-file fileb://deployment.zip
+
+      - name: Update Lambda Description with Release URL
+        env:
+          LAMBDA_NAME: ${{ secrets.LAMBDA_NAME }}
+          RELEASE_URL: ${{ github.event.release.html_url }}
+        run: |
+          aws lambda update-function-configuration --function-name "$LAMBDA_NAME" --description "$RELEASE_URL"
