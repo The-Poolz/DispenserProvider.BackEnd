@@ -45,14 +45,11 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
       - name: Deploy Lambda Code
-        env:
-          LAMBDA_NAME: ${{ secrets.LAMBDA_NAME }}
         run: |
-          aws lambda update-function-code --function-name "$LAMBDA_NAME" --zip-file fileb://deployment.zip
+          aws lambda update-function-code --function-name DispenserProvider --zip-file fileb://deployment.zip
 
       - name: Update Lambda Description with Release URL
         env:
-          LAMBDA_NAME: ${{ secrets.LAMBDA_NAME }}
           RELEASE_URL: ${{ github.event.release.html_url }}
         run: |
-          aws lambda update-function-configuration --function-name "$LAMBDA_NAME" --description "$RELEASE_URL"
+          aws lambda update-function-configuration --function-name DispenserProvider --description "$RELEASE_URL"
