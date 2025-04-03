@@ -12,7 +12,7 @@ jobs:
       name: production
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Build project
         run: dotnet build --configuration Release
@@ -21,13 +21,13 @@ jobs:
         run: dotnet lambda package --configuration Release --output-package deployment.zip
 
       - name: Upload deployment artifact
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: lambda-deployment
           path: deployment.zip
 
       - name: Download deployment artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: lambda-deployment
 
