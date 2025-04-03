@@ -1,0 +1,39 @@
+name: Deploy Lambda Function
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Build project
+        run: dotnet build --configuration Release
+
+      - name: Package Lambda function
+        run: dotnet lambda package --configuration Release --output-package deployment.zip
+
+      - name: Upload deployment artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: lambda-deployment
+          path: deployment.zip
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+    steps:
+      - name: Download deployment artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: lambda-deployment
+      
+      - name: Deploy to AWS Lambda
+        run: |
+          aws lambda update-function-code --function-name DispenserProvider --zip-file fileb://deployment.zip
