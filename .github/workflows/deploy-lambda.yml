@@ -84,4 +84,4 @@ jobs:
         env:
           RELEASE_URL: ${{ github.event.release.html_url }}
         run: |
-          aws lambda update-function-configuration --function-name DispenserProvider --description "$RELEASE_URL"
+          aws lambda update-function-configuration --function-name DispenserProvider --description "$RELEASE_URL" > /dev/null 2>&1
