@@ -7,6 +7,10 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GITHUB_ACTOR: ${{ github.actor }}
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   deploy:
     if: ${{ github.event.release.target_commitish == 'master' }}
