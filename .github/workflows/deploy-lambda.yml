@@ -32,7 +32,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: lambda-deployment
-          path: deployment.zip
+          path: src/deployment.zip
+
 
       - name: Download deployment artifact
         uses: actions/download-artifact@v4
