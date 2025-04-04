@@ -24,7 +24,7 @@ jobs:
         run: dotnet tool install -g Amazon.Lambda.Tools
       
       - name: Package Lambda function
-        run: dotnet lambda package --project ./src/DispenserProvider/DispenserProvider.csproj --configuration Release --output-package deployment.zip
+        run: dotnet lambda package --project "$GITHUB_WORKSPACE/src/DispenserProvider/DispenserProvider.csproj" --configuration Release --output-package deployment.zip
 
       - name: Upload deployment artifact
         uses: actions/upload-artifact@v4
