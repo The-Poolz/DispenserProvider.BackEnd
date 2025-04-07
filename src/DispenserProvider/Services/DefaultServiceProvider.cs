@@ -54,14 +54,14 @@ public static class DefaultServiceProvider
         .AddScoped<ITakenTrackManager, TakenTrackManager>();
 
     private static IServiceCollection Prod => new ServiceCollection()
-        .AddDbContextFactory<DispenserContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Prod)))
-        .AddDbContext<AuthContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Prod)))
-        .AddDbContext<CovalentContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Prod)))
+        .AddDbContextFactory<DispenserContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnectionFromSecret(Env.SECRET_NAME_OF_DISPENSER_CONNECTION.ToString())))
+        .AddDbContext<AuthContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnectionFromSecret(Env.SECRET_NAME_OF_AUTH_CONNECTION.ToString())))
+        .AddDbContext<CovalentContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnectionFromSecret(Env.SECRET_NAME_OF_DOWNLOADER_CONNECTION.ToString())))
         .AddScoped<ISignerManager, SignerManager>();
 
     private static IServiceCollection Stage => new ServiceCollection()
-        .AddDbContextFactory<DispenserContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Staging, "DispenserStage")))
-        .AddDbContext<AuthContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Staging, "AuthStage")))
-        .AddDbContext<CovalentContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnection(ContextOption.Staging, "DownloaderStage")))
+        .AddDbContextFactory<DispenserContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnectionFromConfiguration("DispenserStage")))
+        .AddDbContext<AuthContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnectionFromConfiguration("AuthStage")))
+        .AddDbContext<CovalentContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnectionFromConfiguration("DownloaderStage")))
         .AddScoped<ISignerManager, SignerManager>();
 }
