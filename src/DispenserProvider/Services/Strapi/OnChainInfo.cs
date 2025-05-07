@@ -1,9 +1,3 @@
-﻿using Newtonsoft.Json;
-using Poolz.Finance.CSharp.Strapi;
+﻿namespace DispenserProvider.Services.Strapi;
 
-namespace DispenserProvider.Services.Strapi;
-
-[method: JsonConstructor]
-public record OnChainInfo(
-    [JsonProperty("chains")] ICollection<Chain> Chains
-);
+public record OnChainInfo(string RpcUrl, string DispenserProvider, string LockDealNFT);
