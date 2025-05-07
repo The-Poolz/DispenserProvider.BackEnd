@@ -3,7 +3,6 @@ using FluentValidation;
 using Amazon.Lambda.Core;
 using DispenserProvider.Models;
 using DispenserProvider.Services;
-using DispenserProvider.Services.Strapi;
 using Microsoft.Extensions.DependencyInjection;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
@@ -18,9 +17,6 @@ public class DispenserProviderLambda(IServiceProvider serviceProvider)
     {
         try
         {
-            var strapiClient = new StrapiClient();
-            strapiClient.ReceiveChainInfo(56);
-
             var response = await serviceProvider
                 .GetRequiredService<IMediator>()
                 .Send(request.GetRequest(serviceProvider));
