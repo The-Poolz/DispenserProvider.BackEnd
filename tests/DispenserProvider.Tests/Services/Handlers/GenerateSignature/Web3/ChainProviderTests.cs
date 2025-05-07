@@ -1,9 +1,7 @@
 ﻿using Xunit;
 using FluentAssertions;
-using FluentValidation;
 using DispenserProvider.Services.Web3;
-using Net.Utils.ErrorHandler.Extensions;
-using DispenserProvider.Tests.Mocks.DataBase;
+using DispenserProvider.Tests.Mocks.Strapi;
 
 namespace DispenserProvider.Tests.Services.Handlers.GenerateSignature.Web3;
 
@@ -14,56 +12,45 @@ public class ChainProviderTests
         [Fact]
         internal void WhenChainIdIsSupported_ShouldReturnsWeb3()
         {
-            var context = MockCovalentContext.Create();
+            var strapi = new MockStrapiClient(MockStrapiClient.DefaultOnChainInfo);
 
-            var chainProvider = new ChainProvider(context);
+            var chainProvider = new ChainProvider(strapi);
 
-            var response = chainProvider.Web3(MockCovalentContext.Chain.ChainId);
+            var response = chainProvider.Web3(97);
 
             response.Should().NotBeNull();
         }
-
-        [Fact]
-        internal void WhenChainIdNotSupported_ShouldThrowException()
-        {
-            var chainId = 123;
-            var context = MockCovalentContext.Create();
-
-            var chainProvider = new ChainProvider(context);
-
-            var testCode = () => chainProvider.Web3(chainId);
-
-            testCode.Should().Throw<ValidationException>()
-                .WithMessage(ErrorCode.CHAIN_NOT_SUPPORTED.ToErrorMessage());
-        }
     }
 
-    public class ContractAddress
+    public class DispenserProviderContract
     {
         [Fact]
         internal void WhenChainIdIsSupported_ShouldReturnsContractAddress()
         {
-            var context = MockCovalentContext.Create();
+            var strapi = new MockStrapiClient(MockStrapiClient.DefaultOnChainInfo);
 
-            var chainProvider = new ChainProvider(context);
+            var chainProvider = new ChainProvider(strapi);
 
-            var response = chainProvider.DispenserProviderContract(MockCovalentContext.Chain.ChainId);
+            var response = chainProvider.DispenserProviderContract(97);
 
             response.Should().NotBeNull();
+            response.Should().BeEquivalentTo(MockStrapiClient.DefaultOnChainInfo.DispenserProvider);
         }
+    }
 
+    public class LockDealNFTContract
+    {
         [Fact]
-        internal void WhenChainIdNotSupported_ShouldThrowException()
+        internal void WhenChainIdIsSupported_ShouldReturnsContractAddress()
         {
-            var chainId = 123;
-            var context = MockCovalentContext.Create();
+            var strapi = new MockStrapiClient(MockStrapiClient.DefaultOnChainInfo);
 
-            var chainProvider = new ChainProvider(context);
+            var chainProvider = new ChainProvider(strapi);
 
-            var testCode = () => chainProvider.DispenserProviderContract(chainId);
+            var response = chainProvider.LockDealNFTContract(97);
 
-            testCode.Should().Throw<ValidationException>()
-                .WithMessage(ErrorCode.DISPENSER_PROVIDER_NOT_SUPPORTED.ToErrorMessage());
+            response.Should().NotBeNull();
+            response.Should().BeEquivalentTo(MockStrapiClient.DefaultOnChainInfo.LockDealNFT);
         }
     }
 }

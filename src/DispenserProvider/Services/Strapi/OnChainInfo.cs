@@ -1,3 +1,5 @@
-﻿namespace DispenserProvider.Services.Strapi;
+﻿using Net.Web3.EthereumWallet;
 
-public record OnChainInfo(string RpcUrl, string DispenserProvider, string LockDealNFT);
+namespace DispenserProvider.Services.Strapi;
+
+public record OnChainInfo(string RpcUrl, EthereumAddress DispenserProvider, EthereumAddress LockDealNFT);
