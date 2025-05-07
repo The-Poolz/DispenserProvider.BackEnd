@@ -6,7 +6,7 @@ namespace DispenserProvider.Services.Web3;
 
 public class ChainProvider(IStrapiClient strapi) : IChainProvider
 {
-    private readonly IDictionary<long, OnChainInfo> ChainsInfo = new Dictionary<long, OnChainInfo>();
+    private readonly Dictionary<long, OnChainInfo> ChainsInfo = new();
 
     public IWeb3 Web3(long chainId)
     {
