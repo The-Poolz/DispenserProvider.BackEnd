@@ -1,5 +1,4 @@
-﻿using AuthDB;
-using FluentValidation;
+﻿using FluentValidation;
 using System.Reflection;
 using DispenserProvider.Options;
 using DispenserProvider.DataBase;
@@ -15,7 +14,6 @@ using DispenserProvider.Services.Web3.Contracts;
 using DispenserProvider.MessageTemplate.Services;
 using DispenserProvider.MessageTemplate.Validators;
 using MediatR.Extensions.FluentValidation.AspNetCore;
-using DispenserProvider.Services.Validators.AdminRequest;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
@@ -43,7 +41,7 @@ public static class DefaultServiceProvider
         .AddMediatR(x => x.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()))
         .AddFluentValidation([Assembly.GetExecutingAssembly()])
         .AddValidatorsFromAssemblies([Assembly.GetExecutingAssembly(), typeof(CreateValidator).GetTypeInfo().Assembly])
-        .AddScoped<IAdminValidationService, AdminValidationService>()
+        .AddScoped<IAdminValidationService, StrapiClient>()
         .AddScoped<IDispenserManager, DispenserManager>()
         .AddScoped<ISignatureGenerator, SignatureGenerator>()
         .AddScoped<ISignatureProcessor, SignatureProcessor>()
@@ -56,11 +54,9 @@ public static class DefaultServiceProvider
 
     private static IServiceCollection Prod => new ServiceCollection()
         .AddDbContextFactory<DispenserContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnectionFromSecret(Env.SECRET_NAME_OF_DISPENSER_CONNECTION.ToString())))
-        .AddDbContext<AuthContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnectionFromSecret(Env.SECRET_NAME_OF_AUTH_CONNECTION.ToString())))
         .AddScoped<ISignerManager, SignerManager>();
 
     private static IServiceCollection Stage => new ServiceCollection()
         .AddDbContextFactory<DispenserContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnectionFromConfiguration("DispenserStage")))
-        .AddDbContext<AuthContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnectionFromConfiguration("AuthStage")))
         .AddScoped<ISignerManager, SignerManager>();
 }

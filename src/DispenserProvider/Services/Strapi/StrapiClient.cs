@@ -4,10 +4,11 @@ using Poolz.Finance.CSharp.Strapi;
 using EnvironmentManager.Extensions;
 using Net.Utils.ErrorHandler.Extensions;
 using GraphQL.Client.Serializer.Newtonsoft;
+using DispenserProvider.MessageTemplate.Services;
 
 namespace DispenserProvider.Services.Strapi;
 
-public class StrapiClient : IStrapiClient
+public class StrapiClient : IStrapiClient, IAdminValidationService
 {
     public const string NameOfLockDealNFT = "LockDealNFT";
     public const string NameOfDispenserProvider = "DispenserProvider";
@@ -73,11 +74,7 @@ public class StrapiClient : IStrapiClient
             Query = queryBuilder.Build()
         }).GetAwaiter().GetResult();
 
-        if (response.Errors != null && response.Errors.Any())
-        {
-            var errorMessage = string.Join(Environment.NewLine, response.Errors.Select(x => x.Message));
-            throw new InvalidOperationException(errorMessage);
-        }
+        EnsureNoGraphQLErrors(response);
 
         if (!response.Data.Chains.Any())
         {
@@ -92,6 +89,39 @@ public class StrapiClient : IStrapiClient
         var lockDealNFT = ExtractContractAddress(chain, NameOfLockDealNFT, chainId, ErrorCode.LOCK_DEAL_NFT_NOT_SUPPORTED);
 
         return new OnChainInfo(chain.ContractsOnChain.Rpc, dispenserProvider, lockDealNFT);
+    }
+
+    public bool IsValidAdmin(string userAddress)
+    {
+        var adminsFilter = new GraphQlQueryParameter<AuthAdministratorFiltersInput>("adminsFilter", new AuthAdministratorFiltersInput
+        {
+            Wallet = new StringFilterInput { Eq = userAddress }
+        });
+
+        var queryBuilder = new QueryQueryBuilder()
+            .WithAuthAdministrators(
+                new AuthAdministratorQueryBuilder().WithDocumentId(),
+                adminsFilter
+            )
+            .WithParameter(adminsFilter);
+
+        var response = _client.SendQueryAsync<AuthAdminsResponse>(new GraphQLRequest
+        {
+            Query = queryBuilder.Build()
+        }).GetAwaiter().GetResult();
+
+        EnsureNoGraphQLErrors(response);
+
+        return response.Data.Admins.Any();
+    }
+
+    private void EnsureNoGraphQLErrors<TData>(GraphQLResponse<TData> response)
+    {
+        if (response.Errors != null && response.Errors.Any())
+        {
+            var errorMessage = string.Join(Environment.NewLine, response.Errors.Select(x => x.Message));
+            throw new InvalidOperationException(errorMessage);
+        }
     }
 
     private static string ExtractContractAddress(Chain chain, string nameOfContract, long chainId, ErrorCode error)
