@@ -1,9 +1,10 @@
 ﻿using Xunit;
 using FluentAssertions;
 using DispenserProvider.Services.Web3;
+using DispenserProvider.Tests.Mocks.Strapi;
 using DispenserProvider.Tests.Mocks.DataBase;
-using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 using DispenserProvider.Tests.Mocks.Services.Web3;
+using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
 namespace DispenserProvider.Tests.Services.Handlers.GenerateSignature.Web3;
 
@@ -23,7 +24,8 @@ public class SignatureGeneratorTests
         internal void WhenGeneratedSuccessfully_ShouldReturnSignature()
         {
             var signerManager = new MockSignerManager(PrivateKey);
-            var chainProvider = new ChainProvider(MockCovalentContext.Create());
+            var strapi = new MockStrapiClient(MockStrapiClient.DefaultOnChainInfo);
+            var chainProvider = new ChainProvider(strapi);
             var signatureGenerator = new SignatureGenerator(signerManager, chainProvider);
 
             var transactionDetail = MockDispenserContext.TransactionDetail;

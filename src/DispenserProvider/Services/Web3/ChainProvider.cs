@@ -1,34 +1,32 @@
-﻿using CovalentDb;
-using Nethereum.Web3;
-using CovalentDb.Types;
+﻿using Nethereum.Web3;
 using Net.Web3.EthereumWallet;
-using Net.Utils.ErrorHandler.Extensions;
+using DispenserProvider.Services.Strapi;
 
 namespace DispenserProvider.Services.Web3;
 
-public class ChainProvider(CovalentContext context) : IChainProvider
+public class ChainProvider(IStrapiClient strapi) : IChainProvider
 {
+    private readonly Dictionary<long, OnChainInfo> ChainsInfo = new();
+
     public IWeb3 Web3(long chainId)
     {
-        var chain = context.Chains.FirstOrDefault(x => x.ChainId == chainId)
-            ?? throw ErrorCode.CHAIN_NOT_SUPPORTED.ToException(new
-            {
-                ChainId = chainId
-            });
-        return new Nethereum.Web3.Web3(chain.RpcConnection);
+        var chainInfo = FetchChainInfo(chainId);
+        return new Nethereum.Web3.Web3(chainInfo.RpcUrl);
     }
 
-    public EthereumAddress DispenserProviderContract(long chainId) => GetContract(chainId, ResponseType.DispenserTokensDispensed, ErrorCode.DISPENSER_PROVIDER_NOT_SUPPORTED);
+    public EthereumAddress DispenserProviderContract(long chainId) => FetchChainInfo(chainId).DispenserProvider;
 
-    public EthereumAddress LockDealNFTContract(long chainId) => GetContract(chainId, ResponseType.LDNFTContractApproved, ErrorCode.LOCK_DEAL_NFT_NOT_SUPPORTED);
+    public EthereumAddress LockDealNFTContract(long chainId) => FetchChainInfo(chainId).LockDealNFT;
 
-    private EthereumAddress GetContract(long chainId, ResponseType responseType, ErrorCode error)
+    private OnChainInfo FetchChainInfo(long chainId)
     {
-        var contractAddress = context.DownloaderSettings.FirstOrDefault(x => x.ChainId == chainId && x.ResponseType == responseType)
-            ?? throw error.ToException(new
-            {
-                ChainId = chainId
-            });
-        return contractAddress.ContractAddress;
+        if (ChainsInfo.TryGetValue(chainId, out var chain))
+        {
+            return chain;
+        }
+
+        var chainInfo = strapi.ReceiveChainInfo(chainId);
+        ChainsInfo.Add(chainId, chainInfo);
+        return chainInfo;
     }
 }
