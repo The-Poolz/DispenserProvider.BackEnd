@@ -76,7 +76,7 @@ public class StrapiClient : IStrapiClient, IAdminValidationService
 
         EnsureNoGraphQLErrors(response);
 
-        if (!response.Data.Chains.Any())
+        if (!response.Data.Chains.Any() || response.Data.Chains.First().ContractsOnChain == null)
         {
             throw ErrorCode.CHAIN_NOT_SUPPORTED.ToException(new
             {
