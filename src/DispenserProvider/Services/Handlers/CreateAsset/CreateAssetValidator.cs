@@ -22,7 +22,11 @@ public class CreateAssetValidator : AbstractValidator<CreateAssetRequest>
             .WithError(ErrorCode.POOL_ID_DUPLICATION);
 
         RuleFor(x => new CreateValidatorSettings(
-            new AdminRequestValidatorSettings(x.Signature, x.Message.Eip712Message),
+            new AdminRequestValidatorSettings(
+                x.Signature,
+                x.Message.Eip712Message,
+                x.Message.Refund == null ? new []{ x.Message.ChainId } : new []{ x.Message.ChainId, x.Message.Refund.ChainId }
+            ),
             x.Message.UsersToValidate,
             x.Message.ScheduleToValidate
         )).SetValidator(requestValidator);

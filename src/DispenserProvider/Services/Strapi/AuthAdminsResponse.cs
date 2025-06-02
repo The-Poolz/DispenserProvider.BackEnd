@@ -4,4 +4,8 @@ using Poolz.Finance.CSharp.Strapi;
 namespace DispenserProvider.Services.Strapi;
 
 [method: JsonConstructor]
-public record AuthAdminsResponse([JsonProperty("authAdministrators")] IEnumerable<AuthAdministrator> Admins);
+public record AuthAdminsResponse(
+    [JsonProperty("authAdministrators")] IEnumerable<AuthAdministrator> Admins,
+    [JsonProperty("authRoles")] IEnumerable<AuthAdministrator> Roles,
+    [JsonProperty("chains")] IEnumerable<Chain> Chains
+);

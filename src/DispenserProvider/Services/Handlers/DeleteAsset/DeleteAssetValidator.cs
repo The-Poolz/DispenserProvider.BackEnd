@@ -9,7 +9,11 @@ public class DeleteAssetValidator : AbstractValidator<DeleteAssetRequest>
     public DeleteAssetValidator(IValidator<DeleteValidatorSettings> requestValidator)
     {
         RuleFor(x => new DeleteValidatorSettings(
-            new AdminRequestValidatorSettings(x.Signature, x.Message.Eip712Message),
+            new AdminRequestValidatorSettings(
+                x.Signature,
+                x.Message.Eip712Message,
+                new [] { x.Message.ChainId }
+            ),
             x.Message.UsersToValidate
         )).SetValidator(requestValidator);
     }

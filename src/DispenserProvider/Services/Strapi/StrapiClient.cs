@@ -5,13 +5,12 @@ using EnvironmentManager.Extensions;
 using Net.Utils.ErrorHandler.Extensions;
 using GraphQL.Client.Serializer.Newtonsoft;
 using DispenserProvider.MessageTemplate.Services;
+using DispenserProvider.Services.Strapi.GraphQLRequests;
 
 namespace DispenserProvider.Services.Strapi;
 
 public class StrapiClient : IStrapiClient, IAdminValidationService
 {
-    public const string NameOfLockDealNFT = "LockDealNFT";
-    public const string NameOfDispenserProvider = "DispenserProvider";
     public static readonly string ApiUrl = Env.STRAPI_GRAPHQL_URL.GetRequired<string>();
 
     private readonly GraphQLHttpClient _client = new(
@@ -21,53 +20,7 @@ public class StrapiClient : IStrapiClient, IAdminValidationService
 
     public OnChainInfo ReceiveChainInfo(long chainId)
     {
-        var contractsFilter = new GraphQlQueryParameter<ComponentContractOnChainContractOnChainFiltersInput>("contractsFilter", new ComponentContractOnChainContractOnChainFiltersInput
-        {
-            Or = new[]
-            {
-                new ComponentContractOnChainContractOnChainFiltersInput
-                {
-                    ContractVersion = new ContractFiltersInput
-                    {
-                        NameVersion = new StringFilterInput { Contains = NameOfLockDealNFT }
-                    }
-                },
-                new ComponentContractOnChainContractOnChainFiltersInput
-                {
-                    ContractVersion = new ContractFiltersInput
-                    {
-                        NameVersion = new StringFilterInput { Contains = NameOfDispenserProvider }
-                    }
-                }
-            }
-        });
-        var chainFilter = new GraphQlQueryParameter<ChainFiltersInput>("chainFilter", new ChainFiltersInput
-        {
-            ChainId = new LongFilterInput { Eq = chainId }
-        });
-        var statusParam = new GraphQlQueryParameter<PublicationStatus?>("status", "PublicationStatus", PublicationStatus.Published);
-
-        var queryBuilder = new QueryQueryBuilder()
-            .WithChains(
-                new ChainQueryBuilder()
-                    .WithContractsOnChain(
-                        new ContractsOnChainQueryBuilder()
-                            .WithRpc()
-                            .WithContracts(
-                                new ComponentContractOnChainContractOnChainQueryBuilder()
-                                    .WithContractVersion(
-                                        new ContractQueryBuilder().WithNameVersion()
-                                    )
-                                    .WithAddress(),
-                                    contractsFilter
-                            )
-                    ),
-                chainFilter,
-                status: statusParam
-            )
-            .WithParameter(contractsFilter)
-            .WithParameter(chainFilter)
-            .WithParameter(statusParam);
+        var queryBuilder = OnChainInfoGraphQLRequest.CreateQueryBuilder(chainId);
 
         var response = _client.SendQueryAsync<OnChainInfoResponse>(new GraphQLRequest 
         {
@@ -85,25 +38,16 @@ public class StrapiClient : IStrapiClient, IAdminValidationService
         }
 
         var chain = response.Data.Chains.First();
-        var dispenserProvider = ExtractContractAddress(chain, NameOfDispenserProvider, chainId, ErrorCode.DISPENSER_PROVIDER_NOT_SUPPORTED);
-        var lockDealNFT = ExtractContractAddress(chain, NameOfLockDealNFT, chainId, ErrorCode.LOCK_DEAL_NFT_NOT_SUPPORTED);
+        var dispenserProvider = ExtractContractAddress(chain, OnChainInfoGraphQLRequest.NameOfDispenserProvider, chainId, ErrorCode.DISPENSER_PROVIDER_NOT_SUPPORTED);
+        var lockDealNFT = ExtractContractAddress(chain, OnChainInfoGraphQLRequest.NameOfLockDealNFT, chainId, ErrorCode.LOCK_DEAL_NFT_NOT_SUPPORTED);
 
         return new OnChainInfo(chain.ContractsOnChain.Rpc, dispenserProvider, lockDealNFT);
     }
 
-    public bool IsValidAdmin(string userAddress)
+    public bool IsValidAdmin(string userAddress, IEnumerable<long> chainIDs)
     {
-        var adminsFilter = new GraphQlQueryParameter<AuthAdministratorFiltersInput>("adminsFilter", new AuthAdministratorFiltersInput
-        {
-            Wallet = new StringFilterInput { Eq = userAddress }
-        });
-
-        var queryBuilder = new QueryQueryBuilder()
-            .WithAuthAdministrators(
-                new AuthAdministratorQueryBuilder().WithDocumentId(),
-                adminsFilter
-            )
-            .WithParameter(adminsFilter);
+        var ids = chainIDs as ICollection<long> ?? chainIDs.ToArray();
+        var queryBuilder = AdminInfoGraphQLRequest.CreateQueryBuilder(userAddress, ids);
 
         var response = _client.SendQueryAsync<AuthAdminsResponse>(new GraphQLRequest
         {
@@ -112,10 +56,10 @@ public class StrapiClient : IStrapiClient, IAdminValidationService
 
         EnsureNoGraphQLErrors(response);
 
-        return response.Data.Admins.Any();
+        return response.Data.Admins.Any() || (response.Data.Roles.Any() && response.Data.Chains.Count() == ids.Count);
     }
 
-    private void EnsureNoGraphQLErrors<TData>(GraphQLResponse<TData> response)
+    private static void EnsureNoGraphQLErrors<TData>(GraphQLResponse<TData> response)
     {
         if (response.Errors != null && response.Errors.Any())
         {
