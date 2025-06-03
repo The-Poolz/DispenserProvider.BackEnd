@@ -5,7 +5,7 @@ namespace DispenserProvider.Services.Strapi;
 
 [method: JsonConstructor]
 public record AuthAdminsResponse(
-    [JsonProperty("authAdministrators")] IEnumerable<AuthAdministrator> Admins,
-    [JsonProperty("authRoles")] IEnumerable<AuthAdministrator> Roles,
-    [JsonProperty("chains")] IEnumerable<Chain> Chains
+    [JsonProperty("authAdministrators")] IReadOnlyCollection<AuthAdministrator> Admins,
+    [JsonProperty("authRoles")] IReadOnlyCollection<AuthAdministrator> Roles,
+    [JsonProperty("chains")] IReadOnlyCollection<Chain> Chains
 );

@@ -44,10 +44,9 @@ public class StrapiClient : IStrapiClient, IAdminValidationService
         return new OnChainInfo(chain.ContractsOnChain.Rpc, dispenserProvider, lockDealNFT);
     }
 
-    public bool IsValidAdmin(string userAddress, IEnumerable<long> chainIDs)
+    public bool IsValidAdmin(string userAddress, IReadOnlyCollection<long> chainIDs)
     {
-        var ids = chainIDs as ICollection<long> ?? chainIDs.ToArray();
-        var queryBuilder = AdminInfoGraphQLRequest.CreateQueryBuilder(userAddress, ids);
+        var queryBuilder = AdminInfoGraphQLRequest.CreateQueryBuilder(userAddress, chainIDs);
 
         var response = _client.SendQueryAsync<AuthAdminsResponse>(new GraphQLRequest
         {
@@ -56,7 +55,7 @@ public class StrapiClient : IStrapiClient, IAdminValidationService
 
         EnsureNoGraphQLErrors(response);
 
-        return response.Data.Admins.Any() || (response.Data.Roles.Any() && response.Data.Chains.Count() == ids.Count);
+        return response.Data.Admins.Any() || (response.Data.Roles.Any() && response.Data.Chains.Count == chainIDs.Count);
     }
 
     private static void EnsureNoGraphQLErrors<TData>(GraphQLResponse<TData> response)

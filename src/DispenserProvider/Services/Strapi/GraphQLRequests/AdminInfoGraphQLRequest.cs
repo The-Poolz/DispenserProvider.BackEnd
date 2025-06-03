@@ -6,7 +6,7 @@ namespace DispenserProvider.Services.Strapi.GraphQLRequests;
 
 public static class AdminInfoGraphQLRequest
 {
-    public static QueryQueryBuilder CreateQueryBuilder(EthereumAddress userAddress, IEnumerable<long> chainIDs)
+    public static QueryQueryBuilder CreateQueryBuilder(EthereumAddress userAddress, IReadOnlyCollection<long> chainIDs)
     {
         var adminsFilter = new GraphQlQueryParameter<AuthAdministratorFiltersInput>("adminsFilter", new AuthAdministratorFiltersInput
         {
