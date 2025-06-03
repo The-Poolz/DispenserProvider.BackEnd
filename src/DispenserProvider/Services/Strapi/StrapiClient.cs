@@ -4,6 +4,7 @@ using Poolz.Finance.CSharp.Strapi;
 using EnvironmentManager.Extensions;
 using Net.Utils.ErrorHandler.Extensions;
 using GraphQL.Client.Serializer.Newtonsoft;
+using DispenserProvider.Services.Strapi.Models;
 using DispenserProvider.MessageTemplate.Services;
 using DispenserProvider.Services.Strapi.GraphQLRequests;
 

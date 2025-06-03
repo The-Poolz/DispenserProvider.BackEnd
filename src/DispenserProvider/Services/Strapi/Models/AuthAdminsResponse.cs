@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Poolz.Finance.CSharp.Strapi;
 
-namespace DispenserProvider.Services.Strapi;
+namespace DispenserProvider.Services.Strapi.Models;
 
 [method: JsonConstructor]
 public record AuthAdminsResponse(

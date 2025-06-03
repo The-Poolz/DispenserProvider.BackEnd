@@ -1,4 +1,6 @@
-﻿namespace DispenserProvider.Services.Strapi;
+﻿using DispenserProvider.Services.Strapi.Models;
+
+namespace DispenserProvider.Services.Strapi;
 
 public interface IStrapiClient
 {

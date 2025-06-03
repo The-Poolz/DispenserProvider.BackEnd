@@ -1,4 +1,5 @@
 ﻿using DispenserProvider.Services.Strapi;
+using DispenserProvider.Services.Strapi.Models;
 
 namespace DispenserProvider.Tests.Mocks.Strapi;
 

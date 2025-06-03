@@ -1,6 +1,7 @@
 ﻿using Nethereum.Web3;
 using Net.Web3.EthereumWallet;
 using DispenserProvider.Services.Strapi;
+using DispenserProvider.Services.Strapi.Models;
 
 namespace DispenserProvider.Services.Web3;
 
