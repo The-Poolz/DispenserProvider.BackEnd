@@ -6,7 +6,7 @@ namespace DispenserProvider.Services.Handlers.ReadAsset.Models;
 
 public class Dispenser(DispenserDTO dispenser, bool isRefund)
 {
-    public bool IsTaken { get; } = dispenser.TakenTrack != null;
+    public Taken? Taken { get; } = dispenser.TakenTrack != null ? new Taken(dispenser.TakenTrack) : null;
 
     public string UserAddress { get; } = dispenser.UserAddress;
 
