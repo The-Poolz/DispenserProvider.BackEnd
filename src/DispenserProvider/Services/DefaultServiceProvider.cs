@@ -9,6 +9,7 @@ using DispenserProvider.Services.Strapi;
 using Net.Utils.ErrorHandler.Extensions;
 using ConfiguredSqlConnection.Extensions;
 using DispenserProvider.Services.Database;
+using DispenserProvider.Services.TheGraph;
 using Microsoft.Extensions.DependencyInjection;
 using DispenserProvider.Services.Web3.Contracts;
 using DispenserProvider.MessageTemplate.Services;
@@ -50,7 +51,8 @@ public static class DefaultServiceProvider
         .AddScoped<IDispenserProviderContract, DispenserProviderContract>()
         .AddScoped<IBuilderContract, BuilderContract>()
         .AddScoped<ITakenTrackManager, TakenTrackManager>()
-        .AddScoped<IStrapiClient, StrapiClient>();
+        .AddScoped<IStrapiClient, StrapiClient>()
+        .AddScoped<ITheGraphClient, TheGraphClient>();
 
     private static IServiceCollection Prod => new ServiceCollection()
         .AddDbContextFactory<DispenserContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnectionFromSecret(Env.SECRET_NAME_OF_DISPENSER_CONNECTION.ToString())))

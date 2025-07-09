@@ -14,4 +14,9 @@ internal class MockStrapiClient(OnChainInfo returns) : IStrapiClient
     {
         return returns;
     }
+
+    public string ReceiveTheGraphUrl(long chainId)
+    {
+        throw new NotImplementedException();
+    }
 }
