@@ -43,5 +43,11 @@ public enum ErrorCode
     [Error("Provided builder address is not a simple provider.")]
     BUILDER_MUST_BE_SIMPLE_PROVIDER,
     [Error("PoolId in the specified ChainId is duplicated for Schedule and Refund.")]
-    POOL_ID_DUPLICATION
+    POOL_ID_DUPLICATION,
+    [Error("Page cannot be zero or less.")]
+    PAGE_MUST_BE_MORE_THEN_ZERO,
+    [Error("Limit cannot be zero or less.")]
+    LIMIT_MUST_BE_MORE_THEN_ZERO,
+    [Error("Limit must be lower then max allowed value.")]
+    LIMIT_MUST_BE_LOWER_THEN_MAX_ALLOWED_VALUE
 }

@@ -1,4 +1,5 @@
-﻿using GraphQL;
+﻿using DispenserProvider.Extensions;
+using GraphQL;
 using GraphQL.Client.Http;
 using Poolz.Finance.CSharp.Strapi;
 using EnvironmentManager.Extensions;
@@ -74,9 +75,9 @@ public class StrapiClient : IStrapiClient, IAdminValidationService
             Query = queryBuilder.Build()
         }).GetAwaiter().GetResult();
 
-        EnsureNoGraphQLErrors(response);
+        var data = response.EnsureNoErrors();
 
-        if (!response.Data.Chains.Any() || response.Data.Chains.First().ContractsOnChain == null)
+        if (!data.Chains.Any() || data.Chains.First().ContractsOnChain == null)
         {
             throw ErrorCode.CHAIN_NOT_SUPPORTED.ToException(new
             {
@@ -84,11 +85,61 @@ public class StrapiClient : IStrapiClient, IAdminValidationService
             });
         }
 
-        var chain = response.Data.Chains.First();
-        var dispenserProvider = ExtractContractAddress(chain, NameOfDispenserProvider, chainId, ErrorCode.DISPENSER_PROVIDER_NOT_SUPPORTED);
-        var lockDealNFT = ExtractContractAddress(chain, NameOfLockDealNFT, chainId, ErrorCode.LOCK_DEAL_NFT_NOT_SUPPORTED);
+        var chain = data.Chains.First();
+        var dispenserProvider = ExtractContractAddress(chain.ContractsOnChain.Contracts, NameOfDispenserProvider, chainId, ErrorCode.DISPENSER_PROVIDER_NOT_SUPPORTED);
+        var lockDealNFT = ExtractContractAddress(chain.ContractsOnChain.Contracts, NameOfLockDealNFT, chainId, ErrorCode.LOCK_DEAL_NFT_NOT_SUPPORTED);
 
         return new OnChainInfo(chain.ContractsOnChain.Rpc, dispenserProvider, lockDealNFT);
+    }
+
+    public string ReceiveTheGraphUrl(long chainId)
+    {
+        var contractsFilter = new GraphQlQueryParameter<ComponentContractOnChainContractOnChainFiltersInput>("contractsFilter", new ComponentContractOnChainContractOnChainFiltersInput
+        {
+            ContractVersion = new ContractFiltersInput
+            {
+                NameVersion = new StringFilterInput { Contains = NameOfDispenserProvider }
+            }
+        });
+        var chainFilter = new GraphQlQueryParameter<ContractsOnChainFiltersInput>("chainFilter", new ContractsOnChainFiltersInput
+        {
+            Chain = new ChainFiltersInput
+            {
+                ChainId = new LongFilterInput { Eq = chainId }
+            }
+        });
+        var statusParam = new GraphQlQueryParameter<PublicationStatus?>("status", "PublicationStatus", PublicationStatus.Published);
+
+        var query = new QueryQueryBuilder()
+            .WithContractsOnChains(new ContractsOnChainQueryBuilder()
+                .WithTheGraphUrl()
+                .WithContracts(new ComponentContractOnChainContractOnChainQueryBuilder()
+                    .WithAddress(),
+                    filters: contractsFilter
+                ),
+                filters: chainFilter,
+                status: statusParam
+            )
+            .WithParameter(contractsFilter)
+            .WithParameter(chainFilter)
+            .WithParameter(statusParam)
+            .Build();
+
+        var response = _client.SendQueryAsync<TheGraphDataResponse>(new GraphQLRequest(query)).GetAwaiter().GetResult();
+
+        var data = response.EnsureNoErrors();
+
+        if (!data.ContractsOnChain.Any())
+        {
+            throw ErrorCode.CHAIN_NOT_SUPPORTED.ToException(new
+            {
+                ChainId = chainId
+            });
+        }
+
+        var contractsOnChain = data.ContractsOnChain.First();
+
+        return contractsOnChain.TheGraphUrl;
     }
 
     public bool IsValidAdmin(string userAddress)
@@ -110,23 +161,14 @@ public class StrapiClient : IStrapiClient, IAdminValidationService
             Query = queryBuilder.Build()
         }).GetAwaiter().GetResult();
 
-        EnsureNoGraphQLErrors(response);
+        var data = response.EnsureNoErrors();
 
-        return response.Data.Admins.Any();
+        return data.Admins.Any();
     }
 
-    private void EnsureNoGraphQLErrors<TData>(GraphQLResponse<TData> response)
+    private static string ExtractContractAddress(ICollection<ComponentContractOnChainContractOnChain> contracts, string nameOfContract, long chainId, ErrorCode error)
     {
-        if (response.Errors != null && response.Errors.Any())
-        {
-            var errorMessage = string.Join(Environment.NewLine, response.Errors.Select(x => x.Message));
-            throw new InvalidOperationException(errorMessage);
-        }
-    }
-
-    private static string ExtractContractAddress(Chain chain, string nameOfContract, long chainId, ErrorCode error)
-    {
-        var contract = chain.ContractsOnChain.Contracts.FirstOrDefault(x =>
+        var contract = contracts.FirstOrDefault(x =>
             x.ContractVersion.NameVersion.Contains(nameOfContract)
         );
         if (contract == null) throw error.ToException(new

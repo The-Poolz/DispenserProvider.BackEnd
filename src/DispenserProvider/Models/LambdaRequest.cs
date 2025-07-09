@@ -3,6 +3,7 @@ using DispenserProvider.Services.Handlers.ReadAsset.Models;
 using DispenserProvider.Services.Handlers.CreateAsset.Models;
 using DispenserProvider.Services.Handlers.DeleteAsset.Models;
 using DispenserProvider.Services.Handlers.ListOfAssets.Models;
+using DispenserProvider.Services.Handlers.AdminListAssets.Models;
 using DispenserProvider.Services.Handlers.GenerateSignature.Models;
 using DispenserProvider.Services.Handlers.RetrieveSignature.Models;
 
@@ -13,6 +14,7 @@ public class LambdaRequest
     public ReadAssetRequest? ReadAssetRequest { get; set; }
     public CreateAssetRequest? CreateAssetRequest { get; set; }
     public DeleteAssetRequest? DeleteAssetRequest { get; set; }
+    public AdminListAssetsRequest? AdminListAssetsRequest { get; set; }
 
     public ListOfAssetsRequest? ListOfAssetsRequest { get; set; }
     public SignatureRequest? GenerateSignatureRequest { get; set; }
@@ -23,6 +25,7 @@ public class LambdaRequest
         { CreateAssetRequest: not null } => CreateAssetRequest,
         { DeleteAssetRequest: not null } => DeleteAssetRequest,
         { ReadAssetRequest: not null } => ReadAssetRequest,
+        { AdminListAssetsRequest: not null } => AdminListAssetsRequest,
         { ListOfAssetsRequest: not null } => ListOfAssetsRequest,
         { GenerateSignatureRequest: not null } => new GenerateSignatureRequest(GenerateSignatureRequest, serviceProvider),
         { RetrieveSignatureRequest: not null } => new RetrieveSignatureRequest(RetrieveSignatureRequest, serviceProvider),
