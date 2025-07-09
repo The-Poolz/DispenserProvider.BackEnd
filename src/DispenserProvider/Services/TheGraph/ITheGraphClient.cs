@@ -4,5 +4,5 @@ namespace DispenserProvider.Services.TheGraph;
 
 public interface ITheGraphClient
 {
-    public Task<ICollection<DispenserUpdateParams>> GetDispenserUpdateParamsAsync(long chainId, int page, int limit);
+    public Task<ICollection<DispenserUpdateParams>> GetDispenserUpdateParamsAsync(long chainId);
 }

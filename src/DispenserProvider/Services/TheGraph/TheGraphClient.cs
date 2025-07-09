@@ -11,7 +11,9 @@ namespace DispenserProvider.Services.TheGraph;
 
 public class TheGraphClient(IStrapiClient strapi) : ITheGraphClient
 {
-    public async Task<ICollection<DispenserUpdateParams>> GetDispenserUpdateParamsAsync(long chainId, int page, int limit)
+    public const int MaxPageSize = 1000;
+
+    public async Task<ICollection<DispenserUpdateParams>> GetDispenserUpdateParamsAsync(long chainId)
     {
         var theGraphUrl = strapi.ReceiveTheGraphUrl(chainId);
         var theGraphClient = new GraphQLHttpClient(theGraphUrl, new NewtonsoftJsonSerializer(), new HttpClient
@@ -22,10 +24,10 @@ public class TheGraphClient(IStrapiClient strapi) : ITheGraphClient
         });
 
         var all = new List<DispenserProviderUpdateParams>();
-        var skip = (page - 1) * limit;
+        var skip = 0;
         while (true)
         {
-            var firstFilter = new GraphQlQueryParameter<int?>("firstFilter", limit);
+            var firstFilter = new GraphQlQueryParameter<int?>("firstFilter", MaxPageSize);
             var skipFilter = new GraphQlQueryParameter<int?>("skipFilter", skip);
             var query = new QueryQueryBuilder()
                 .WithDispenserProviderUpdateParamsCollection(new DispenserProviderUpdateParamsQueryBuilder()
@@ -46,9 +48,9 @@ public class TheGraphClient(IStrapiClient strapi) : ITheGraphClient
 
             all.AddRange(data.DispenserUpdateParams);
 
-            if (data.DispenserUpdateParams.Count < limit) break;
+            if (data.DispenserUpdateParams.Count < MaxPageSize) break;
 
-            skip += limit;
+            skip += MaxPageSize;
         }
 
         return all
