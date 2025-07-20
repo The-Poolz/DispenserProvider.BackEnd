@@ -11,12 +11,16 @@ public class SignatureProcessor(IDbContextFactory<DispenserContext> dispenserCon
     {
         var transactionDetail = isRefund ? dispenser.RefundDetail! : dispenser.WithdrawalDetail;
 
-        var validUntil = CalculateValidUntil(dispenser.RefundFinishTime, isRefund);
+        // Use a single timestamp to ensure consistency across all calculations
+        var baseTimestamp = DateTime.UtcNow;
+        var validUntil = CalculateValidUntil(dispenser.RefundFinishTime, isRefund, baseTimestamp);
+        var validFrom = CalculateValidFrom(dispenser, baseTimestamp);
+        
         var signature = new SignatureDTO
         {
             Signature = signatureGenerator.GenerateSignature(transactionDetail, validUntil),
             ValidUntil = validUntil,
-            ValidFrom = CalculateValidFrom(dispenser),
+            ValidFrom = validFrom,
             IsRefund = isRefund,
             DispenserId = dispenser.Id
         };
@@ -28,16 +32,16 @@ public class SignatureProcessor(IDbContextFactory<DispenserContext> dispenserCon
         return signature.ValidFrom;
     }
 
-    private static DateTime CalculateValidFrom(DispenserDTO dispenser)
+    private static DateTime CalculateValidFrom(DispenserDTO dispenser, DateTime baseTimestamp)
     {
         return dispenser.LastUserSignature != null
-            ? DateTime.UtcNow + TimeSpan.FromSeconds(Env.VALID_FROM_OFFSET_IN_SECONDS.GetRequired<int>())
-            : DateTime.UtcNow;
+            ? baseTimestamp + TimeSpan.FromSeconds(Env.VALID_FROM_OFFSET_IN_SECONDS.GetRequired<int>())
+            : baseTimestamp;
     }
 
-    private static DateTime CalculateValidUntil(DateTime? refundFinishTime, bool isRefund)
+    private static DateTime CalculateValidUntil(DateTime? refundFinishTime, bool isRefund, DateTime baseTimestamp)
     {
-        var calculated = DateTime.UtcNow + TimeSpan.FromSeconds(Env.VALID_UNTIL_MAX_OFFSET_IN_SECONDS.GetRequired<int>());
+        var calculated = baseTimestamp + TimeSpan.FromSeconds(Env.VALID_UNTIL_MAX_OFFSET_IN_SECONDS.GetRequired<int>());
         return isRefund && calculated > refundFinishTime!.Value ? refundFinishTime.Value : calculated;
     }
 }
