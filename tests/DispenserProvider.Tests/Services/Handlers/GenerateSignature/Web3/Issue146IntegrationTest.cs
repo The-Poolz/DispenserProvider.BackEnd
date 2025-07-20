@@ -16,7 +16,7 @@ public class Issue146IntegrationTest
 {
     public class SignatureTimestampConsistencyFix
     {
-        public Issue146IntegrationTest()
+        public SignatureTimestampConsistencyFix()
         {
             Environment.SetEnvironmentVariable("VALID_UNTIL_MAX_OFFSET_IN_SECONDS", "300");
             Environment.SetEnvironmentVariable("VALID_FROM_OFFSET_IN_SECONDS", "300");
