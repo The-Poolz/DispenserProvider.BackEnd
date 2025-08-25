@@ -1,5 +1,4 @@
-﻿using Nethereum.Util;
-using FluentValidation;
+﻿using FluentValidation;
 using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.Services.Validators.Signature.Models;
 
@@ -19,12 +18,12 @@ public class RetrieveSignatureRequestValidator : AbstractValidator<RetrieveSigna
             .Must(x => DateTime.UtcNow >= x!.ValidFrom)
             .WithError(ErrorCode.SIGNATURE_VALID_TIME_NOT_ARRIVED, x => new
             {
-                ValidFrom = x.Dispenser.LastUserSignature!.ValidFrom.ToUnixTimestamp()
+                ValidFrom = x.Dispenser.LastUserSignature!.ValidFrom.ToUnixTimeSeconds()
             })
             .Must(x => DateTime.UtcNow <= x!.ValidUntil)
             .WithError(ErrorCode.SIGNATURE_VALID_TIME_IS_EXPIRED, x => new
             {
-                ValidUntil = x.Dispenser.LastUserSignature!.ValidUntil.ToUnixTimestamp()
+                ValidUntil = x.Dispenser.LastUserSignature!.ValidUntil.ToUnixTimeSeconds()
             });
 
         RuleFor(x => x)

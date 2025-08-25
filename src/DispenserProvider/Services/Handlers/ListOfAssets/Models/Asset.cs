@@ -9,7 +9,7 @@ public class Asset(DispenserDTO dispenser)
     public string UserAddress { get; } = dispenser.UserAddress;
 
     [JsonConverter(typeof(UnixDateTimeConverter))]
-    public DateTime? RefundFinishTime { get; } = dispenser.RefundFinishTime;
+    public DateTimeOffset? RefundFinishTime { get; } = dispenser.RefundFinishTime;
 
     public TransactionDetail WithdrawalDetail { get; } = new(dispenser.WithdrawalDetail);
 

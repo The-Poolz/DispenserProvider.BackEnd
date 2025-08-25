@@ -7,7 +7,7 @@ namespace DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
 public class SignatureProcessor(IDbContextFactory<DispenserContext> dispenserContextFactory, ISignatureGenerator signatureGenerator) : ISignatureProcessor
 {
-    public DateTime SaveSignature(DispenserDTO dispenser, bool isRefund)
+    public DateTimeOffset SaveSignature(DispenserDTO dispenser, bool isRefund)
     {
         var transactionDetail = isRefund ? dispenser.RefundDetail! : dispenser.WithdrawalDetail;
 
@@ -28,16 +28,16 @@ public class SignatureProcessor(IDbContextFactory<DispenserContext> dispenserCon
         return signature.ValidFrom;
     }
 
-    private static DateTime CalculateValidFrom(DispenserDTO dispenser)
+    private static DateTimeOffset CalculateValidFrom(DispenserDTO dispenser)
     {
         return dispenser.LastUserSignature != null
-            ? DateTime.UtcNow + TimeSpan.FromSeconds(Env.VALID_FROM_OFFSET_IN_SECONDS.GetRequired<int>())
-            : DateTime.UtcNow;
+            ? DateTimeOffset.UtcNow + TimeSpan.FromSeconds(Env.VALID_FROM_OFFSET_IN_SECONDS.GetRequired<int>())
+            : DateTimeOffset.UtcNow;
     }
 
-    private static DateTime CalculateValidUntil(DateTime? refundFinishTime, bool isRefund)
+    private static DateTimeOffset CalculateValidUntil(DateTimeOffset? refundFinishTime, bool isRefund)
     {
-        var calculated = DateTime.UtcNow + TimeSpan.FromSeconds(Env.VALID_UNTIL_MAX_OFFSET_IN_SECONDS.GetRequired<int>());
+        var calculated = DateTimeOffset.UtcNow + TimeSpan.FromSeconds(Env.VALID_UNTIL_MAX_OFFSET_IN_SECONDS.GetRequired<int>());
         return isRefund && calculated > refundFinishTime!.Value ? refundFinishTime.Value : calculated;
     }
 }

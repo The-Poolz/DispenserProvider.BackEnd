@@ -1,5 +1,4 @@
 ﻿using Xunit;
-using Nethereum.Util;
 using FluentAssertions;
 using FluentValidation;
 using DispenserProvider.DataBase.Models;
@@ -21,8 +20,8 @@ public class UpdatingSignatureValidatorTests
         internal void WhenSignatureStillValid_ShouldThrowException()
         {
             var signature = new SignatureDTO {
-                ValidFrom = DateTime.UtcNow.AddDays(-1),
-                ValidUntil = DateTime.UtcNow.AddDays(1),
+                ValidFrom = DateTimeOffset.UtcNow.AddDays(-1),
+                ValidUntil = DateTimeOffset.UtcNow.AddDays(1),
                 IsRefund = true
             };
             var dispenser = new DispenserDTO {
@@ -42,8 +41,8 @@ public class UpdatingSignatureValidatorTests
                     ErrorMessage = "Cannot generate signature, because it is still valid until.",
                     CustomState = new
                     {
-                        ValidFrom = dispenser.LastUserSignature!.ValidFrom.ToUnixTimestamp(),
-                        NextTry = UpdatingSignatureValidator.NextTry(dispenser).ToUnixTimestamp()
+                        ValidFrom = dispenser.LastUserSignature!.ValidFrom.ToUnixTimeSeconds(),
+                        NextTry = UpdatingSignatureValidator.NextTry(dispenser).ToUnixTimeSeconds()
                     }
                 });
         }
@@ -52,8 +51,8 @@ public class UpdatingSignatureValidatorTests
         internal void WhenGenerationOnCooldown_ShouldThrowException()
         {
             var signature = new SignatureDTO{
-                ValidFrom = DateTime.UtcNow.AddDays(-1),
-                ValidUntil = DateTime.UtcNow,
+                ValidFrom = DateTimeOffset.UtcNow.AddDays(-1),
+                ValidUntil = DateTimeOffset.UtcNow,
                 IsRefund = true
             };
             var dispenser = new DispenserDTO{
@@ -73,7 +72,7 @@ public class UpdatingSignatureValidatorTests
                     ErrorMessage = "Cannot generate signature, because the next valid time for generation has not yet arrived.",
                     CustomState = new
                     {
-                        NextTry = UpdatingSignatureValidator.NextTry(dispenser).ToUnixTimestamp()
+                        NextTry = UpdatingSignatureValidator.NextTry(dispenser).ToUnixTimeSeconds()
                     }
                 });
         }
@@ -83,8 +82,8 @@ public class UpdatingSignatureValidatorTests
         {
             var signature = new SignatureDTO
             {
-                ValidFrom = DateTime.UtcNow.AddDays(-1),
-                ValidUntil = DateTime.UtcNow,
+                ValidFrom = DateTimeOffset.UtcNow.AddDays(-1),
+                ValidUntil = DateTimeOffset.UtcNow,
                 IsRefund = true
             };
             var dispenser = new DispenserDTO
@@ -104,8 +103,8 @@ public class UpdatingSignatureValidatorTests
         internal void WhenRequestIsValid_ShouldNotThrowException()
         {
             var signature = new SignatureDTO {
-                ValidFrom = DateTime.UtcNow.AddDays(-2),
-                ValidUntil = DateTime.UtcNow.AddDays(-1),
+                ValidFrom = DateTimeOffset.UtcNow.AddDays(-2),
+                ValidUntil = DateTimeOffset.UtcNow.AddDays(-1),
                 IsRefund = true
             };
             var dispenser = new DispenserDTO {

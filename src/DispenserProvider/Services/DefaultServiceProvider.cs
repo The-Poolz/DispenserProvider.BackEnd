@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using DispenserProvider.Services.Web3;
 using DispenserProvider.Services.Strapi;
 using Net.Utils.ErrorHandler.Extensions;
-using ConfiguredSqlConnection.Extensions;
 using DispenserProvider.Services.Database;
 using Microsoft.Extensions.DependencyInjection;
 using DispenserProvider.Services.Web3.Contracts;
 using DispenserProvider.MessageTemplate.Services;
 using DispenserProvider.MessageTemplate.Validators;
 using MediatR.Extensions.FluentValidation.AspNetCore;
+using ConfiguredSqlConnection.Abstractions.Extensions;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
