@@ -8,7 +8,7 @@ public sealed class DispenserWrapper : DispenserDTO
         : base(withdrawalDetails, refundDetails)
     {
         CreationLogSignature = request.Signature;
-        RefundFinishTime = request.Message.Refund?.FinishTime;
+        RefundFinishTime = request.Message.Refund?.FinishTime.UtcDateTime;
         WithdrawalDetail = withdrawalDetails;
         RefundDetail = refundDetails;
     }

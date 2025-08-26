@@ -17,13 +17,13 @@ public class UpdatingSignatureValidator : AbstractValidator<GenerateSignatureVal
             .WithError(ErrorCode.SIGNATURE_IS_STILL_VALID, x => new
             {
                 ValidFrom = x.Dispenser.LastUserSignature!.ValidFrom.ToUnixTimestamp(),
-                NextTry = NextTry(x.Dispenser).ToUnixTimestamp()
+                NextTry = NextTry(x.Dispenser).ToUnixTimeSeconds()
             })
             .Must(x => DateTime.UtcNow >= NextTry(x))
             .When(x => x.IsRefund != x.Dispenser.LastUserSignature!.IsRefund)
             .WithError(ErrorCode.SIGNATURE_GENERATION_VALID_TIME_NOT_ARRIVED, x => new
             {
-                NextTry = NextTry(x.Dispenser).ToUnixTimestamp()
+                NextTry = NextTry(x.Dispenser).ToUnixTimeSeconds()
             });
     }
 
