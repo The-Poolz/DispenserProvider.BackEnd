@@ -8,7 +8,7 @@ namespace DispenserProvider.Services.Handlers.RetrieveSignature.Models;
 public class Asset(DispenserDTO dispenser, TransactionDetailDTO transactionDetail, bool isRefund)
 {
     [JsonConverter(typeof(UnixDateTimeConverter))]
-    public DateTime ValidUntil { get; } = dispenser.LastUserSignature!.ValidUntil;
+    public DateTime ValidUntil { get; } = dispenser.LastUserSignature!.ValidUntil.ToUniversalTime();
     public string Receiver { get; } = dispenser.UserAddress;
     public long PoolId { get; } = transactionDetail.PoolId;
     public long ChainId { get; } = transactionDetail.ChainId;
