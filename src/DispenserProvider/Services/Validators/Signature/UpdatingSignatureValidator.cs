@@ -13,7 +13,7 @@ public class UpdatingSignatureValidator : AbstractValidator<GenerateSignatureVal
     {
         RuleFor(x => x.Dispenser.LastUserSignature!)
             .Cascade(CascadeMode.Stop)
-            .Must(x => DateTime.UtcNow >= x.ValidUntil.ToUniversalTime())
+            .Must(x => DateTime.UtcNow >= x.ValidUntil)
             .WithError(ErrorCode.SIGNATURE_IS_STILL_VALID, x => new
             {
                 ValidFrom = x.Dispenser.LastUserSignature!.ValidFrom.ToUnixTimestamp(),
@@ -27,6 +27,6 @@ public class UpdatingSignatureValidator : AbstractValidator<GenerateSignatureVal
             });
     }
 
-    public static DateTime NextTry(SignatureDTO signature) => signature.ValidUntil.ToUniversalTime() + TimeSpan.FromSeconds(Env.COOLDOWN_OFFSET_IN_SECONDS.GetRequired<int>());
+    public static DateTime NextTry(SignatureDTO signature) => signature.ValidUntil + TimeSpan.FromSeconds(Env.COOLDOWN_OFFSET_IN_SECONDS.GetRequired<int>());
     public static DateTime NextTry(DispenserDTO dispenser) => NextTry(dispenser.LastUserSignature!);
 }
