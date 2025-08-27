@@ -15,8 +15,8 @@ public class SignatureProcessor(IDbContextFactory<DispenserContext> dispenserCon
         var signature = new SignatureDTO
         {
             Signature = signatureGenerator.GenerateSignature(transactionDetail, validUntil),
-            ValidUntil = validUntil.UtcDateTime,
-            ValidFrom = CalculateValidFrom(dispenser).UtcDateTime,
+            ValidUntil = validUntil,
+            ValidFrom = CalculateValidFrom(dispenser),
             IsRefund = isRefund,
             DispenserId = dispenser.Id
         };
@@ -25,7 +25,7 @@ public class SignatureProcessor(IDbContextFactory<DispenserContext> dispenserCon
         dispenserContext.Signatures.Add(signature);
         dispenserContext.SaveChanges();
 
-        return signature.ValidFrom.ToUniversalTime();
+        return signature.ValidFrom;
     }
 
     private static DateTime CalculateValidFrom(DispenserDTO dispenser)

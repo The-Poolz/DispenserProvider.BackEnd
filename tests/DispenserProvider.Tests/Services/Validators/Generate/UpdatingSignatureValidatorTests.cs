@@ -43,7 +43,7 @@ public class UpdatingSignatureValidatorTests
                     CustomState = new
                     {
                         ValidFrom = dispenser.LastUserSignature!.ValidFrom.ToUnixTimestamp(),
-                        NextTry = UpdatingSignatureValidator.NextTry(dispenser).ToUnixTimeSeconds()
+                        NextTry = UpdatingSignatureValidator.NextTry(dispenser).ToUnixTimestamp()
                     }
                 });
         }
@@ -73,7 +73,7 @@ public class UpdatingSignatureValidatorTests
                     ErrorMessage = "Cannot generate signature, because the next valid time for generation has not yet arrived.",
                     CustomState = new
                     {
-                        NextTry = UpdatingSignatureValidator.NextTry(dispenser).ToUnixTimeSeconds()
+                        NextTry = UpdatingSignatureValidator.NextTry(dispenser).ToUnixTimestamp()
                     }
                 });
         }
