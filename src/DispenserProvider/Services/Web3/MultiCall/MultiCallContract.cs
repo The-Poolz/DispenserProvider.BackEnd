@@ -1,5 +1,6 @@
 ﻿using Nethereum.Contracts;
 using Nethereum.ABI.Decoders;
+using Nethereum.Contracts.QueryHandlers.MultiCall;
 using DispenserProvider.Services.Web3.MultiCall.Models;
 using poolz.finance.csharp.contracts.DispenserProvider.ContractDefinition;
 
@@ -22,12 +23,13 @@ public class MultiCallContract(IChainProvider chainProvider) : IMultiCallContrac
         var multiCallAddress = chainProvider.MultiCallContract(request.ChainId);
         var dispenserProvider = chainProvider.DispenserProviderContract(request.ChainId);
 
-        var multiCallFunction = new MultiCallFunction
+        var multiCallFunction = new Aggregate3Function
         {
-            Calls = request.IsTakenRequests.Select(x => new Models.MultiCall
+            Calls = request.IsTakenRequests.Select(x => new Call3
             {
-                To = dispenserProvider,
-                Data = new IsTakenFunction
+                AllowFailure = false,
+                Target = dispenserProvider,
+                CallData = new IsTakenFunction
                 {
                     ReturnValue1 = x.PoolId,
                     ReturnValue2 = x.Address
@@ -35,13 +37,13 @@ public class MultiCallContract(IChainProvider chainProvider) : IMultiCallContrac
             }).ToList()
         };
 
-        var handler = web3.Eth.GetContractQueryHandler<MultiCallFunction>();
-        var response = await handler.QueryAsync<List<byte[]>>(multiCallAddress, multiCallFunction);
+        var handler = web3.Eth.GetContractQueryHandler<Aggregate3Function>();
+        var response = await handler.QueryAsync<Aggregate3OutputDTO>(multiCallAddress, multiCallFunction);
 
         return new MultiCallResponse(request.ChainId, request.IsTakenRequests
             .Select((x, id) =>
             {
-                var isTaken = new BoolTypeDecoder().Decode(response[id]);
+                var isTaken = new BoolTypeDecoder().Decode(response.ReturnData[id].ReturnData);
                 return new IsTakenResponse(x.DispenserId, x.PoolId, x.Address, x.IsRefund, isTaken);
             }).ToArray()
         );
