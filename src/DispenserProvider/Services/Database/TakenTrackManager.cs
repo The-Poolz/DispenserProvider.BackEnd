@@ -17,17 +17,15 @@ public class TakenTrackManager(IDbContextFactory<DispenserContext> dispenserCont
             .Where(dispenser => dispenser.TakenTrack == null)
             .ToList();
 
-        var uniqueChainIDs = UniqueChainIDs(notTakenDispensers);
-        var isTakenBatchRequests = uniqueChainIDs.Select(chainId =>
+        var isTakenBatchRequests = UniqueChainIDs(notTakenDispensers).Select(chainId =>
         {
             var withdrawsIsTakenRequests = dispensers
                 .Where(x => x.WithdrawalDetail.ChainId == chainId)
                 .Select(x => new IsTakenRequest(x.Id, x.WithdrawalDetail.PoolId, x.WithdrawalDetail.UserAddress, false));
 
             var refundsIsTakenRequests = dispensers
-                .Where(x => x.RefundDetail != null)
-                .Where(x => x.RefundDetail!.ChainId == chainId)
-                .Select(x => new IsTakenRequest(x.Id ,x.RefundDetail!.PoolId, x.RefundDetail.UserAddress, true));
+                .Where(x => x.RefundDetail?.ChainId == chainId)
+                .Select(x => new IsTakenRequest(x.Id, x.RefundDetail!.PoolId, x.RefundDetail.UserAddress, true));
 
             var isTakenRequests = withdrawsIsTakenRequests
                 .Concat(refundsIsTakenRequests)
@@ -36,17 +34,14 @@ public class TakenTrackManager(IDbContextFactory<DispenserContext> dispenserCont
             return new MultiCallRequest(chainId, isTakenRequests);
         }).ToArray();
 
-        var isTakenBatchResponses = multiCall
+        var onlyTaken = multiCall
             .IsTakenBatchAsync(isTakenBatchRequests)
             .GetAwaiter()
-            .GetResult();
-
-        var processed = new List<DispenserDTO>();
-
-        var onlyTaken = isTakenBatchResponses
+            .GetResult()
             .SelectMany(r => r.IsTakenResponses)
             .Where(x => x.IsTaken);
 
+        var processed = new List<DispenserDTO>();
         foreach (var isTakenResponse in onlyTaken)
         {
             var dispenser = notTakenDispensers.FirstOrDefault(x => x.Id == isTakenResponse.DispenserId);
@@ -63,19 +58,9 @@ public class TakenTrackManager(IDbContextFactory<DispenserContext> dispenserCont
 
     private static HashSet<long> UniqueChainIDs(ICollection<DispenserDTO> dispensers)
     {
-        var uniqueWithdrawChainIDs = dispensers
+        return dispensers
             .Select(x => x.WithdrawalDetail.ChainId)
-            .Distinct();
-
-        var uniqueRefundChainIDs = dispensers
-            .Where(x => x.RefundDetail != null)
-            .Select(x => x.RefundDetail!.ChainId)
-            .Distinct();
-        
-        var uniqueChainIDs = uniqueWithdrawChainIDs
-            .Concat(uniqueRefundChainIDs)
-            .Distinct();
-
-        return uniqueChainIDs.ToHashSet();
+            .Concat(dispensers.Where(x => x.RefundDetail != null).Select(x => x.RefundDetail!.ChainId))
+            .ToHashSet();
     }
 }
