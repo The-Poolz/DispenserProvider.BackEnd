@@ -2,4 +2,9 @@
 
 namespace DispenserProvider.Services.Strapi;
 
-public record OnChainInfo(string RpcUrl, EthereumAddress DispenserProvider, EthereumAddress LockDealNFT);
+public record OnChainInfo(
+    string RpcUrl,
+    EthereumAddress DispenserProvider,
+    EthereumAddress LockDealNFT,
+    EthereumAddress MultiCall
+);
