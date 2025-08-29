@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Web3.MultiCall;
+using DispenserProvider.Services.Database.Models;
 using DispenserProvider.Services.Web3.MultiCall.Models;
 
 namespace DispenserProvider.Services.Database;
@@ -26,7 +27,7 @@ public class TakenTrackManager(IDbContextFactory<DispenserContext> dispenserCont
             var refundsIsTakenRequests = dispensers
                 .Where(x => x.RefundDetail != null)
                 .Where(x => x.RefundDetail!.ChainId == chainId)
-                .Select(x => new IsTakenRequest(x.Id ,x.RefundDetail!.PoolId, x.RefundDetail.UserAddress, false));
+                .Select(x => new IsTakenRequest(x.Id ,x.RefundDetail!.PoolId, x.RefundDetail.UserAddress, true));
 
             var isTakenRequests = withdrawsIsTakenRequests
                 .Concat(refundsIsTakenRequests)
@@ -41,7 +42,19 @@ public class TakenTrackManager(IDbContextFactory<DispenserContext> dispenserCont
             .GetResult();
 
         var processed = new List<DispenserDTO>();
-        // TODO: Process response of `isTakenBatchResponses` if marked as IsTaken add into `precessed`, also add new entry `dispenserContext.TakenTrack.Add(new TakenTrack(..., ...))`
+
+        var onlyTaken = isTakenBatchResponses
+            .SelectMany(r => r.IsTakenResponses)
+            .Where(x => x.IsTaken);
+
+        foreach (var isTakenResponse in onlyTaken)
+        {
+            var dispenser = notTakenDispensers.FirstOrDefault(x => x.Id == isTakenResponse.DispenserId);
+            if (dispenser == null) continue;
+
+            processed.Add(dispenser);
+            dispenserContext.TakenTrack.Add(new TakenTrack(isTakenResponse.IsRefund, dispenser));
+        }
 
         if (processed.Count > 0) dispenserContext.SaveChanges();
 
