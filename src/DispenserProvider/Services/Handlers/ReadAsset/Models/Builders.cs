@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using DispenserProvider.Extensions;
 using DispenserProvider.DataBase.Models;
 
 namespace DispenserProvider.Services.Handlers.ReadAsset.Models;
@@ -11,8 +12,8 @@ public class Builder(BuilderDTO builder)
     public string WeiAmount { get; } = builder.WeiAmount;
 
     [JsonConverter(typeof(UnixDateTimeConverter))]
-    public DateTime? StartTime { get; } = builder.StartTime;
+    public DateTime? StartTime { get; } = builder.StartTime.SpecifyUtcKind();
 
     [JsonConverter(typeof(UnixDateTimeConverter))]
-    public DateTime? FinishTime { get; } = builder.FinishTime;
+    public DateTime? FinishTime { get; } = builder.FinishTime.SpecifyUtcKind();
 }

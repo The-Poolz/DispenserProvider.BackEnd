@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using DispenserProvider.Extensions;
 using DispenserProvider.DataBase.Models;
 
 namespace DispenserProvider.Services.Handlers.ListOfAssets.Models;
@@ -9,7 +10,7 @@ public class Asset(DispenserDTO dispenser)
     public string UserAddress { get; } = dispenser.UserAddress;
 
     [JsonConverter(typeof(UnixDateTimeConverter))]
-    public DateTime? RefundFinishTime { get; } = dispenser.RefundFinishTime;
+    public DateTime? RefundFinishTime { get; } = dispenser.RefundFinishTime.SpecifyUtcKind();
 
     public TransactionDetail WithdrawalDetail { get; } = new(dispenser.WithdrawalDetail);
 
