@@ -1,4 +1,5 @@
 ﻿using Nethereum.Contracts;
+using Nethereum.ABI.Decoders;
 using DispenserProvider.Services.Web3.MultiCall.Models;
 using poolz.finance.csharp.contracts.DispenserProvider.ContractDefinition;
 
@@ -40,8 +41,7 @@ public class MultiCallContract(IChainProvider chainProvider) : IMultiCallContrac
         return new MultiCallResponse(request.ChainId, request.IsTakenRequests
             .Select((x, id) =>
             {
-                var bytes = response[id];
-                var isTaken = false;
+                var isTaken = new BoolTypeDecoder().Decode(response[id]);
                 return new IsTakenResponse(x.DispenserId, x.PoolId, x.Address, x.IsRefund, isTaken);
             }).ToArray()
         );
