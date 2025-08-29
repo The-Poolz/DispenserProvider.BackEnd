@@ -1,5 +1,3 @@
-﻿using Net.Web3.EthereumWallet;
+﻿namespace DispenserProvider.Services.Web3.MultiCall.Models;
 
-namespace DispenserProvider.Services.Web3.MultiCall.Models;
-
-public record IsTakenResponse(string DispenserId, long PoolId, EthereumAddress Address, bool IsRefund, bool IsTaken);
+public record IsTakenResponse(string DispenserId, bool IsRefund, bool IsTaken);

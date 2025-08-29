@@ -44,7 +44,7 @@ public class MultiCallContract(IChainProvider chainProvider) : IMultiCallContrac
             .Select((x, id) =>
             {
                 var isTaken = new BoolTypeDecoder().Decode(response.ReturnData[id].ReturnData);
-                return new IsTakenResponse(x.DispenserId, x.PoolId, x.Address, x.IsRefund, isTaken);
+                return new IsTakenResponse(x.DispenserId, x.IsRefund, isTaken);
             }).ToArray()
         );
     }
