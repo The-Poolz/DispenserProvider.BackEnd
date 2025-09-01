@@ -31,7 +31,7 @@ public class ReadAssetHandler(IDbContextFactory<DispenserContext> dispenserConte
             )
         ).ToList();
 
-        takenTrackManager.ProcessTakenTracks(assets.SelectMany(a => a.Dispensers.Select(d => d.DTO)));
+        takenTrackManager.ProcessTakenTracks(assets.SelectMany(a => a.Dispensers.Select(d => d.DTO)).ToArray());
 
         return Task.FromResult(new ReadAssetResponse(assets));
     }

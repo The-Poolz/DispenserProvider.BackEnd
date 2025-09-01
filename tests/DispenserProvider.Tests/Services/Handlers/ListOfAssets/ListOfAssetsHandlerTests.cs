@@ -4,7 +4,6 @@ using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Database;
 using DispenserProvider.Tests.Mocks.DataBase;
 using DispenserProvider.Tests.Mocks.Services.Web3;
-using DispenserProvider.Services.Validators.Signature;
 using DispenserProvider.Services.Handlers.ListOfAssets;
 using DispenserProvider.Services.Handlers.ListOfAssets.Models;
 
@@ -34,8 +33,8 @@ public class ListOfAssetsHandlerTests
             await dbFactory.Current.SaveChangesAsync();
 
             var dispenser = dbFactory.Current.Dispenser.First();
-            var dispenserContract = MockDispenserProviderContract.Create(dispenser, isWithdrawn: false, isRefunded: false);
-            var takenTrackManager = new TakenTrackManager(dbFactory, new AssetAvailabilityValidator(dispenserContract));
+            var multiCall = new MockMultiCallContract((dispenser, false, false), (secondDispenser, false, false));
+            var takenTrackManager = new TakenTrackManager(dbFactory, multiCall);
             var handler = new ListOfAssetsHandler(dbFactory, takenTrackManager);
 
             var request = new ListOfAssetsRequest
@@ -68,8 +67,8 @@ public class ListOfAssetsHandlerTests
         {
             var dbFactory = new MockDbContextFactory(seed: true);
             var dispenser = dbFactory.Current.Dispenser.First();
-            var dispenserContract = MockDispenserProviderContract.Create(dispenser, isWithdrawn: true, isRefunded: false);
-            var takenTrackManager = new TakenTrackManager(dbFactory, new AssetAvailabilityValidator(dispenserContract));
+            var multiCall = new MockMultiCallContract((dispenser, true, false));
+            var takenTrackManager = new TakenTrackManager(dbFactory, multiCall);
             var handler = new ListOfAssetsHandler(dbFactory, takenTrackManager);
 
             var request = new ListOfAssetsRequest
@@ -94,8 +93,8 @@ public class ListOfAssetsHandlerTests
         {
             var dbFactory = new MockDbContextFactory(seed: true);
             var dispenser = dbFactory.Current.Dispenser.First();
-            var dispenserContract = MockDispenserProviderContract.Create(dispenser, isWithdrawn: false, isRefunded: false);
-            var takenTrackManager = new TakenTrackManager(dbFactory, new AssetAvailabilityValidator(dispenserContract));
+            var multiCall = new MockMultiCallContract((dispenser, false, false));
+            var takenTrackManager = new TakenTrackManager(dbFactory, multiCall);
             var handler = new ListOfAssetsHandler(dbFactory, takenTrackManager);
 
             var request = new ListOfAssetsRequest

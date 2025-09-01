@@ -87,8 +87,9 @@ public class StrapiClient : IStrapiClient, IAdminValidationService
         var chain = response.Data.Chains.First();
         var dispenserProvider = ExtractContractAddress(chain, NameOfDispenserProvider, chainId, ErrorCode.DISPENSER_PROVIDER_NOT_SUPPORTED);
         var lockDealNFT = ExtractContractAddress(chain, NameOfLockDealNFT, chainId, ErrorCode.LOCK_DEAL_NFT_NOT_SUPPORTED);
+        var multiCall = Env.MULTI_CALL_CONTRACT_ADDRESS.GetRequired();
 
-        return new OnChainInfo(chain.ContractsOnChain.Rpc, dispenserProvider, lockDealNFT);
+        return new OnChainInfo(chain.ContractsOnChain.Rpc, dispenserProvider, lockDealNFT, multiCall);
     }
 
     public bool IsValidAdmin(string userAddress)
@@ -126,13 +127,14 @@ public class StrapiClient : IStrapiClient, IAdminValidationService
 
     private static string ExtractContractAddress(Chain chain, string nameOfContract, long chainId, ErrorCode error)
     {
-        var contract = chain.ContractsOnChain.Contracts.FirstOrDefault(x =>
+        var address = chain.ContractsOnChain.Contracts.FirstOrDefault(x =>
             x.ContractVersion.NameVersion.Contains(nameOfContract)
-        );
-        if (contract == null) throw error.ToException(new
+        )?.Address;
+
+        if (string.IsNullOrEmpty(address)) throw error.ToException(new
         {
             ChainId = chainId
         });
-        return contract.Address;
+        return address;
     }
 }
