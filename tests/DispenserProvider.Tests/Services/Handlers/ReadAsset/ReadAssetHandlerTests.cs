@@ -18,8 +18,8 @@ public class ReadAssetHandlerTests
         {
             var dbFactory = new MockDbContextFactory(seed: true);
             var dispenser = dbFactory.Current.Dispenser.First();
-            var dispenserContract = MockDispenserProviderContract.Create(dispenser, isWithdrawn: false, isRefunded: false);
-            var takenTrackManager = new TakenTrackManager(dbFactory, new AssetAvailabilityValidator(dispenserContract));
+            var multiCall = new MockMultiCallContract((dispenser, false, false));
+            var takenTrackManager = new TakenTrackManager(dbFactory, multiCall);
             var handler = new ReadAssetHandler(dbFactory, takenTrackManager);
 
             var request = new ReadAssetRequest
@@ -60,8 +60,8 @@ public class ReadAssetHandlerTests
         {
             var dbFactory = new MockDbContextFactory(seed: true);
             var dispenser = dbFactory.Current.Dispenser.First();
-            var dispenserContract = MockDispenserProviderContract.Create(dispenser, isWithdrawn: true, isRefunded: false);
-            var takenTrackManager = new TakenTrackManager(dbFactory, new AssetAvailabilityValidator(dispenserContract));
+            var multiCall = new MockMultiCallContract((dispenser, true, false));
+            var takenTrackManager = new TakenTrackManager(dbFactory, multiCall);
             var handler = new ReadAssetHandler(dbFactory, takenTrackManager);
 
             var request = new ReadAssetRequest
@@ -109,8 +109,8 @@ public class ReadAssetHandlerTests
         {
             var dbFactory = new MockDbContextFactory(seed: true);
             var dispenser = dbFactory.Current.Dispenser.First();
-            var dispenserContract = MockDispenserProviderContract.Create(dispenser, isWithdrawn: false, isRefunded: false);
-            var takenTrackManager = new TakenTrackManager(dbFactory, new AssetAvailabilityValidator(dispenserContract));
+            var multiCall = new MockMultiCallContract((dispenser, false, false));
+            var takenTrackManager = new TakenTrackManager(dbFactory, multiCall);
             var handler = new ReadAssetHandler(dbFactory, takenTrackManager);
 
             var request = new ReadAssetRequest

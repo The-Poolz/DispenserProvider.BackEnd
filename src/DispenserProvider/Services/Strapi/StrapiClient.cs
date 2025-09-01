@@ -85,8 +85,8 @@ public class StrapiClient : IStrapiClient, IAdminValidationService
         }
 
         var chain = response.Data.Chains.First();
-        var dispenserProvider = ExtractContractAddress(chain, chainId, ErrorCode.DISPENSER_PROVIDER_NOT_SUPPORTED);
-        var lockDealNFT = ExtractContractAddress(chain, chainId, ErrorCode.LOCK_DEAL_NFT_NOT_SUPPORTED);
+        var dispenserProvider = ExtractContractAddress(chain, NameOfDispenserProvider, chainId, ErrorCode.DISPENSER_PROVIDER_NOT_SUPPORTED);
+        var lockDealNFT = ExtractContractAddress(chain, NameOfLockDealNFT, chainId, ErrorCode.LOCK_DEAL_NFT_NOT_SUPPORTED);
         var multiCall = Env.MULTI_CALL_CONTRACT_ADDRESS.GetRequired();
 
         return new OnChainInfo(chain.ContractsOnChain.Rpc, dispenserProvider, lockDealNFT, multiCall);
@@ -125,10 +125,10 @@ public class StrapiClient : IStrapiClient, IAdminValidationService
         }
     }
 
-    private static string ExtractContractAddress(Chain chain, long chainId, ErrorCode error)
+    private static string ExtractContractAddress(Chain chain, string nameOfContract, long chainId, ErrorCode error)
     {
         var address = chain.ContractsOnChain.Contracts.FirstOrDefault(x =>
-            x.ContractVersion.NameVersion.Contains(NameOfLockDealNFT)
+            x.ContractVersion.NameVersion.Contains(nameOfContract)
         )?.Address;
 
         if (string.IsNullOrEmpty(address)) throw error.ToException(new
