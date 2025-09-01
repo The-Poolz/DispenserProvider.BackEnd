@@ -36,13 +36,13 @@ public class SignatureStruct(long poolId, EthereumAddress receiver, DateTime val
     public string Receiver { get; } = receiver;
 
     [Parameter(type: "uint256", name: "validUntil", order: 3)]
-    public BigInteger ValidUntil { get; } = validUntil.SpecifyUtcKind().ToUnixTimestamp();
+    public BigInteger ValidUntil { get; } = validUntil.SpecifyUtcKind().RoundDateTime().ToUnixTimestamp();
 
     [Parameter(type: "tuple[]", name: "data", order: 4, structTypeName: "Builder[]")]
     public List<Builder> Builders { get; } = builders.ToList();
 
     private static BigInteger ToUnixBigInteger(DateTime date)
     {
-        return new BigInteger(date.SpecifyUtcKind().ToUnixTimestamp());
+        return new BigInteger(date.SpecifyUtcKind().RoundDateTime().ToUnixTimestamp());
     }
 }
