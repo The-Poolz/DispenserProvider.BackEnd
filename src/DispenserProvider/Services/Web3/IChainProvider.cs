@@ -8,4 +8,5 @@ public interface IChainProvider
     public IWeb3 Web3(long chainId);
     public EthereumAddress DispenserProviderContract(long chainId);
     public EthereumAddress LockDealNFTContract(long chainId);
+    public EthereumAddress MultiCallContract(long chainId);
 }

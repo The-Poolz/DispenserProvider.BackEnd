@@ -18,6 +18,8 @@ public class ChainProvider(IStrapiClient strapi) : IChainProvider
 
     public EthereumAddress LockDealNFTContract(long chainId) => FetchChainInfo(chainId).LockDealNFT;
 
+    public EthereumAddress MultiCallContract(long chainId) => FetchChainInfo(chainId).MultiCall;
+
     private OnChainInfo FetchChainInfo(long chainId)
     {
         if (ChainsInfo.TryGetValue(chainId, out var chain))

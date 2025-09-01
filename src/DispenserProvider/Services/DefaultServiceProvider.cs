@@ -12,6 +12,7 @@ using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.Services.Database;
 using Microsoft.Extensions.DependencyInjection;
 using DispenserProvider.Services.Web3.Contracts;
+using DispenserProvider.Services.Web3.MultiCall;
 using DispenserProvider.MessageTemplate.Services;
 using DispenserProvider.MessageTemplate.Validators;
 using MediatR.Extensions.FluentValidation.AspNetCore;
@@ -52,6 +53,7 @@ public static class DefaultServiceProvider
         .AddScoped<IDispenserProviderContract, DispenserProviderContract>()
         .AddScoped<IBuilderContract, BuilderContract>()
         .AddScoped<ITakenTrackManager, TakenTrackManager>()
+        .AddScoped<IMultiCallContract, MultiCallContract>()
         .AddScoped<IStrapiClient, StrapiClient>();
 
     private static IServiceCollection Prod => new ServiceCollection()
