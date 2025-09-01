@@ -7,7 +7,8 @@ internal class MockStrapiClient(OnChainInfo returns) : IStrapiClient
     internal static OnChainInfo DefaultOnChainInfo => new(
         RpcUrl: "http://localhost:5050",
         DispenserProvider: "0x0000000000000000000000000000000000000001",
-        LockDealNFT: "0x0000000000000000000000000000000000000002"
+        LockDealNFT: "0x0000000000000000000000000000000000000002",
+        MultiCall: "0x0000000000000000000000000000000000000003"
     );
 
     public OnChainInfo ReceiveChainInfo(long chainId)
