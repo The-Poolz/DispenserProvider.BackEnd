@@ -1,6 +1,5 @@
 ﻿using System.Numerics;
 using Net.Web3.EthereumWallet;
-using DispenserProvider.Extensions;
 using DispenserProvider.DataBase.Models;
 using Nethereum.ABI.FunctionEncoding.Attributes;
 
@@ -35,13 +34,8 @@ public class SignatureStruct(long poolId, EthereumAddress receiver, DateTimeOffs
     public string Receiver { get; } = receiver;
 
     [Parameter(type: "uint256", name: "validUntil", order: 3)]
-    public BigInteger ValidUntil { get; } = validUntil.SpecifyUtcKind().RoundDateTime().ToUnixTimestamp();
+    public BigInteger ValidUntil { get; } = validUntil.ToUnixTimeSeconds();
 
     [Parameter(type: "tuple[]", name: "data", order: 4, structTypeName: "Builder[]")]
     public List<Builder> Builders { get; } = builders.ToList();
-
-    private static BigInteger ToUnixBigInteger(DateTime date)
-    {
-        return new BigInteger(date.SpecifyUtcKind().RoundDateTime().ToUnixTimestamp());
-    }
 }

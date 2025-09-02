@@ -68,11 +68,11 @@ public static class DefaultServiceProvider
             var dbUser = Env.STAGE_POSTGRES_DB_USER.GetRequired();
             var dbName = Env.STAGE_POSTGRES_DB_NAME.GetRequired();
             var sslCertPath = Env.STAGE_POSTGRES_SSL_CERT_FULL_PATH.GetRequired();
-            var region = RegionEndpoint.AFSouth1; // Need to make wrapper to receive it from env, or keep hard-code.
+            var region = RegionEndpoint.EUCentral1; // Need to make wrapper to receive it from env, or keep hard-code.
 
             var pwd = RDSAuthTokenGenerator.GenerateAuthToken(region, hostname, port, dbUser);
 
-            var connectionString = $"Server={hostname};User Id={dbUser};Password={pwd};Database={dbName};SSL Mode=Require;Root Certificate={sslCertPath}";
+            var connectionString = $"Server={hostname};User Id={dbUser};Password={pwd};Database={dbName};SSL Mode=VerifyFull;Root Certificate={sslCertPath};Include Error Detail=true";
 
             options.UseNpgsql(connectionString);
         })

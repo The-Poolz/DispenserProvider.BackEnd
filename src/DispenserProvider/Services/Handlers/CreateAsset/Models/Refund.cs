@@ -8,7 +8,7 @@ public class Refund
 {
     [JsonRequired]
     [JsonConverter(typeof(UnixDateTimeConverter))]
-    public DateTime FinishTime { get; set; }
+    public DateTimeOffset FinishTime { get; set; }
 
     [JsonRequired]
     public string WeiRatio { get; set; } = null!;

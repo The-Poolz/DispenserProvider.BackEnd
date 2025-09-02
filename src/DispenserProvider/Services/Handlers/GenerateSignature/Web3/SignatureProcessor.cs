@@ -1,5 +1,4 @@
 ﻿using DispenserProvider.DataBase;
-using DispenserProvider.Extensions;
 using EnvironmentManager.Extensions;
 using Microsoft.EntityFrameworkCore;
 using DispenserProvider.DataBase.Models;
@@ -17,7 +16,7 @@ public class SignatureProcessor(IDbContextFactory<DispenserContext> dispenserCon
         {
             Signature = signatureGenerator.GenerateSignature(transactionDetail, validUntil),
             ValidUntil = validUntil,
-            ValidFrom = CalculateValidFrom(dispenser).RoundDateTime(),
+            ValidFrom = CalculateValidFrom(dispenser),
             IsRefund = isRefund,
             DispenserId = dispenser.Id
         };
