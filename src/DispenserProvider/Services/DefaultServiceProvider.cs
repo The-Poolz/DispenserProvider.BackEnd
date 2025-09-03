@@ -2,8 +2,10 @@
 using Amazon.RDS.Util;
 using FluentValidation;
 using System.Reflection;
+using EnvironmentManager.Core;
 using DispenserProvider.Options;
 using DispenserProvider.DataBase;
+using DispenserProvider.Converters;
 using EnvironmentManager.Extensions;
 using Microsoft.EntityFrameworkCore;
 using DispenserProvider.Services.Web3;
@@ -68,7 +70,8 @@ public static class DefaultServiceProvider
             var dbUser = Env.STAGE_POSTGRES_DB_USER.GetRequired();
             var dbName = Env.STAGE_POSTGRES_DB_NAME.GetRequired();
             var sslCertPath = Env.STAGE_POSTGRES_SSL_CERT_FULL_PATH.GetRequired();
-            var region = RegionEndpoint.EUCentral1; // Need to make wrapper to receive it from env, or keep hard-code.
+            var envManager = new EnvManager(MapperConfigurationsExtensions.WithAwsRegionConverters());
+            var region = envManager.Get<RegionEndpoint?>(nameof(Env.STAGE_POSTGRES_AWS_REGION)) ?? RegionEndpoint.EUCentral1;
 
             var pwd = RDSAuthTokenGenerator.GenerateAuthToken(region, hostname, port, dbUser);
 
