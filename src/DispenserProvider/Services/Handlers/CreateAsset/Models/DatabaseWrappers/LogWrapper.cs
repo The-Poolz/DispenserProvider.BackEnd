@@ -7,7 +7,7 @@ public class LogWrapper : LogDTO
     public LogWrapper(string signature)
     {
         Signature = signature;
-        CreationTime = DateTime.UtcNow;
+        CreationTime = DateTimeOffset.UtcNow;
         IsCreation = true;
     }
 }

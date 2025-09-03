@@ -1,5 +1,4 @@
-﻿using Nethereum.Util;
-using DispenserProvider.Extensions;
+﻿using DispenserProvider.Extensions;
 using DispenserProvider.DataBase.Models;
 
 namespace DispenserProvider.Services.Handlers.CreateAsset.Models.DatabaseWrappers;
@@ -10,7 +9,7 @@ public sealed class BuilderWrapper : BuilderDTO
     {
         ProviderAddress = schedule.ProviderAddress;
         StartTime = schedule.StartDate;
-        FinishTime = schedule.FinishDate.ToUnixTimestamp() == 0 ? null : schedule.FinishDate;
+        FinishTime = schedule.FinishDate.ToUnixTimeSeconds() == 0 ? null : schedule.FinishDate;
         WeiAmount = user.WeiAmount.MultiplyWeiByRatio(schedule.WeiRatio);
         TransactionDetail = transactionDetail;
     }

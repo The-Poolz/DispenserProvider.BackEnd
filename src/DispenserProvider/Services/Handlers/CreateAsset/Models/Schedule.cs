@@ -15,10 +15,10 @@ public class Schedule
     [JsonRequired]
     [JsonProperty("StartTime")]
     [JsonConverter(typeof(UnixDateTimeConverter))]
-    public DateTime StartDate { get; set; }
+    public DateTimeOffset StartDate { get; set; }
 
     [JsonRequired]
     [JsonProperty("FinishTime")]
     [JsonConverter(typeof(UnixDateTimeConverter))]
-    public DateTime FinishDate { get; set; }
+    public DateTimeOffset FinishDate { get; set; }
 }
