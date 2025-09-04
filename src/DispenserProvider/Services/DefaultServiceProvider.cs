@@ -1,4 +1,5 @@
 ﻿using Amazon;
+using SecretsManager;
 using Amazon.RDS.Util;
 using FluentValidation;
 using System.Reflection;
@@ -18,7 +19,6 @@ using DispenserProvider.Services.Web3.MultiCall;
 using DispenserProvider.MessageTemplate.Services;
 using DispenserProvider.MessageTemplate.Validators;
 using MediatR.Extensions.FluentValidation.AspNetCore;
-using ConfiguredSqlConnection.Abstractions.Extensions;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
@@ -59,7 +59,20 @@ public static class DefaultServiceProvider
         .AddScoped<IStrapiClient, StrapiClient>();
 
     private static IServiceCollection Prod => new ServiceCollection()
-        .AddDbContextFactory<DispenserContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnectionFromSecret(Env.SECRET_NAME_OF_DISPENSER_CONNECTION.ToString())))
+        .AddDbContextFactory<DispenserContext>(options =>
+        {
+            var hostname = Env.PROD_POSTGRES_HOSTNAME.GetRequired();
+            var port = Env.PROD_POSTGRES_PORT.GetRequired<int>();
+            var dbName = Env.PROD_POSTGRES_DB_NAME.GetRequired();
+            var secretManager = new SecretManager();
+            var secretId = Env.PROD_POSTGRES_SECRET_ID.GetRequired();
+            var dbUser = secretManager.GetSecretValue(secretId, Env.PROD_POSTGRES_SECRET_KEY_OF_USERNAME.GetRequired());
+            var dbPassword = secretManager.GetSecretValue(secretId, Env.PROD_POSTGRES_SECRET_KEY_OF_PASSWORD.GetRequired());
+
+            var connectionString = $"Server={hostname};Port={port};User Id={dbUser};Password={dbPassword};Database={dbName};";
+
+            options.UseNpgsql(connectionString);
+        })
         .AddScoped<ISignerManager, SignerManager>();
 
     private static IServiceCollection Stage => new ServiceCollection()
