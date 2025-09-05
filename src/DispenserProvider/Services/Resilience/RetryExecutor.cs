@@ -1,4 +1,5 @@
-﻿using Polly;
+﻿using Amazon.Lambda.Core;
+using Polly;
 using Polly.Retry;
 
 namespace DispenserProvider.Services.Resilience;
@@ -6,8 +7,7 @@ namespace DispenserProvider.Services.Resilience;
 public sealed class RetryExecutor(
     int maxRetries = 3,
     TimeSpan? baseDelayInSeconds = null,
-    Func<Exception, bool>? shouldRetryOnException = null,
-    Action<string>? log = null
+    Func<Exception, bool>? shouldRetryOnException = null
 ) : IRetryExecutor
 {
     private readonly TimeSpan _baseDelay = baseDelayInSeconds ?? TimeSpan.FromSeconds(2);
@@ -32,7 +32,7 @@ public sealed class RetryExecutor(
                 var ex = args.Outcome.Exception;
                 if (ex != null)
                 {
-                    log?.Invoke($"[Retry] attempt={args.AttemptNumber}, delay={args.RetryDelay}, exception={ex.GetType().Name}: {ex.Message}");
+                    LambdaLogger.Log($"[Retry] attempt={args.AttemptNumber}, delay={args.RetryDelay}, exception={ex.GetType().Name}: {ex.Message}");
                 }
                 return default;
             }
