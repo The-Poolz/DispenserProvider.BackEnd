@@ -1,16 +1,16 @@
-﻿using Amazon.Lambda.Core;
-using Polly;
+﻿using Polly;
 using Polly.Retry;
+using Amazon.Lambda.Core;
 
 namespace DispenserProvider.Services.Resilience;
 
 public sealed class RetryExecutor(
     int maxRetries = 3,
-    TimeSpan? baseDelayInSeconds = null,
+    TimeSpan? baseDelayInMilliseconds = null,
     Func<Exception, bool>? shouldRetryOnException = null
 ) : IRetryExecutor
 {
-    private readonly TimeSpan _baseDelay = baseDelayInSeconds ?? TimeSpan.FromSeconds(2);
+    private readonly TimeSpan _baseDelay = baseDelayInMilliseconds ?? TimeSpan.FromMilliseconds(250);
     private readonly Func<Exception, bool> _shouldRetryOnException = shouldRetryOnException ?? (_ => true);
 
     public T Execute<T>(Func<CancellationToken, Task<T>> action, CancellationToken ct = default)
@@ -24,8 +24,8 @@ public sealed class RetryExecutor(
         {
             MaxRetryAttempts = maxRetries,
             Delay = _baseDelay,
-            BackoffType = DelayBackoffType.Exponential,
-            UseJitter = true,
+            BackoffType = DelayBackoffType.Constant,
+            UseJitter = false,
             ShouldHandle = new PredicateBuilder<T>().Handle<Exception>(ex => _shouldRetryOnException(ex)),
             OnRetry = args =>
             {
