@@ -1,12 +1,13 @@
 ﻿using Nethereum.Contracts;
 using Nethereum.ABI.Decoders;
+using DispenserProvider.Services.Resilience;
 using Nethereum.Contracts.QueryHandlers.MultiCall;
 using DispenserProvider.Services.Web3.MultiCall.Models;
 using poolz.finance.csharp.contracts.DispenserProvider.ContractDefinition;
 
 namespace DispenserProvider.Services.Web3.MultiCall;
 
-public class MultiCallContract(IChainProvider chainProvider) : IMultiCallContract
+public class MultiCallContract(IChainProvider chainProvider, IRetryExecutor retry) : IMultiCallContract
 {
     public async Task<ICollection<MultiCallResponse>> IsTakenBatchAsync(ICollection<MultiCallRequest> requests)
     {
@@ -38,7 +39,7 @@ public class MultiCallContract(IChainProvider chainProvider) : IMultiCallContrac
         };
 
         var handler = web3.Eth.GetContractQueryHandler<Aggregate3Function>();
-        var response = await handler.QueryAsync<Aggregate3OutputDTO>(multiCallAddress, multiCallFunction);
+        var response = await retry.ExecuteAsync(_ => handler.QueryAsync<Aggregate3OutputDTO>(multiCallAddress, multiCallFunction));
 
         return new MultiCallResponse(request.ChainId, request.IsTakenRequests
             .Select((x, id) =>
