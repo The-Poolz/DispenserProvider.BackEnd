@@ -5,13 +5,11 @@ using Amazon.Lambda.Core;
 namespace DispenserProvider.Services.Resilience;
 
 public sealed class RetryExecutor(
-    int maxRetries = 3,
-    TimeSpan? baseDelayInMilliseconds = null,
-    Func<Exception, bool>? shouldRetryOnException = null
+    int maxRetries = 2,
+    TimeSpan? baseDelay = null
 ) : IRetryExecutor
 {
-    private readonly TimeSpan _baseDelay = baseDelayInMilliseconds ?? TimeSpan.FromMilliseconds(250);
-    private readonly Func<Exception, bool> _shouldRetryOnException = shouldRetryOnException ?? (_ => true);
+    private readonly TimeSpan _baseDelay = baseDelay ?? TimeSpan.FromMilliseconds(250);
 
     public T Execute<T>(Func<CancellationToken, Task<T>> action, CancellationToken ct = default)
     {
@@ -26,7 +24,7 @@ public sealed class RetryExecutor(
             Delay = _baseDelay,
             BackoffType = DelayBackoffType.Constant,
             UseJitter = false,
-            ShouldHandle = new PredicateBuilder<T>().Handle<Exception>(ex => _shouldRetryOnException(ex)),
+            ShouldHandle = new PredicateBuilder<T>().Handle<Exception>(_ => true),
             OnRetry = args =>
             {
                 var ex = args.Outcome.Exception;
