@@ -853,7 +853,7 @@ It provides details on the endpoint, handler file, error code, error message, an
 - **Optional ErrorInfo**: 
 ```json
 {
-    "IsRefund": 123456789,
+    "IsRefund": false,
     "CurerntTime": 123456789
 }
 ```
@@ -873,7 +873,7 @@ It provides details on the endpoint, handler file, error code, error message, an
               "data": null,
               "errorType": "SIGNATURE_TYPE_IS_INVALID",
               "errorInfo": {
-                  "IsRefund": 123456789,
+                  "IsRefund": false,
                   "CurerntTime": 123456789
               },
               "locations": [ ],
