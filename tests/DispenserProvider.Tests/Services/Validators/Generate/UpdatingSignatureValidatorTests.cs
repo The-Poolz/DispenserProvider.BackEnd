@@ -1,6 +1,7 @@
 ﻿using Xunit;
 using FluentAssertions;
 using FluentValidation;
+using DispenserProvider.Extensions;
 using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Validators.Signature;
 using DispenserProvider.Services.Validators.Signature.Models;
@@ -42,7 +43,7 @@ public class UpdatingSignatureValidatorTests
                     CustomState = new
                     {
                         ValidFrom = dispenser.LastUserSignature!.ValidFrom.ToUnixTimeSeconds(),
-                        NextTry = UpdatingSignatureValidator.NextTry(dispenser).ToUnixTimeSeconds()
+                        NextTry = dispenser.NextTry().ToUnixTimeSeconds()
                     }
                 });
         }
@@ -72,7 +73,7 @@ public class UpdatingSignatureValidatorTests
                     ErrorMessage = "Cannot generate signature, because the next valid time for generation has not yet arrived.",
                     CustomState = new
                     {
-                        NextTry = UpdatingSignatureValidator.NextTry(dispenser).ToUnixTimeSeconds()
+                        NextTry = dispenser.NextTry().ToUnixTimeSeconds()
                     }
                 });
         }
