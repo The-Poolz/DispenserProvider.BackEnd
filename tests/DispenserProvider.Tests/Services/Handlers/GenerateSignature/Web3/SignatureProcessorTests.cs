@@ -23,7 +23,7 @@ public class SignatureProcessorTests
             const string signature = "0x";
             var dbFactory = new MockDbContextFactory(seed: true);
             var signatureGenerator = new Mock<ISignatureGenerator>();
-            signatureGenerator.Setup(x => x.GenerateSignature(It.IsAny<TransactionDetailDTO>(), It.IsAny<DateTimeOffset>()))
+            signatureGenerator.Setup(x => x.GenerateSignature(It.IsAny<TransactionDetailDTO>(), It.IsAny<DateTime>()))
                 .Returns(signature);
 
             const bool isRefund = false;

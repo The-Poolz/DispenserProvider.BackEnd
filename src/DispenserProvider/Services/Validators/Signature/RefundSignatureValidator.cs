@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Nethereum.Util;
+using FluentValidation;
 using DispenserProvider.DataBase.Models;
 using Net.Utils.ErrorHandler.Extensions;
 
@@ -12,7 +13,7 @@ public class RefundSignatureValidator : AbstractValidator<DispenserDTO>
             .Must(x => DateTime.UtcNow <= x.RefundFinishTime)
             .WithState(x => new
             {
-                RefundFinishTime = x.RefundFinishTime!.Value.ToUnixTimeSeconds()
+                RefundFinishTime = x.RefundFinishTime!.Value.ToUnixTimestamp()
             })
             .WithError(ErrorCode.REFUND_TIME_IS_EXPIRED);
     }

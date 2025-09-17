@@ -1,16 +1,13 @@
-﻿using Amazon;
-using Amazon.RDS.Util;
-using FluentValidation;
+﻿using FluentValidation;
 using System.Reflection;
-using EnvironmentManager.Core;
 using DispenserProvider.Options;
 using DispenserProvider.DataBase;
-using DispenserProvider.Converters;
 using EnvironmentManager.Extensions;
 using Microsoft.EntityFrameworkCore;
 using DispenserProvider.Services.Web3;
 using DispenserProvider.Services.Strapi;
 using Net.Utils.ErrorHandler.Extensions;
+using ConfiguredSqlConnection.Extensions;
 using DispenserProvider.Services.Database;
 using Microsoft.Extensions.DependencyInjection;
 using DispenserProvider.Services.Web3.Contracts;
@@ -18,7 +15,6 @@ using DispenserProvider.Services.Web3.MultiCall;
 using DispenserProvider.MessageTemplate.Services;
 using DispenserProvider.MessageTemplate.Validators;
 using MediatR.Extensions.FluentValidation.AspNetCore;
-using ConfiguredSqlConnection.Abstractions.Extensions;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
@@ -63,21 +59,6 @@ public static class DefaultServiceProvider
         .AddScoped<ISignerManager, SignerManager>();
 
     private static IServiceCollection Stage => new ServiceCollection()
-        .AddDbContextFactory<DispenserContext>(options =>
-        {
-            var hostname = Env.STAGE_POSTGRES_HOSTNAME.GetRequired();
-            var port = Env.STAGE_POSTGRES_PORT.GetRequired<int>();
-            var dbUser = Env.STAGE_POSTGRES_DB_USER.GetRequired();
-            var dbName = Env.STAGE_POSTGRES_DB_NAME.GetRequired();
-            var sslCertPath = Env.STAGE_POSTGRES_SSL_CERT_FULL_PATH.GetRequired();
-            var envManager = new EnvManager(MapperConfigurationsExtensions.WithAwsRegionConverters());
-            var region = envManager.Get<RegionEndpoint?>(nameof(Env.STAGE_POSTGRES_AWS_REGION)) ?? RegionEndpoint.EUCentral1;
-
-            var pwd = RDSAuthTokenGenerator.GenerateAuthToken(region, hostname, port, dbUser);
-
-            var connectionString = $"Server={hostname};User Id={dbUser};Password={pwd};Database={dbName};SSL Mode=VerifyFull;Root Certificate={sslCertPath};Include Error Detail=true";
-
-            options.UseNpgsql(connectionString);
-        })
-        .AddScoped<ISignerManager, EnvSignerManager>();
+        .AddDbContextFactory<DispenserContext>(options => options.UseSqlServer(ConnectionStringFactory.GetConnectionFromConfiguration("DispenserStage")))
+        .AddScoped<ISignerManager, SignerManager>();
 }
