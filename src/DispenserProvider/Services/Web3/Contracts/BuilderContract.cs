@@ -1,5 +1,5 @@
 ﻿using Net.Web3.EthereumWallet;
-using DispenserProvider.Services.Resilience;
+using Poolz.Finance.CSharp.Polly.Extensions;
 using poolz.finance.csharp.contracts.LockDealNFT;
 
 namespace DispenserProvider.Services.Web3.Contracts;
@@ -10,6 +10,8 @@ public class BuilderContract(IChainProvider chainProvider, IRetryExecutor retry)
     {
         var web3 = chainProvider.Web3(chainId);
         var contract = new LockDealNFTService(web3, address);
-        return retry.Execute(_ => contract.NameQueryAsync());
+        return retry.ExecuteAsync(_ => contract.NameQueryAsync())
+            .GetAwaiter()
+            .GetResult();
     }
 }

@@ -1,6 +1,6 @@
 ﻿using Nethereum.Contracts;
 using Nethereum.ABI.Decoders;
-using DispenserProvider.Services.Resilience;
+using Poolz.Finance.CSharp.Polly.Extensions;
 using Nethereum.Contracts.QueryHandlers.MultiCall;
 using DispenserProvider.Services.Web3.MultiCall.Models;
 using poolz.finance.csharp.contracts.DispenserProvider.ContractDefinition;

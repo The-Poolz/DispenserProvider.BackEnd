@@ -1,5 +1,5 @@
 ﻿using Net.Web3.EthereumWallet;
-using DispenserProvider.Services.Resilience;
+using Poolz.Finance.CSharp.Polly.Extensions;
 using poolz.finance.csharp.contracts.DispenserProvider;
 
 namespace DispenserProvider.Services.Web3.Contracts;
@@ -10,6 +10,8 @@ public class DispenserProviderContract(IChainProvider chainProvider, IRetryExecu
     {
         var web3 = chainProvider.Web3(chainId);
         var contract = new DispenserProviderService(web3, chainProvider.DispenserProviderContract(chainId));
-        return retry.Execute(_ => contract.IsTakenQueryAsync(poolId, address));
+        return retry.ExecuteAsync(_ => contract.IsTakenQueryAsync(poolId, address))
+            .GetAwaiter()
+            .GetResult();
     }
 }

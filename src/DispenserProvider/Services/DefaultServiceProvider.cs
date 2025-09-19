@@ -13,7 +13,7 @@ using DispenserProvider.Services.Web3;
 using DispenserProvider.Services.Strapi;
 using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.Services.Database;
-using DispenserProvider.Services.Resilience;
+using Poolz.Finance.CSharp.Polly.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using DispenserProvider.Services.Web3.Contracts;
 using DispenserProvider.Services.Web3.MultiCall;
