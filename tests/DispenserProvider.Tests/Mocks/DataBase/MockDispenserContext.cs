@@ -1,7 +1,6 @@
 ﻿using DispenserProvider.DataBase;
 using DispenserProvider.DataBase.Models;
-using ConfiguredSqlConnection.PostgresSql.Extensions;
-using ConfiguredSqlConnection.Abstractions.Extensions;
+using ConfiguredSqlConnection.Extensions;
 using DispenserProvider.Tests.Mocks.Services.Handlers.CreateAsset.Models;
 
 namespace DispenserProvider.Tests.Mocks.DataBase;
@@ -10,9 +9,7 @@ internal static class MockDispenserContext
 {
     internal static DispenserContext Create(bool seed = false)
     {
-        var context = new DbContextFactory<DispenserContext>(
-            new PostgresSqlDbContextOptionsBuilderFactory<DispenserContext>()
-        ).Create(ContextOption.InMemory, $"{Guid.NewGuid()}");
+        var context = new DbContextFactory<DispenserContext>().Create(ContextOption.InMemory, $"{Guid.NewGuid()}");
         if (seed) SeedContext(context);
         return context;
     }
@@ -20,13 +17,13 @@ internal static class MockDispenserContext
     internal static LogDTO Log => new()
     {
         Signature = MockCreateAssetRequest.Signature,
-        CreationTime = DateTimeOffset.UtcNow
+        CreationTime = DateTime.UtcNow
     };
 
     internal static DispenserDTO Dispenser => new()
     {
         Id = "e166ee5c678d5c23b2e8889a9f143e4e0acaa3cf7f4cfea4cfa87f2e8c10d35a",
-        RefundFinishTime = DateTimeOffset.FromUnixTimeSeconds(1763544530),
+        RefundFinishTime = DateTimeOffset.FromUnixTimeSeconds(1763544530).DateTime,
         CreationLogSignature = MockCreateAssetRequest.Signature
     };
 
@@ -71,4 +68,4 @@ internal static class MockDispenserContext
         context.Builders.Add(builder);
         context.SaveChanges();
     }
-};
+}

@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using DispenserProvider.Extensions;
 using DispenserProvider.DataBase.Models;
 using DispenserProvider.Services.Handlers.ReadAsset.Models;
 
@@ -8,7 +9,7 @@ namespace DispenserProvider.Services.Handlers.RetrieveSignature.Models;
 public class Asset(DispenserDTO dispenser, TransactionDetailDTO transactionDetail, bool isRefund)
 {
     [JsonConverter(typeof(UnixDateTimeConverter))]
-    public DateTimeOffset ValidUntil { get; } = dispenser.LastUserSignature!.ValidUntil;
+    public DateTime ValidUntil { get; } = dispenser.LastUserSignature!.ValidUntil.SpecifyUtcKind();
     public string Receiver { get; } = dispenser.UserAddress;
     public long PoolId { get; } = transactionDetail.PoolId;
     public long ChainId { get; } = transactionDetail.ChainId;

@@ -7,7 +7,7 @@ namespace DispenserProvider.Services.Handlers.GenerateSignature.Web3;
 
 public class SignatureGenerator(ISignerManager signerManager, IChainProvider chainProvider) : ISignatureGenerator
 {
-    public string GenerateSignature(TransactionDetailDTO transactionDetail, DateTimeOffset validUntil)
+    public string GenerateSignature(TransactionDetailDTO transactionDetail, DateTime validUntil)
     {
         var typedData = new Eip712TypedData(
             transactionDetail,

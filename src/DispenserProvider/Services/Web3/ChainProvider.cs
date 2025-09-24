@@ -1,6 +1,8 @@
-﻿using Nethereum.Web3;
+﻿using System.Net.Http.Headers;
+using Nethereum.Web3;
 using Net.Web3.EthereumWallet;
 using DispenserProvider.Services.Strapi;
+using Nethereum.JsonRpc.Client;
 
 namespace DispenserProvider.Services.Web3;
 
@@ -11,7 +13,21 @@ public class ChainProvider(IStrapiClient strapi) : IChainProvider
     public IWeb3 Web3(long chainId)
     {
         var chainInfo = FetchChainInfo(chainId);
-        return new Nethereum.Web3.Web3(chainInfo.RpcUrl);
+        return new Nethereum.Web3.Web3(
+            new RpcClient(
+                new Uri(chainInfo.RpcUrl),
+                new HttpClient
+                {
+                    DefaultRequestHeaders =
+                    {
+                        UserAgent =
+                        {
+                            new ProductInfoHeaderValue("DispenserLambda", "1.0.0")
+                        }
+                    }
+                }
+            )
+        );
     }
 
     public EthereumAddress DispenserProviderContract(long chainId) => FetchChainInfo(chainId).DispenserProvider;

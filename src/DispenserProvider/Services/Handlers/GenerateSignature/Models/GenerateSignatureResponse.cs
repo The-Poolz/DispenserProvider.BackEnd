@@ -3,10 +3,10 @@ using Newtonsoft.Json.Converters;
 
 namespace DispenserProvider.Services.Handlers.GenerateSignature.Models;
 
-public class GenerateSignatureResponse(DateTimeOffset validFrom)
+public class GenerateSignatureResponse(DateTime validFrom)
 {
     public GenerateSignatureResponse() : this(default) { }
 
     [JsonConverter(typeof(UnixDateTimeConverter))]
-    public DateTimeOffset ValidFrom { get; } = validFrom;
+    public DateTime ValidFrom { get; } = validFrom;
 }

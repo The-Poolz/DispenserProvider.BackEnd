@@ -32,20 +32,20 @@ public class CreateAssetMessage : IValidatedMessage
         ? new CreateMessage(
             chainId: ChainId,
             poolId: PoolId,
-            schedules: Schedules.Select(x => new ValidationSchedule(x.ProviderAddress, BigInteger.Parse(x.WeiRatio), x.StartDate.UtcDateTime, HandleFinishDate(x.FinishDate))),
+            schedules: Schedules.Select(x => new ValidationSchedule(x.ProviderAddress, BigInteger.Parse(x.WeiRatio), x.StartDate, HandleFinishDate(x.FinishDate))),
             users: Users.Select(x => new ValidationUser(x.UserAddress, BigInteger.Parse(x.WeiAmount)))
         )
         : new CreateMessageWithRefund(
             chainId: ChainId,
             poolId: PoolId,
-            schedules: Schedules.Select(x => new ValidationSchedule(x.ProviderAddress, BigInteger.Parse(x.WeiRatio), x.StartDate.UtcDateTime, HandleFinishDate(x.FinishDate))),
+            schedules: Schedules.Select(x => new ValidationSchedule(x.ProviderAddress, BigInteger.Parse(x.WeiRatio), x.StartDate, HandleFinishDate(x.FinishDate))),
             users: Users.Select(x => new ValidationUser(x.UserAddress, BigInteger.Parse(x.WeiAmount))),
             refund: new ValidationRefund(
                 chainId: Refund.ChainId,
                 poolId: Refund.PoolId,
                 weiRatio: BigInteger.Parse(Refund.WeiRatio),
                 dealProvider: Refund.DealProvider,
-                finishTime: Refund.FinishTime.UtcDateTime
+                finishTime: Refund.FinishTime
             )
         );
 
@@ -55,5 +55,5 @@ public class CreateAssetMessage : IValidatedMessage
     [JsonIgnore]
     public IEnumerable<IValidatedScheduleItem> ScheduleToValidate => Schedules.Select(x => new ValidatedSchedule(x));
 
-    private static DateTime HandleFinishDate(DateTimeOffset? finishDate) => finishDate?.UtcDateTime ?? DateTimeOffset.FromUnixTimeSeconds(0).UtcDateTime;
+    private static DateTime HandleFinishDate(DateTime? finishDate) => finishDate ?? DateTimeOffset.FromUnixTimeSeconds(0).UtcDateTime;
 }

@@ -9,7 +9,7 @@ namespace DispenserProvider.Services.Handlers.GenerateSignature.Web3.Eip712;
 [JsonObject(MemberSerialization.OptIn)]
 public class Eip712TypedData : TypedData<Eip712Domain>
 {
-    public Eip712TypedData(TransactionDetailDTO transactionDetail, EthereumAddress verifyingContract, DateTimeOffset validUntil)
+    public Eip712TypedData(TransactionDetailDTO transactionDetail, EthereumAddress verifyingContract, DateTime validUntil)
     {
         Domain = new Eip712Domain(transactionDetail, verifyingContract);
         DomainRawValues = MemberValueFactory.CreateFromMessage(Domain);
