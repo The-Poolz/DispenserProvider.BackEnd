@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using DispenserProvider.Extensions;
+using FluentValidation;
 using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.Services.Validators.Signature.Models;
 
@@ -33,7 +34,8 @@ public class RetrieveSignatureRequestValidator : AbstractValidator<RetrieveSigna
             )
             .WithError(ErrorCode.SIGNATURE_TYPE_IS_INVALID, x => new
             {
-                IsRefund = x.IsRefund == x.Dispenser.LastUserSignature!.IsRefund
+                IsRefund = x.IsRefund == x.Dispenser.LastUserSignature!.IsRefund,
+                NextTry = x.Dispenser.NextTry()
             });
 
         RuleFor(x => x.Dispenser)

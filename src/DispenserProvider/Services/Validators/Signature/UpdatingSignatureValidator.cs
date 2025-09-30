@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
-using EnvironmentManager.Extensions;
-using DispenserProvider.DataBase.Models;
+using DispenserProvider.Extensions;
 using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.Services.Validators.Signature.Models;
 
@@ -16,16 +15,13 @@ public class UpdatingSignatureValidator : AbstractValidator<GenerateSignatureVal
             .WithError(ErrorCode.SIGNATURE_IS_STILL_VALID, x => new
             {
                 ValidFrom = x.Dispenser.LastUserSignature!.ValidFrom.ToUnixTimeSeconds(),
-                NextTry = NextTry(x.Dispenser).ToUnixTimeSeconds()
+                NextTry = x.Dispenser.NextTry().ToUnixTimeSeconds()
             })
-            .Must(x => DateTime.UtcNow >= NextTry(x))
+            .Must(x => DateTime.UtcNow >= x.NextTry())
             .When(x => x.IsRefund != x.Dispenser.LastUserSignature!.IsRefund)
             .WithError(ErrorCode.SIGNATURE_GENERATION_VALID_TIME_NOT_ARRIVED, x => new
             {
-                NextTry = NextTry(x.Dispenser).ToUnixTimeSeconds()
+                NextTry = x.Dispenser.NextTry().ToUnixTimeSeconds()
             });
     }
-
-    public static DateTimeOffset NextTry(SignatureDTO signature) => signature.ValidUntil + TimeSpan.FromSeconds(Env.COOLDOWN_OFFSET_IN_SECONDS.GetRequired<int>());
-    public static DateTimeOffset NextTry(DispenserDTO dispenser) => NextTry(dispenser.LastUserSignature!);
 }
