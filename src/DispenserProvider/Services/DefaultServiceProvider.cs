@@ -13,6 +13,7 @@ using DispenserProvider.Services.Web3;
 using DispenserProvider.Services.Strapi;
 using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.Services.Database;
+using Poolz.Finance.CSharp.Polly.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using DispenserProvider.Services.Web3.Contracts;
 using DispenserProvider.Services.Web3.MultiCall;
@@ -46,6 +47,7 @@ public static class DefaultServiceProvider
         .AddMediatR(x => x.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()))
         .AddFluentValidation([Assembly.GetExecutingAssembly()])
         .AddValidatorsFromAssemblies([Assembly.GetExecutingAssembly(), typeof(CreateValidator).GetTypeInfo().Assembly])
+        .AddScoped<IRetryExecutor, RetryExecutor>()
         .AddScoped<IAdminValidationService, StrapiClient>()
         .AddScoped<IDispenserManager, DispenserManager>()
         .AddScoped<ISignatureGenerator, SignatureGenerator>()
