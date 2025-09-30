@@ -1,4 +1,5 @@
 ﻿using DispenserProvider.DataBase;
+using DispenserProvider.Extensions;
 using EnvironmentManager.Extensions;
 using Microsoft.EntityFrameworkCore;
 using DispenserProvider.DataBase.Models;
@@ -11,7 +12,7 @@ public class SignatureProcessor(IDbContextFactory<DispenserContext> dispenserCon
     {
         var transactionDetail = isRefund ? dispenser.RefundDetail! : dispenser.WithdrawalDetail;
 
-        var validUntil = CalculateValidUntil(dispenser.RefundFinishTime, isRefund);
+        var validUntil = CalculateValidUntil(dispenser.RefundFinishTime, isRefund).UtcDateTime.RoundDateTime();
         var signature = new SignatureDTO
         {
             Signature = signatureGenerator.GenerateSignature(transactionDetail, validUntil),
