@@ -3,6 +3,7 @@ name: Deploy Lambda Function
 on:
   release:
     types: [published]
+
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   GITHUB_ACTOR: ${{ github.actor }}
@@ -18,6 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: production
+    env:
+      FUNCTION_NAME: ${{ secrets.LAMBDA_FUNCTION_NAME }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -27,22 +30,10 @@ jobs:
 
       - name: Install Amazon Lambda Tools
         run: dotnet tool install -g Amazon.Lambda.Tools
-      
+
       - name: Package Lambda function
         working-directory: ${{ github.workspace }}/src/DispenserProvider
         run: dotnet lambda package --configuration Release --output-package ../deployment.zip
-
-
-      - name: Upload deployment artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: lambda-deployment
-          path: src/deployment.zip
-
-      - name: Download deployment artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: lambda-deployment
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -51,37 +42,33 @@ jobs:
           role-session-name: GitHub_to_AWS_via_FederatedOIDC
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
+      - name: Ensure FUNCTION_NAME is set
+        run: |
+          set -euo pipefail
+          : "${FUNCTION_NAME:?FUNCTION_NAME secret is missing}"
+
+      - name: Verify target Lambda exists
+        run: |
+          set -euo pipefail
+          aws lambda get-function-configuration --function-name "$FUNCTION_NAME" --query '{Name:FunctionName,PackageType:PackageType}' --output table
+
       - name: Deploy Lambda Code
         run: |
-          aws lambda update-function-code --function-name DispenserProvider --zip-file fileb://deployment.zip > /dev/null 2>&1
+          set -euo pipefail
+          ls -l src/deployment.zip
+          aws lambda update-function-code \
+            --function-name "$FUNCTION_NAME" \
+            --zip-file fileb://src/deployment.zip \
+            --publish
 
       - name: Wait for Lambda update to complete
         run: |
-          echo "Waiting for Lambda function update to complete..."
-          attempt=0
-          max_attempts=30
-          while true; do
-            status=$(aws lambda get-function-configuration --function-name DispenserProvider --query 'LastUpdateStatus' --output text)
-            echo "Current status: $status"
-            if [ "$status" != "InProgress" ]; then
-              if [ "$status" = "Successful" ]; then
-                echo "Lambda function update completed successfully."
-                break
-              else
-                echo "Lambda function update finished with status: $status"
-                exit 1
-              fi
-            fi
-            sleep 1
-            attempt=$((attempt + 1))
-            if [ $attempt -ge $max_attempts ]; then
-              echo "Max attempts reached. Exiting."
-              exit 1
-            fi
-          done
-      
+          set -euo pipefail
+          aws lambda wait function-updated --function-name "$FUNCTION_NAME"
+
       - name: Update Lambda Description with Release URL
         env:
           RELEASE_URL: ${{ github.event.release.html_url }}
         run: |
-          aws lambda update-function-configuration --function-name DispenserProvider --description "$RELEASE_URL" > /dev/null 2>&1
+          set -euo pipefail
+          aws lambda update-function-configuration --function-name "$FUNCTION_NAME" --description "$RELEASE_URL"
