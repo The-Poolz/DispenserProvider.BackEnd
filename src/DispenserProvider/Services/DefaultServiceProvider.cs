@@ -1,4 +1,5 @@
-﻿using Amazon;
+﻿using Npgsql;
+using Amazon;
 using SecretsManager;
 using Amazon.RDS.Util;
 using FluentValidation;
@@ -63,17 +64,20 @@ public static class DefaultServiceProvider
     private static IServiceCollection Prod => new ServiceCollection()
         .AddDbContextFactory<DispenserContext>(options =>
         {
-            var hostname = Env.PROD_POSTGRES_HOSTNAME.GetRequired();
-            var port = Env.PROD_POSTGRES_PORT.GetRequired<int>();
-            var dbName = Env.PROD_POSTGRES_DB_NAME.GetRequired();
             var secretManager = new SecretManager();
             var secretId = Env.PROD_POSTGRES_SECRET_ID.GetRequired();
             var dbUser = secretManager.GetSecretValue(secretId, Env.PROD_POSTGRES_SECRET_KEY_OF_USERNAME.GetRequired());
             var dbPassword = secretManager.GetSecretValue(secretId, Env.PROD_POSTGRES_SECRET_KEY_OF_PASSWORD.GetRequired());
-
-            var connectionString = $"Server={hostname};Port={port};User Id={dbUser};Password={dbPassword};Database={dbName};";
-
-            options.UseNpgsql(connectionString);
+            options.UseNpgsql(new NpgsqlConnectionStringBuilder
+            {
+                Host = Env.PROD_POSTGRES_HOSTNAME.GetRequired(),
+                Port = Env.PROD_POSTGRES_PORT.GetRequired<int>(),
+                Database = Env.PROD_POSTGRES_DB_NAME.GetRequired(),
+                Username = dbUser,
+                Password = dbPassword,
+                Timeout = 5,
+                IncludeErrorDetail = false
+            }.ConnectionString);
         })
         .AddScoped<ISignerManager, SignerManager>();
 
@@ -87,12 +91,20 @@ public static class DefaultServiceProvider
             var sslCertPath = Env.STAGE_POSTGRES_SSL_CERT_FULL_PATH.GetRequired();
             var envManager = new EnvManager(MapperConfigurationsExtensions.WithAwsRegionConverters());
             var region = envManager.Get<RegionEndpoint?>(nameof(Env.STAGE_POSTGRES_AWS_REGION)) ?? RegionEndpoint.EUCentral1;
-
             var pwd = RDSAuthTokenGenerator.GenerateAuthToken(region, hostname, port, dbUser);
 
-            var connectionString = $"Server={hostname};User Id={dbUser};Password={pwd};Database={dbName};SSL Mode=VerifyFull;Root Certificate={sslCertPath};Include Error Detail=true";
-
-            options.UseNpgsql(connectionString);
+            options.UseNpgsql(new NpgsqlConnectionStringBuilder
+            {
+                Host = hostname,
+                Port = port,
+                Database = dbName,
+                Username = dbUser,
+                Password = pwd,
+                Timeout = 5,
+                SslMode = SslMode.VerifyFull,
+                SslCertificate = sslCertPath,
+                IncludeErrorDetail = true
+            }.ConnectionString);
         })
         .AddScoped<ISignerManager, EnvSignerManager>();
 }
