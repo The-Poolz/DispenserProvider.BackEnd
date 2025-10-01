@@ -12,7 +12,7 @@ public class ChainProviderTests
         [Fact]
         internal void WhenChainIdIsSupported_ShouldReturnsWeb3()
         {
-            Environment.SetEnvironmentVariable("RPC_URL", "http://localhost:5050");
+            Environment.SetEnvironmentVariable("BASE_URL_OF_RPC", "http://localhost:5050");
 
             var strapi = new MockStrapiClient(MockStrapiClient.DefaultOnChainInfo);
 

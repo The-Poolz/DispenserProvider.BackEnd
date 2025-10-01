@@ -9,7 +9,7 @@ public class ChainProvider(IStrapiClient strapi) : IChainProvider
 {
     private readonly Dictionary<long, OnChainInfo> ChainsInfo = new();
 
-    public string RpcUrl(long chainId) => $"{Env.RPC_URL.GetRequired()}/evm/{chainId}";
+    public string RpcUrl(long chainId) => $"{Env.BASE_URL_OF_RPC.GetRequired()}/evm/{chainId}";
 
     public IWeb3 Web3(long chainId) => new Nethereum.Web3.Web3(RpcUrl(chainId));
 
