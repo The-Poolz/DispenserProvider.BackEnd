@@ -45,7 +45,7 @@ public static class NpgsqlConnectionStringFactory
             Username = dbUser,
             Password = password,
             SslMode = SslMode.VerifyFull,
-            SslCertificate = Env.STAGE_POSTGRES_SSL_CERT_FULL_PATH.GetRequired(),
+            RootCertificate = Env.STAGE_POSTGRES_SSL_CERT_FULL_PATH.GetRequired(),
             Timeout = 5,
             IncludeErrorDetail = true
         };
