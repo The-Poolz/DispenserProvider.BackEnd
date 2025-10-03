@@ -1,18 +1,13 @@
-﻿using Amazon;
-using SecretsManager;
-using Amazon.RDS.Util;
-using FluentValidation;
+﻿using FluentValidation;
 using System.Reflection;
-using EnvironmentManager.Core;
 using DispenserProvider.Options;
 using DispenserProvider.DataBase;
-using DispenserProvider.Converters;
 using EnvironmentManager.Extensions;
-using Microsoft.EntityFrameworkCore;
 using DispenserProvider.Services.Web3;
 using DispenserProvider.Services.Strapi;
 using Net.Utils.ErrorHandler.Extensions;
 using DispenserProvider.Services.Database;
+using DispenserProvider.Extensions.Npgsql;
 using Poolz.Finance.CSharp.Polly.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using DispenserProvider.Services.Web3.Contracts;
@@ -61,38 +56,10 @@ public static class DefaultServiceProvider
         .AddScoped<IStrapiClient, StrapiClient>();
 
     private static IServiceCollection Prod => new ServiceCollection()
-        .AddDbContextFactory<DispenserContext>(options =>
-        {
-            var hostname = Env.PROD_POSTGRES_HOSTNAME.GetRequired();
-            var port = Env.PROD_POSTGRES_PORT.GetRequired<int>();
-            var dbName = Env.PROD_POSTGRES_DB_NAME.GetRequired();
-            var secretManager = new SecretManager();
-            var secretId = Env.PROD_POSTGRES_SECRET_ID.GetRequired();
-            var dbUser = secretManager.GetSecretValue(secretId, Env.PROD_POSTGRES_SECRET_KEY_OF_USERNAME.GetRequired());
-            var dbPassword = secretManager.GetSecretValue(secretId, Env.PROD_POSTGRES_SECRET_KEY_OF_PASSWORD.GetRequired());
-
-            var connectionString = $"Server={hostname};Port={port};User Id={dbUser};Password={dbPassword};Database={dbName};";
-
-            options.UseNpgsql(connectionString);
-        })
+        .AddDbContextFactory<DispenserContext>(opts => opts.UseProdNpgsql())
         .AddScoped<ISignerManager, SignerManager>();
 
     private static IServiceCollection Stage => new ServiceCollection()
-        .AddDbContextFactory<DispenserContext>(options =>
-        {
-            var hostname = Env.STAGE_POSTGRES_HOSTNAME.GetRequired();
-            var port = Env.STAGE_POSTGRES_PORT.GetRequired<int>();
-            var dbUser = Env.STAGE_POSTGRES_DB_USER.GetRequired();
-            var dbName = Env.STAGE_POSTGRES_DB_NAME.GetRequired();
-            var sslCertPath = Env.STAGE_POSTGRES_SSL_CERT_FULL_PATH.GetRequired();
-            var envManager = new EnvManager(MapperConfigurationsExtensions.WithAwsRegionConverters());
-            var region = envManager.Get<RegionEndpoint?>(nameof(Env.STAGE_POSTGRES_AWS_REGION)) ?? RegionEndpoint.EUCentral1;
-
-            var pwd = RDSAuthTokenGenerator.GenerateAuthToken(region, hostname, port, dbUser);
-
-            var connectionString = $"Server={hostname};User Id={dbUser};Password={pwd};Database={dbName};SSL Mode=VerifyFull;Root Certificate={sslCertPath};Include Error Detail=true";
-
-            options.UseNpgsql(connectionString);
-        })
+        .AddDbContextFactory<DispenserContext>(opts => opts.UseStageNpgsql())
         .AddScoped<ISignerManager, EnvSignerManager>();
 }
