@@ -12,11 +12,15 @@ public class ChainProviderTests
         [Fact]
         internal void WhenChainIdIsSupported_ShouldReturnsWeb3()
         {
+            var chainId = 97;
+            var baseUrl = "https://rpc/evm/";
+            Environment.SetEnvironmentVariable(nameof(Env.BASE_URL_OF_RPC), baseUrl);
+
             var strapi = new MockStrapiClient(MockStrapiClient.DefaultOnChainInfo);
 
             var chainProvider = new ChainProvider(strapi);
 
-            var response = chainProvider.Web3(97);
+            var response = chainProvider.Web3(chainId);
 
             response.Should().NotBeNull();
         }
