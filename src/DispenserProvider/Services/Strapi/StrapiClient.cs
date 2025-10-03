@@ -52,7 +52,6 @@ public class StrapiClient : IStrapiClient, IAdminValidationService
                 new ChainQueryBuilder()
                     .WithContractsOnChain(
                         new ContractsOnChainQueryBuilder()
-                            .WithRpc()
                             .WithContracts(
                                 new ComponentContractOnChainContractOnChainQueryBuilder()
                                     .WithContractVersion(
@@ -89,7 +88,7 @@ public class StrapiClient : IStrapiClient, IAdminValidationService
         var lockDealNFT = ExtractContractAddress(chain, NameOfLockDealNFT, chainId, ErrorCode.LOCK_DEAL_NFT_NOT_SUPPORTED);
         var multiCall = Env.MULTI_CALL_CONTRACT_ADDRESS.GetRequired();
 
-        return new OnChainInfo(chain.ContractsOnChain.Rpc, dispenserProvider, lockDealNFT, multiCall);
+        return new OnChainInfo(dispenserProvider, lockDealNFT, multiCall);
     }
 
     public bool IsValidAdmin(string userAddress)
