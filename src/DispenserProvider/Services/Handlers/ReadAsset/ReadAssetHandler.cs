@@ -3,6 +3,7 @@ using DispenserProvider.DataBase;
 using Microsoft.EntityFrameworkCore;
 using DispenserProvider.Services.Database;
 using DispenserProvider.Services.Handlers.ReadAsset.Models;
+using DispenserProvider.Extensions;
 
 namespace DispenserProvider.Services.Handlers.ReadAsset;
 
@@ -29,7 +30,10 @@ public class ReadAssetHandler(IDbContextFactory<DispenserContext> dispenserConte
                     dispenser.RefundDetail != null && dispenser.RefundDetail.ChainId == assetContext.ChainId && dispenser.RefundDetail.PoolId == assetContext.PoolId
                 ))
             )
-        ).ToList();
+        )
+        .AsEnumerable()
+        .Where(x => !TestnetChainsManager.TestnetChains.Contains(x.ChainId))
+        .ToList();
 
         takenTrackManager.ProcessTakenTracks(assets.SelectMany(a => a.Dispensers.Select(d => d.DTO)).ToArray());
 
