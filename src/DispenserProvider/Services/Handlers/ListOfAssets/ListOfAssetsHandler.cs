@@ -27,7 +27,7 @@ public class ListOfAssetsHandler(IDbContextFactory<DispenserContext> dispenserCo
             .AsEnumerable()
             .Where(x =>
                 !TestnetChainsManager.TestnetChains.Contains(x.WithdrawalDetail.ChainId) &&
-                (x.RefundDetail != null && !TestnetChainsManager.TestnetChains.Contains(x.RefundDetail.ChainId))
+                (x.RefundDetail == null || !TestnetChainsManager.TestnetChains.Contains(x.RefundDetail.ChainId))
             )
             .ToArray();
 
