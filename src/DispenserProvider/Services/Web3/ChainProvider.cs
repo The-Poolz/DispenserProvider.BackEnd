@@ -1,5 +1,7 @@
 ﻿using Nethereum.Web3;
 using Net.Web3.EthereumWallet;
+using Nethereum.JsonRpc.Client;
+using Poolz.Finance.CSharp.Http;
 using EnvironmentManager.Extensions;
 using DispenserProvider.Services.Strapi;
 
@@ -11,7 +13,13 @@ public class ChainProvider(IStrapiClient strapi) : IChainProvider
 
     public string RpcUrl(long chainId) => $"{Env.BASE_URL_OF_RPC.GetRequired()}{chainId}";
 
-    public IWeb3 Web3(long chainId) => new Nethereum.Web3.Web3(RpcUrl(chainId));
+    public IWeb3 Web3(long chainId)
+    {
+        var rpcUrl = RpcUrl(chainId);
+        var httpClient = new HttpClientFactory().Create(rpcUrl);
+        var web3 = new Nethereum.Web3.Web3(new RpcClient(new Uri(rpcUrl), httpClient));
+        return web3;
+    }
 
     public EthereumAddress DispenserProviderContract(long chainId) => FetchChainInfo(chainId).DispenserProvider;
 
