@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using DispenserProvider.Services.Database;
 using DispenserProvider.Extensions.Pagination;
 using DispenserProvider.Services.Handlers.ListOfAssets.Models;
+using DispenserProvider.Extensions;
 
 namespace DispenserProvider.Services.Handlers.ListOfAssets;
 
@@ -23,6 +24,11 @@ public class ListOfAssetsHandler(IDbContextFactory<DispenserContext> dispenserCo
             .ThenInclude(x => x.Builders)
             .Include(x => x.RefundDetail)
             .ThenInclude(x => x!.Builders)
+            .AsEnumerable()
+            .Where(x =>
+                !TestnetChainsManager.TestnetChains.Contains(x.WithdrawalDetail.ChainId) &&
+                (x.RefundDetail == null || !TestnetChainsManager.TestnetChains.Contains(x.RefundDetail.ChainId))
+            )
             .ToArray();
 
         var processed = takenTrackManager
